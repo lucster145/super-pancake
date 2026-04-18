@@ -47,6 +47,22 @@ const APPS = {
 // Store app installation state
 const installedApps = new Set(['notes', 'game2048', 'musicplayer', 'calculator', 'memory']);
 
+// Global error handler for better debugging
+window.addEventListener('error', (e) => {
+    console.error('Application error:', e.error);
+    // Could show user-friendly error message here
+});
+
+// Performance: Use requestAnimationFrame for smooth animations
+let animationFrameId = null;
+
+function requestAnimationFrame(callback) {
+    if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+    }
+    animationFrameId = window.requestAnimationFrame(callback);
+}
+
 // Window management
 class WindowManager {
     constructor() {
@@ -135,7 +151,7 @@ class WindowManager {
                 windowEl.dataset.maximized = 'false';
             } else {
                 windowEl.dataset.originalWidth = windowEl.style.width;
-                windowEl.data.originalHeight = windowEl.style.height;
+                windowEl.dataset.originalHeight = windowEl.style.height;
                 windowEl.dataset.originalLeft = windowEl.style.left;
                 windowEl.dataset.originalTop = windowEl.style.top;
                 windowEl.style.width = '100%';
@@ -514,11 +530,20 @@ document.addEventListener('click', (e) => {
     }
 });
 
-// Desktop icon click
+// Desktop icon click and keyboard support
 document.querySelectorAll('.desktop-icon').forEach(icon => {
     icon.addEventListener('click', () => {
         const appId = icon.dataset.app;
         openApp(appId);
+    });
+
+    // Keyboard support
+    icon.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            const appId = icon.dataset.app;
+            openApp(appId);
+        }
     });
 });
 

@@ -9,6 +9,10 @@ body, html {
     height: 100%;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     overflow: hidden;
+    /* Performance: Enable hardware acceleration */
+    transform: translateZ(0);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 #desktop {
@@ -142,6 +146,60 @@ body, html {
 .close-btn:hover {
     background-color: #fe4f56;
     color: white;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .desktop-icons {
+        gap: 30px;
+        top: 10px;
+        left: 10px;
+    }
+
+    .desktop-icon {
+        width: 60px;
+    }
+
+    .desktop-icon img {
+        width: 36px;
+        height: 36px;
+    }
+
+    .desktop-icon p {
+        font-size: 10px;
+    }
+
+    .taskbar {
+        height: 40px;
+    }
+
+    .start-btn svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    .window {
+        min-width: 250px;
+        min-height: 150px;
+    }
+}
+
+@media (max-width: 480px) {
+    .desktop-icons {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .taskbar-apps {
+        display: none; /* Hide taskbar apps on very small screens */
+    }
+
+    .window {
+        width: 90% !important;
+        height: 80% !important;
+        left: 5% !important;
+        top: 10% !important;
+    }
 }
 
 .window-content {
