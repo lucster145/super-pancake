@@ -694,7 +694,24 @@ class WindowManager {
                             <button class="net2-player-close" onclick="closeNet2Player()">✕</button>
                             <h2 id="net2-player-title">Now Playing</h2>
                             <p id="net2-player-description">Enjoy your show on Net2.</p>
-                            <div class="net2-video-window">📺 Watching now...</div>
+                            <div class="net2-video-window" id="net2-video-window">
+                                <div class="net2-video-content">
+                                    <div class="net2-video-scene" id="net2-video-scene">
+                                        <div class="net2-video-text">Loading...</div>
+                                    </div>
+                                    <div class="net2-video-overlay">
+                                        <div class="net2-progress-bar">
+                                            <div class="net2-progress-fill" id="net2-progress-fill"></div>
+                                        </div>
+                                        <div class="net2-controls">
+                                            <button class="net2-control-btn" onclick="net2PlayPause()" id="net2-play-btn">⏸️</button>
+                                            <button class="net2-control-btn" onclick="net2Skip(-10)">⏪ 10s</button>
+                                            <button class="net2-control-btn" onclick="net2Skip(10)">10s ⏩</button>
+                                            <button class="net2-control-btn" onclick="net2Fullscreen()">⛶</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="net2-player-actions">
                                 <button onclick="closeNet2Player()">Exit</button>
                             </div>
@@ -1779,6 +1796,9 @@ function playNet2Content(title) {
     if (descEl) {
         descEl.textContent = `Enjoy this episode or movie from Net2. Press Exit when you want to stop.`;
     }
+    
+    // Start video simulation
+    startNet2Video();
 }
 
 function playNet2Info(title) {
@@ -1789,6 +1809,97 @@ function closeNet2Player() {
     const player = document.getElementById('net2-player');
     if (player) {
         player.classList.add('hidden');
+    }
+    // Stop video simulation
+    if (net2VideoInterval) {
+        clearInterval(net2VideoInterval);
+        net2VideoInterval = null;
+    }
+    net2IsPlaying = false;
+}
+
+// ===== NET2 VIDEO PLAYER =====
+let net2VideoInterval = null;
+let net2IsPlaying = false;
+let net2CurrentTime = 0;
+let net2Duration = 120; // 2 minutes for demo
+
+const net2Scenes = [
+    { text: "🎬 Opening scene...", duration: 10 },
+    { text: "🏃 Action sequence!", duration: 15 },
+    { text: "💬 Dialogue moment", duration: 20 },
+    { text: "🌟 Dramatic reveal", duration: 25 },
+    { text: "🎭 Character development", duration: 30 },
+    { text: "🏁 Climax approaching", duration: 20 }
+];
+
+function startNet2Video() {
+    net2IsPlaying = true;
+    net2CurrentTime = 0;
+    updateNet2Progress();
+    
+    let sceneIndex = 0;
+    let sceneTime = 0;
+    
+    net2VideoInterval = setInterval(() => {
+        if (!net2IsPlaying) return;
+        
+        net2CurrentTime++;
+        sceneTime++;
+        
+        // Update progress bar
+        updateNet2Progress();
+        
+        // Change scenes
+        if (sceneTime >= net2Scenes[sceneIndex].duration) {
+            sceneIndex = (sceneIndex + 1) % net2Scenes.length;
+            sceneTime = 0;
+            updateNet2Scene(sceneIndex);
+        }
+        
+        // End video
+        if (net2CurrentTime >= net2Duration) {
+            net2IsPlaying = false;
+            clearInterval(net2VideoInterval);
+            net2VideoInterval = null;
+            updateNet2Scene(-1); // End credits
+        }
+    }, 1000); // Update every second
+}
+
+function updateNet2Scene(index) {
+    const sceneEl = document.getElementById('net2-video-scene');
+    const textEl = sceneEl.querySelector('.net2-video-text');
+    
+    if (index === -1) {
+        textEl.textContent = "🎉 The End - Thanks for watching!";
+        return;
+    }
+    
+    textEl.textContent = net2Scenes[index].text;
+}
+
+function updateNet2Progress() {
+    const progressFill = document.getElementById('net2-progress-fill');
+    const progress = (net2CurrentTime / net2Duration) * 100;
+    progressFill.style.width = progress + '%';
+}
+
+function net2PlayPause() {
+    const btn = document.getElementById('net2-play-btn');
+    net2IsPlaying = !net2IsPlaying;
+    btn.textContent = net2IsPlaying ? '⏸️' : '▶️';
+}
+
+function net2Skip(seconds) {
+    net2CurrentTime = Math.max(0, Math.min(net2Duration, net2CurrentTime + seconds));
+    updateNet2Progress();
+}
+
+function net2Fullscreen() {
+    const player = document.getElementById('net2-player');
+    if (player.requestFullscreen) {
+        player.requestFullscreen();
     }
 }
 
