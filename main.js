@@ -275,12 +275,33 @@ class WindowManager {
 
     closeWindow(windowEl) {
         const appId = windowEl.dataset.appId;
+        
+        // Clean up app-specific resources
+        this.cleanupApp(appId);
+        
         windowEl.remove();
         this.windows = this.windows.filter(w => w !== windowEl);
         
         const taskbarIcon = document.querySelector(`[data-app-id="${appId}"]`);
         if (taskbarIcon) {
             taskbarIcon.remove();
+        }
+    }
+
+    cleanupApp(appId) {
+        switch(appId) {
+            case 'dino':
+                // Clean up dino game
+                clearInterval(dinoGameState.interval);
+                if (dinoGameState.spawnTimeout) clearTimeout(dinoGameState.spawnTimeout);
+                // Remove event listeners
+                const gameContainer = document.getElementById('dino-game');
+                if (gameContainer) {
+                    gameContainer.removeEventListener('click', dinoJumpHandler);
+                }
+                document.removeEventListener('keydown', dinoKeyHandler);
+                break;
+            // Add cleanup for other apps if needed
         }
     }
 
@@ -937,6 +958,17 @@ let dinoGameState = {
     gameOver: false
 };
 
+function dinoJumpHandler() {
+    dinoJump();
+}
+
+function dinoKeyHandler(e) {
+    if (e.code === 'Space' || e.code === 'ArrowUp') {
+        e.preventDefault();
+        dinoJump();
+    }
+}
+
 function initDinoGame() {
     const gameContainer = document.getElementById('dino-game');
     if (!gameContainer) return;
@@ -968,14 +1000,13 @@ function initDinoGame() {
         dinoEl.style.bottom = '20px';
     }
 
+    // Remove existing event listeners to prevent duplicates
+    gameContainer.removeEventListener('click', dinoJumpHandler);
+    document.removeEventListener('keydown', dinoKeyHandler);
+
     // Add event listeners
-    gameContainer.addEventListener('click', () => dinoJump());
-    document.addEventListener('keydown', (e) => {
-        if (e.code === 'Space' || e.code === 'ArrowUp') {
-            e.preventDefault();
-            dinoJump();
-        }
-    });
+    gameContainer.addEventListener('click', dinoJumpHandler);
+    document.addEventListener('keydown', dinoKeyHandler);
 
     // Start game loop
     dinoGameState.interval = setInterval(dinoGameLoop, 30);
@@ -1050,14 +1081,18 @@ function checkCollisions() {
 
     if (!dinoEl || dinoGameState.jumping) return;
 
+    const gameContainer = document.getElementById('dino-game');
+    const containerRect = gameContainer.getBoundingClientRect();
     const dinoRect = dinoEl.getBoundingClientRect();
 
     cacti.forEach(cactus => {
         const cactusRect = cactus.getBoundingClientRect();
 
-        if (dinoRect.right > cactusRect.left + 5 &&
-            dinoRect.left < cactusRect.right - 5 &&
-            dinoRect.bottom > cactusRect.top) {
+        // Check for significant horizontal overlap (more than 20px)
+        const horizontalOverlap = (Math.min(dinoRect.right, cactusRect.right) - Math.max(dinoRect.left, cactusRect.left)) > 20;
+        const verticalCollision = dinoRect.bottom >= cactusRect.top + 10; // Allow 10px tolerance
+
+        if (horizontalOverlap && verticalCollision) {
             endDinoGame();
         }
     });
@@ -1091,7 +1126,8 @@ function endDinoGame() {
 
 function restartDinoGame() {
     // Clean up
-    clearInterval(dinoGameInterval);
+    clearInterval(dinoGameState.interval);
+    if (dinoGameState.spawnTimeout) clearTimeout(dinoGameState.spawnTimeout);
     const gameContainer = document.getElementById('dino-game');
     if (gameContainer) {
         const existingCacti = gameContainer.querySelectorAll('.dino-cactus');
