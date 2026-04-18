@@ -57,7 +57,7 @@ const APPS = {
         minHeight: 500
     },
     football: {
-        name: 'PlayBall',
+        name: 'Throaball',
         icon: '⚽',
         color: '#228B22',
         minWidth: 600,
@@ -522,7 +522,7 @@ class WindowManager {
         const highScore = localStorage.getItem('footballHighScore') || '0';
         return `
             <div class="game-content">
-                <div class="game-title">PlayBall</div>
+                <div class="game-title">Throaball</div>
                 <div style="text-align: center; margin-bottom: 20px; color: #666; font-size: 14px;">
                     Press SPACEBAR to charge and throw the ball! Hit the targets for points!
                 </div>
