@@ -292,7 +292,7 @@ class WindowManager {
         switch(appId) {
             case 'dino':
                 // Clean up dino game
-                clearInterval(dinoGameState.interval);
+                cancelAnimationFrame(dinoGameState.interval);
                 if (dinoGameState.spawnTimeout) clearTimeout(dinoGameState.spawnTimeout);
                 // Remove event listeners
                 const gameContainer = document.getElementById('dino-game');
@@ -476,6 +476,9 @@ class WindowManager {
                     <div id="dino-game-over" class="dino-game-over hidden">
                         <div class="game-over-text">GAME OVER</div>
                         <div id="dino-final-score" style="font-size: 18px; margin-bottom: 15px;"></div>
+                        <div style="font-size: 14px; margin-bottom: 15px; color: #ccc;">
+                            Press R or click Restart to play again
+                        </div>
                         <button class="game-button" onclick="restartDinoGame()">Restart</button>
                     </div>
                 </div>
@@ -955,6 +958,7 @@ let dinoGameState = {
     spawnTimeout: null,
     score: 0,
     jumping: false,
+    jumpStartTime: 0,
     gameOver: false
 };
 
@@ -966,6 +970,9 @@ function dinoKeyHandler(e) {
     if (e.code === 'Space' || e.code === 'ArrowUp') {
         e.preventDefault();
         dinoJump();
+    } else if (e.code === 'KeyR' && dinoGameState.gameOver) {
+        // Allow restart with R key when game is over
+        restartDinoGame();
     }
 }
 
@@ -976,12 +983,14 @@ function initDinoGame() {
     // Reset game state
     dinoGameState.score = 0;
     dinoGameState.jumping = false;
+    dinoGameState.jumpStartTime = 0;
     dinoGameState.gameOver = false;
 
     // Clear any existing cacti
     const existingCacti = gameContainer.querySelectorAll('.dino-cactus');
     existingCacti.forEach(cactus => cactus.remove());
-    
+
+    // Clear any existing timers
     clearInterval(dinoGameState.interval);
     if (dinoGameState.spawnTimeout) clearTimeout(dinoGameState.spawnTimeout);
 
@@ -998,6 +1007,7 @@ function initDinoGame() {
     if (dinoEl) {
         dinoEl.classList.remove('jumping');
         dinoEl.style.bottom = '20px';
+        dinoEl.textContent = '🦕'; // Reset to normal dino
     }
 
     // Remove existing event listeners to prevent duplicates
@@ -1008,8 +1018,14 @@ function initDinoGame() {
     gameContainer.addEventListener('click', dinoJumpHandler);
     document.addEventListener('keydown', dinoKeyHandler);
 
-    // Start game loop
-    dinoGameState.interval = setInterval(dinoGameLoop, 30);
+    // Start game loop with requestAnimationFrame for smoother performance
+    const gameLoop = () => {
+        if (!dinoGameState.gameOver) {
+            dinoGameLoop();
+            dinoGameState.interval = requestAnimationFrame(gameLoop);
+        }
+    };
+    dinoGameState.interval = requestAnimationFrame(gameLoop);
 
     // Spawn first cactus after a delay
     dinoGameState.spawnTimeout = setTimeout(spawnCactus, 2000);
@@ -1022,12 +1038,46 @@ function dinoJump() {
     if (!dinoEl) return;
 
     dinoGameState.jumping = true;
+    dinoGameState.jumpStartTime = Date.now();
     dinoEl.classList.add('jumping');
+    dinoEl.textContent = '🦕'; // Normal dino
 
-    setTimeout(() => {
-        dinoEl.classList.remove('jumping');
-        dinoGameState.jumping = false;
-    }, 500);
+    // Use JavaScript animation for more precise control
+    const jumpDuration = 600; // Slightly longer jump
+    const jumpHeight = 70; // Jump height in pixels
+    const startBottom = 20;
+    const endTime = dinoGameState.jumpStartTime + jumpDuration;
+
+    const animateJump = () => {
+        const now = Date.now();
+        const elapsed = now - dinoGameState.jumpStartTime;
+        const progress = Math.min(elapsed / jumpDuration, 1);
+
+        // Parabolic jump curve
+        const height = Math.sin(progress * Math.PI) * jumpHeight;
+        const currentBottom = startBottom + height;
+
+        dinoEl.style.bottom = currentBottom + 'px';
+
+        // Change dino expression during jump
+        if (progress < 0.5) {
+            dinoEl.textContent = '🦕'; // Ascending
+        } else {
+            dinoEl.textContent = '🦖'; // Descending (different dino)
+        }
+
+        if (progress < 1) {
+            requestAnimationFrame(animateJump);
+        } else {
+            // Jump finished
+            dinoEl.style.bottom = startBottom + 'px';
+            dinoEl.classList.remove('jumping');
+            dinoEl.textContent = '🦕'; // Back to normal
+            dinoGameState.jumping = false;
+        }
+    };
+
+    requestAnimationFrame(animateJump);
 }
 
 function spawnCactus() {
@@ -1039,29 +1089,40 @@ function spawnCactus() {
     const cactus = document.createElement('div');
     cactus.className = 'dino-cactus';
     cactus.textContent = '🌵';
-    cactus.style.right = '-10%';
+    cactus.style.right = '-60px'; // Start just off-screen
+    cactus.style.bottom = '20px';
 
     gameContainer.appendChild(cactus);
 
-    // Animate cactus
-    let position = -10;
-    const moveInterval = setInterval(() => {
-        if (!gameContainer.contains(cactus)) {
-            clearInterval(moveInterval);
+    // Animate cactus using requestAnimationFrame for smoother movement
+    let position = -60; // Start position in pixels
+    const speed = 3; // Pixels per frame
+
+    const moveCactus = () => {
+        if (!gameContainer.contains(cactus) || dinoGameState.gameOver) {
+            if (cactus.parentNode) cactus.parentNode.removeChild(cactus);
             return;
         }
 
-        position += 1.5;
-        cactus.style.right = position + '%';
+        position += speed;
+        cactus.style.right = position + 'px';
 
-        if (position > 110) {
-            clearInterval(moveInterval);
+        // Remove cactus when it goes off-screen
+        if (position > gameContainer.offsetWidth + 60) {
             if (cactus.parentNode) cactus.parentNode.removeChild(cactus);
+            return;
         }
-    }, 20);
 
-    // Spawn next cactus
-    const nextSpawnTime = Math.random() * 1500 + 1000;
+        requestAnimationFrame(moveCactus);
+    };
+
+    requestAnimationFrame(moveCactus);
+
+    // Spawn next cactus with variable timing based on score
+    const baseDelay = Math.max(2000 - Math.floor(dinoGameState.score / 50) * 100, 1000);
+    const randomDelay = Math.random() * 800;
+    const nextSpawnTime = baseDelay + randomDelay;
+
     dinoGameState.spawnTimeout = setTimeout(spawnCactus, nextSpawnTime);
 }
 
@@ -1079,20 +1140,35 @@ function checkCollisions() {
     const dinoEl = document.getElementById('dino-player');
     const cacti = document.querySelectorAll('.dino-cactus');
 
-    if (!dinoEl || dinoGameState.jumping) return;
+    if (!dinoEl) return;
 
     const gameContainer = document.getElementById('dino-game');
+    if (!gameContainer) return;
+
     const containerRect = gameContainer.getBoundingClientRect();
     const dinoRect = dinoEl.getBoundingClientRect();
+
+    // Get current dino bottom position (accounting for jumping)
+    const dinoBottom = parseFloat(dinoEl.style.bottom) || 20;
 
     cacti.forEach(cactus => {
         const cactusRect = cactus.getBoundingClientRect();
 
-        // Check for significant horizontal overlap (more than 20px)
-        const horizontalOverlap = (Math.min(dinoRect.right, cactusRect.right) - Math.max(dinoRect.left, cactusRect.left)) > 20;
-        const verticalCollision = dinoRect.bottom >= cactusRect.top + 10; // Allow 10px tolerance
+        // Calculate positions relative to game container
+        const dinoLeft = dinoRect.left - containerRect.left;
+        const dinoRight = dinoRect.right - containerRect.left;
+        const cactusLeft = cactusRect.left - containerRect.left;
+        const cactusRight = cactusRect.right - containerRect.left;
 
-        if (horizontalOverlap && verticalCollision) {
+        // Check for horizontal overlap
+        const horizontalOverlap = dinoRight > cactusLeft && dinoLeft < cactusRight;
+
+        // Check vertical collision - dino must be on the ground (not jumping high enough)
+        const dinoHeight = dinoRect.bottom - dinoRect.top;
+        const cactusHeight = cactusRect.bottom - cactusRect.top;
+        const verticalCollision = dinoBottom <= 25; // Allow small tolerance for ground level
+
+        if (horizontalOverlap && verticalCollision && !dinoGameState.jumping) {
             endDinoGame();
         }
     });
@@ -1100,14 +1176,15 @@ function checkCollisions() {
 
 function endDinoGame() {
     dinoGameState.gameOver = true;
-    clearInterval(dinoGameState.interval);
+    cancelAnimationFrame(dinoGameState.interval);
     if (dinoGameState.spawnTimeout) clearTimeout(dinoGameState.spawnTimeout);
 
-    // Calculate final score
-    const finalScore = Math.floor(dinoGameState.score / 10);
-    const currentHighScore = parseInt(localStorage.getItem('dinoHighScore') || '0');
-    
-    // Update high score if needed
+    // Change dino to sad expression
+    const dinoEl = document.getElementById('dino-player');
+    if (dinoEl) {
+        dinoEl.textContent = '💀'; // Dead dino
+    }
+
     let scoreMessage = `Final Score: ${finalScore}`;
     if (finalScore > currentHighScore) {
         localStorage.setItem('dinoHighScore', finalScore);
@@ -1126,7 +1203,7 @@ function endDinoGame() {
 
 function restartDinoGame() {
     // Clean up
-    clearInterval(dinoGameState.interval);
+    cancelAnimationFrame(dinoGameState.interval);
     if (dinoGameState.spawnTimeout) clearTimeout(dinoGameState.spawnTimeout);
     const gameContainer = document.getElementById('dino-game');
     if (gameContainer) {
