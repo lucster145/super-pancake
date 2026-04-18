@@ -76,11 +76,18 @@ const APPS = {
         color: '#E50914',
         minWidth: 800,
         minHeight: 600
+    },
+    browser: {
+        name: 'Web Browser',
+        icon: '🌐',
+        color: '#4285F4',
+        minWidth: 700,
+        minHeight: 500
     }
 };
 
 // Store app installation state
-const installedApps = new Set(['playstore', 'notes', 'game2048', 'musicplayer', 'calculator', 'memory', 'dino', 'books', 'football', 'calendar', 'net2']);
+const installedApps = new Set(['playstore', 'notes', 'game2048', 'musicplayer', 'calculator', 'memory', 'dino', 'books', 'football', 'calendar', 'net2', 'browser']);
 
 // Global error handler for better debugging
 window.addEventListener('error', (e) => {
@@ -357,6 +364,8 @@ class WindowManager {
                 return this.getCalendarContent();
             case 'net2':
                 return this.getNet2Content();
+            case 'browser':
+                return this.getBrowserContent();
             default:
                 return '<p>App not implemented</p>';
         }
@@ -617,10 +626,10 @@ class WindowManager {
                 <div class="net2-header">
                     <div class="net2-logo">Net2</div>
                     <div class="net2-nav">
-                        <button class="net2-nav-btn active" onclick="showNet2Category('home')">Home</button>
-                        <button class="net2-nav-btn" onclick="showNet2Category('movies')">Movies</button>
-                        <button class="net2-nav-btn" onclick="showNet2Category('tv')">TV Shows</button>
-                        <button class="net2-nav-btn" onclick="showNet2Category('my-list')">My List</button>
+                        <button class="net2-nav-btn active" onclick="showNet2Category('home', event)">Home</button>
+                        <button class="net2-nav-btn" onclick="showNet2Category('movies', event)">Movies</button>
+                        <button class="net2-nav-btn" onclick="showNet2Category('tv', event)">TV Shows</button>
+                        <button class="net2-nav-btn" onclick="showNet2Category('my-list', event)">My List</button>
                     </div>
                     <div class="net2-search">
                         <input type="text" placeholder="Search movies, TV shows..." id="net2-search">
@@ -630,11 +639,11 @@ class WindowManager {
                 <div class="net2-main" id="net2-main">
                     <div class="net2-hero">
                         <div class="hero-content">
-                            <h1>Stranger Things</h1>
-                            <p>When a young boy vanishes, a small town uncovers a mystery involving secret experiments, terrifying supernatural forces, and one strange little girl.</p>
+                            <h1 id="net2-hero-title">Stranger Things</h1>
+                            <p id="net2-hero-description">When a young boy vanishes, a small town uncovers a mystery involving secret experiments, terrifying supernatural forces, and one strange little girl.</p>
                             <div class="hero-buttons">
-                                <button class="net2-play-btn">▶ Play</button>
-                                <button class="net2-info-btn">ℹ More Info</button>
+                                <button class="net2-play-btn" onclick="playNet2Content('Stranger Things')">▶ Play</button>
+                                <button class="net2-info-btn" onclick="playNet2Info('Stranger Things')">ℹ More Info</button>
                             </div>
                         </div>
                     </div>
@@ -678,6 +687,43 @@ class WindowManager {
                             <div class="net2-item" onclick="playNet2Content('Fight Club')">
                                 <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'%3E%3Crect fill='%23333' width='200' height='300'/%3E%3Ctext x='100' y='150' font-size='24' fill='white' text-anchor='middle'%3E👊%3C/text%3E%3Ctext x='100' y='180' font-size='14' fill='white' text-anchor='middle'%3EFight Club%3C/text%3E%3C/svg%3E" alt="Fight Club">
                             </div>
+                        </div>
+                    </div>
+                    <div id="net2-player" class="net2-player hidden">
+                        <div class="net2-player-screen">
+                            <button class="net2-player-close" onclick="closeNet2Player()">✕</button>
+                            <h2 id="net2-player-title">Now Playing</h2>
+                            <p id="net2-player-description">Enjoy your show on Net2.</p>
+                            <div class="net2-video-window">📺 Watching now...</div>
+                            <div class="net2-player-actions">
+                                <button onclick="closeNet2Player()">Exit</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    getBrowserContent() {
+        return `
+            <div class="browser-content">
+                <div class="browser-toolbar">
+                    <button class="browser-nav-btn" onclick="browserGoBack()">←</button>
+                    <button class="browser-nav-btn" onclick="browserGoForward()">→</button>
+                    <button class="browser-nav-btn" onclick="browserRefresh()">🔄</button>
+                    <input type="text" class="browser-address" id="browser-address" placeholder="Search or enter address" value="https://www.example.com">
+                    <button class="browser-search-btn" onclick="browserSearch()">Search</button>
+                </div>
+                <div class="browser-results" id="browser-results">
+                    <div class="browser-homepage">
+                        <h1>Welcome to Web Browser</h1>
+                        <p>Search for anything or enter a website address.</p>
+                        <div class="browser-shortcuts">
+                            <div class="shortcut" onclick="browserNavigate('cats')">🐱 Cats</div>
+                            <div class="shortcut" onclick="browserNavigate('dogs')">🐶 Dogs</div>
+                            <div class="shortcut" onclick="browserNavigate('food')">🍕 Food</div>
+                            <div class="shortcut" onclick="browserNavigate('games')">🎮 Games</div>
                         </div>
                     </div>
                 </div>
@@ -1393,6 +1439,9 @@ function endDinoGame() {
         dinoEl.textContent = '💀'; // Dead dino
     }
 
+    const finalScore = Math.floor(dinoGameState.score / 10);
+    const currentHighScore = parseInt(localStorage.getItem('dinoHighScore') || '0');
+
     let scoreMessage = `Final Score: ${finalScore}`;
     if (finalScore > currentHighScore) {
         localStorage.setItem('dinoHighScore', finalScore);
@@ -1680,19 +1729,256 @@ function initNet2() {
     // Net2 is mostly static HTML with interactive elements
 }
 
-function showNet2Category(category) {
+function showNet2Category(category, event) {
     // Update navigation buttons
     document.querySelectorAll('.net2-nav-btn').forEach(btn => {
         btn.classList.remove('active');
     });
-    event.target.classList.add('active');
+    if (event && event.target) {
+        event.target.classList.add('active');
+    }
 
-    // Could implement category switching here
-    console.log(`Showing category: ${category}`);
+    const heroTitle = document.getElementById('net2-hero-title');
+    const heroDesc = document.getElementById('net2-hero-description');
+    const categories = {
+        home: {
+            title: 'Stranger Things',
+            desc: 'A small town uncovers a mystery involving experiments, supernatural forces, and a strange little girl.'
+        },
+        movies: {
+            title: 'Movie Night',
+            desc: 'Watch the latest thrillers, sci-fi epics, and dramas from the Net2 movie library.'
+        },
+        tv: {
+            title: 'Top TV Shows',
+            desc: 'Binge the best TV series and discover new favorites in the TV catalog.'
+        },
+        'my-list': {
+            title: 'My List',
+            desc: 'Continue watching your saved shows and movies anytime.'
+        }
+    };
+
+    if (heroTitle && heroDesc && categories[category]) {
+        heroTitle.textContent = categories[category].title;
+        heroDesc.textContent = categories[category].desc;
+    }
 }
 
 function playNet2Content(title) {
-    alert(`🎬 Now playing: ${title}\n\nEnjoy your movie! 🍿`);
+    const player = document.getElementById('net2-player');
+    const titleEl = document.getElementById('net2-player-title');
+    const descEl = document.getElementById('net2-player-description');
+
+    if (player) {
+        player.classList.remove('hidden');
+    }
+    if (titleEl) {
+        titleEl.textContent = `Now Playing: ${title}`;
+    }
+    if (descEl) {
+        descEl.textContent = `Enjoy this episode or movie from Net2. Press Exit when you want to stop.`;
+    }
+}
+
+function playNet2Info(title) {
+    alert(`ℹ ${title}\n\nThis is a featured Net2 title. Press Play to start watching it.`);
+}
+
+function closeNet2Player() {
+    const player = document.getElementById('net2-player');
+    if (player) {
+        player.classList.add('hidden');
+    }
+}
+
+// ===== BROWSER APP =====
+function browserSearch() {
+    const addressInput = document.getElementById('browser-address');
+    const query = addressInput.value.trim();
+    if (query) {
+        browserNavigate(query);
+    }
+}
+
+function browserNavigate(query) {
+    const resultsDiv = document.getElementById('browser-results');
+    const addressInput = document.getElementById('browser-address');
+    
+    addressInput.value = query;
+    
+    // Mock search results
+    const mockResults = getMockSearchResults(query.toLowerCase());
+    
+    resultsDiv.innerHTML = `
+        <div class="search-results">
+            <h2>Search Results for "${query}"</h2>
+            ${mockResults}
+        </div>
+    `;
+}
+
+function browserGoBack() {
+    // Simple back - just go to homepage
+    const resultsDiv = document.getElementById('browser-results');
+    const addressInput = document.getElementById('browser-address');
+    
+    addressInput.value = 'https://www.example.com';
+    resultsDiv.innerHTML = `
+        <div class="browser-homepage">
+            <h1>Welcome to Web Browser</h1>
+            <p>Search for anything or enter a website address.</p>
+            <div class="browser-shortcuts">
+                <div class="shortcut" onclick="browserNavigate('cats')">🐱 Cats</div>
+                <div class="shortcut" onclick="browserNavigate('dogs')">🐶 Dogs</div>
+                <div class="shortcut" onclick="browserNavigate('food')">🍕 Food</div>
+                <div class="shortcut" onclick="browserNavigate('games')">🎮 Games</div>
+            </div>
+        </div>
+    `;
+}
+
+function browserGoForward() {
+    // Not implemented - just refresh
+    browserRefresh();
+}
+
+function browserRefresh() {
+    const addressInput = document.getElementById('browser-address');
+    const query = addressInput.value;
+    if (query && query !== 'https://www.example.com') {
+        browserNavigate(query);
+    } else {
+        browserGoBack();
+    }
+}
+
+function getMockSearchResults(query) {
+    const results = {
+        'cats': `
+            <div class="result-item">
+                <h3>🐱 All About Cats</h3>
+                <p>Cats are fascinating creatures with over 500 million domestic cats worldwide. They have been domesticated for over 9,000 years.</p>
+                <p><strong>Fun Facts:</strong></p>
+                <ul>
+                    <li>Cats sleep for 12-16 hours a day</li>
+                    <li>They have 230 bones in their body</li>
+                    <li>Cats can jump up to 6 times their length</li>
+                </ul>
+            </div>
+        `,
+        'dogs': `
+            <div class="result-item">
+                <h3>🐶 All About Dogs</h3>
+                <p>Dogs are loyal companions that have been with humans for thousands of years. There are over 340 dog breeds worldwide.</p>
+                <p><strong>Fun Facts:</strong></p>
+                <ul>
+                    <li>Dogs have 42 teeth</li>
+                    <li>They can smell 1,000 to 10,000 times better than humans</li>
+                    <li>The oldest known dog was 14 years old</li>
+                </ul>
+            </div>
+        `,
+        'food': `
+            <div class="result-item">
+                <h3>🍕 Delicious Food Around the World</h3>
+                <p>Food is essential for life and comes in countless varieties. Here are some popular foods:</p>
+                <p><strong>Popular Foods:</strong></p>
+                <ul>
+                    <li>Pizza - Italy's gift to the world</li>
+                    <li>Sushi - Traditional Japanese cuisine</li>
+                    <li>Tacos - Mexican street food favorite</li>
+                    <li>Pasta - Italian comfort food</li>
+                </ul>
+            </div>
+        `,
+        'games': `
+            <div class="result-item">
+                <h3>🎮 Video Games</h3>
+                <p>Video games are interactive entertainment enjoyed by millions worldwide. The industry generates billions in revenue annually.</p>
+                <p><strong>Popular Genres:</strong></p>
+                <ul>
+                    <li>Action-Adventure</li>
+                    <li>RPG (Role-Playing Games)</li>
+                    <li>Strategy Games</li>
+                    <li>Sports Games</li>
+                </ul>
+            </div>
+        `,
+        'weather': `
+            <div class="result-item">
+                <h3>🌤️ Weather Information</h3>
+                <p>Today's weather: Sunny with a high of 75°F (24°C) and a low of 55°F (13°C). No precipitation expected.</p>
+                <p><strong>Forecast:</strong></p>
+                <ul>
+                    <li>Tomorrow: Partly cloudy, 72°F</li>
+                    <li>Day after: Rainy, 68°F</li>
+                    <li>Next week: Mostly sunny</li>
+                </ul>
+            </div>
+        `,
+        'news': `
+            <div class="result-item">
+                <h3>📰 Latest News</h3>
+                <p>Stay informed with the latest headlines:</p>
+                <ul>
+                    <li>Technology: New AI developments announced</li>
+                    <li>Science: Mars rover discovers ancient water</li>
+                    <li>Sports: Local team wins championship</li>
+                    <li>Entertainment: New movie releases this week</li>
+                </ul>
+            </div>
+        `,
+        'music': `
+            <div class="result-item">
+                <h3>🎵 Music Information</h3>
+                <p>Music is a universal language that brings people together. Here are some popular genres:</p>
+                <ul>
+                    <li>Pop - Catchy and mainstream</li>
+                    <li>Rock - Energetic and guitar-driven</li>
+                    <li>Hip-Hop - Rhythmic and expressive</li>
+                    <li>Classical - Timeless compositions</li>
+                </ul>
+            </div>
+        `,
+        'sports': `
+            <div class="result-item">
+                <h3>⚽ Sports News</h3>
+                <p>Latest sports updates:</p>
+                <ul>
+                    <li>Soccer: Championship finals this weekend</li>
+                    <li>Basketball: Record-breaking season continues</li>
+                    <li>Tennis: Grand slam tournament underway</li>
+                    <li>Football: Playoffs starting soon</li>
+                </ul>
+            </div>
+        `
+    };
+    
+    // Check for exact matches first
+    if (results[query]) {
+        return results[query];
+    }
+    
+    // Check for partial matches
+    for (const [key, content] of Object.entries(results)) {
+        if (query.includes(key) || key.includes(query)) {
+            return content;
+        }
+    }
+    
+    // Default result for unknown queries
+    return `
+        <div class="result-item">
+            <h3>🔍 Search Results</h3>
+            <p>We found information related to "${query}". Here are some general facts:</p>
+            <ul>
+                <li>This appears to be a search for: ${query}</li>
+                <li>Try searching for cats, dogs, food, games, weather, news, music, or sports</li>
+                <li>More results would be available in a real web browser</li>
+            </ul>
+        </div>
+    `;
 }
 
 // ===== BOOKS APP =====
