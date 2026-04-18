@@ -55,11 +55,18 @@ const APPS = {
         color: '#FF6B6B',
         minWidth: 600,
         minHeight: 500
+    },
+    football: {
+        name: 'Football Throw',
+        icon: '⚽',
+        color: '#228B22',
+        minWidth: 600,
+        minHeight: 400
     }
 };
 
 // Store app installation state
-const installedApps = new Set(['playstore', 'notes', 'game2048', 'musicplayer', 'calculator', 'memory', 'dino', 'books']);
+const installedApps = new Set(['playstore', 'notes', 'game2048', 'musicplayer', 'calculator', 'memory', 'dino', 'books', 'football']);
 
 // Global error handler for better debugging
 window.addEventListener('error', (e) => {
@@ -301,6 +308,11 @@ class WindowManager {
                 }
                 document.removeEventListener('keydown', dinoKeyHandler);
                 break;
+            case 'football':
+                // Clean up football game
+                clearInterval(footballGameState.interval);
+                document.removeEventListener('keydown', footballKeyHandler);
+                break;
             // Add cleanup for other apps if needed
         }
     }
@@ -325,6 +337,8 @@ class WindowManager {
                 return this.getDinoGameContent();
             case 'books':
                 return this.getBooksContent();
+            case 'football':
+                return this.getFootballGameContent();
             default:
                 return '<p>App not implemented</p>';
         }
@@ -486,6 +500,37 @@ class WindowManager {
         `;
     }
 
+    getFootballGameContent() {
+        const highScore = localStorage.getItem('footballHighScore') || '0';
+        return `
+            <div class="game-content">
+                <div class="game-title">Football Throw</div>
+                <div style="text-align: center; margin-bottom: 20px; color: #666; font-size: 14px;">
+                    Press SPACEBAR to throw the football! Hit the targets for points!
+                </div>
+                <div style="text-align: center; margin-bottom: 15px; font-weight: 600;">
+                    High Score: <span id="football-high-score">${highScore}</span>
+                </div>
+                <div id="football-game" class="football-game">
+                    <div class="football-field">
+                        <div id="football-player" class="football-player">🏃‍♂️</div>
+                        <div id="football-ball" class="football-ball">⚽</div>
+                        <div id="football-target-1" class="football-target" style="left: 200px;">🎯</div>
+                        <div id="football-target-2" class="football-target" style="left: 350px;">🎯</div>
+                        <div id="football-target-3" class="football-target" style="left: 500px;">🎯</div>
+                    </div>
+                    <div id="football-score" class="football-score">Score: 0</div>
+                    <div id="football-power" class="football-power">Power: 0%</div>
+                    <div id="football-game-over" class="football-game-over hidden">
+                        <div class="game-over-text">ROUND COMPLETE</div>
+                        <div id="football-final-score" style="font-size: 18px; margin-bottom: 15px;"></div>
+                        <button class="game-button" onclick="restartFootballGame()">Next Round</button>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
     getBooksContent() {
         return `
             <div class="books-content">
@@ -565,6 +610,9 @@ class WindowManager {
                 break;
             case 'books':
                 initBooksApp(contentEl);
+                break;
+            case 'football':
+                initFootballGame();
                 break;
         }
     }
@@ -1213,6 +1261,204 @@ function restartDinoGame() {
 
     // Restart
     initDinoGame();
+}
+
+// ===== FOOTBALL GAME =====
+let footballGameState = {
+    power: 0,
+    powerIncreasing: false,
+    ballThrown: false,
+    ballX: 80,
+    ballY: 30,
+    targets: [],
+    score: 0,
+    round: 1,
+    interval: null
+};
+
+function initFootballGame() {
+    const gameContainer = document.getElementById('football-game');
+    if (!gameContainer) return;
+
+    // Reset game state
+    footballGameState.power = 0;
+    footballGameState.powerIncreasing = false;
+    footballGameState.ballThrown = false;
+    footballGameState.ballX = 80;
+    footballGameState.ballY = 30;
+    footballGameState.score = 0;
+    footballGameState.targets = [200, 350, 500]; // Target positions
+    footballGameState.round = 1;
+
+    // Update displays
+    updateFootballScore();
+    updateFootballPower();
+
+    // Reset ball position
+    const ballEl = document.getElementById('football-ball');
+    if (ballEl) {
+        ballEl.style.left = '80px';
+        ballEl.style.bottom = '30px';
+    }
+
+    // Reset targets
+    resetFootballTargets();
+
+    // Hide game over screen
+    const gameOverEl = document.getElementById('football-game-over');
+    if (gameOverEl) gameOverEl.classList.add('hidden');
+
+    // Remove existing event listeners
+    gameContainer.removeEventListener('keydown', footballKeyHandler);
+    document.removeEventListener('keydown', footballKeyHandler);
+
+    // Add event listeners
+    document.addEventListener('keydown', footballKeyHandler);
+
+    // Start power meter
+    startFootballPowerMeter();
+}
+
+function footballKeyHandler(e) {
+    if (e.code === 'Space') {
+        e.preventDefault();
+        if (!footballGameState.ballThrown) {
+            if (footballGameState.powerIncreasing) {
+                // Release the ball
+                throwFootball();
+            } else {
+                // Start charging power
+                footballGameState.powerIncreasing = true;
+            }
+        }
+    }
+}
+
+function startFootballPowerMeter() {
+    footballGameState.interval = setInterval(() => {
+        if (footballGameState.powerIncreasing && !footballGameState.ballThrown) {
+            footballGameState.power = Math.min(footballGameState.power + 2, 100);
+            updateFootballPower();
+        }
+    }, 50);
+}
+
+function updateFootballPower() {
+    const powerEl = document.getElementById('football-power');
+    if (powerEl) {
+        powerEl.textContent = `Power: ${footballGameState.power}%`;
+    }
+}
+
+function updateFootballScore() {
+    const scoreEl = document.getElementById('football-score');
+    if (scoreEl) {
+        scoreEl.textContent = `Score: ${footballGameState.score}`;
+    }
+}
+
+function throwFootball() {
+    footballGameState.ballThrown = true;
+    footballGameState.powerIncreasing = false;
+
+    const power = footballGameState.power;
+    const ballEl = document.getElementById('football-ball');
+    if (!ballEl) return;
+
+    // Calculate trajectory
+    const angle = 45; // 45 degree angle
+    const velocity = power / 10; // Power affects distance
+    const gravity = 0.5;
+
+    let x = 80;
+    let y = 30;
+    let vx = velocity * Math.cos(angle * Math.PI / 180);
+    let vy = velocity * Math.sin(angle * Math.PI / 180);
+
+    const animateBall = () => {
+        x += vx;
+        y += vy;
+        vy -= gravity;
+
+        ballEl.style.left = x + 'px';
+        ballEl.style.bottom = y + 'px';
+
+        // Check for target hits
+        checkFootballTargets(x, y);
+
+        // Check if ball is out of bounds or hit ground
+        if (y <= 20 || x > 600) {
+            endFootballRound();
+            return;
+        }
+
+        requestAnimationFrame(animateBall);
+    };
+
+    requestAnimationFrame(animateBall);
+}
+
+function checkFootballTargets(ballX, ballY) {
+    const targets = document.querySelectorAll('.football-target');
+    targets.forEach((target, index) => {
+        if (!target.classList.contains('hit')) {
+            const targetRect = target.getBoundingClientRect();
+            const gameRect = document.getElementById('football-game').getBoundingClientRect();
+
+            const targetX = targetRect.left - gameRect.left;
+            const targetY = targetRect.bottom - gameRect.top;
+
+            // Check if ball is near target
+            const distance = Math.sqrt(Math.pow(ballX - targetX, 2) + Math.pow(ballY - (250 - targetY), 2));
+
+            if (distance < 30) {
+                target.classList.add('hit');
+                target.textContent = '💥';
+                footballGameState.score += 10;
+                updateFootballScore();
+            }
+        }
+    });
+}
+
+function resetFootballTargets() {
+    const targets = document.querySelectorAll('.football-target');
+    targets.forEach(target => {
+        target.classList.remove('hit');
+        target.textContent = '🎯';
+    });
+}
+
+function endFootballRound() {
+    clearInterval(footballGameState.interval);
+
+    // Calculate round bonus
+    const targetsHit = document.querySelectorAll('.football-target.hit').length;
+    const roundBonus = targetsHit * 5;
+    footballGameState.score += roundBonus;
+
+    // Update high score
+    const currentHighScore = parseInt(localStorage.getItem('footballHighScore') || '0');
+    if (footballGameState.score > currentHighScore) {
+        localStorage.setItem('footballHighScore', footballGameState.score);
+        const highScoreEl = document.getElementById('football-high-score');
+        if (highScoreEl) highScoreEl.textContent = footballGameState.score;
+    }
+
+    // Show round complete screen
+    const gameOverEl = document.getElementById('football-game-over');
+    if (gameOverEl) {
+        gameOverEl.classList.remove('hidden');
+        const finalScoreEl = document.getElementById('football-final-score');
+        if (finalScoreEl) {
+            finalScoreEl.textContent = `Round ${footballGameState.round} Score: ${footballGameState.score} (Targets: ${targetsHit}/3, Bonus: ${roundBonus})`;
+        }
+    }
+}
+
+function restartFootballGame() {
+    footballGameState.round++;
+    initFootballGame();
 }
 
 // ===== BOOKS APP =====
