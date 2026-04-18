@@ -52,7 +52,7 @@ const APPS = {
 };
 
 // Store app installation state
-const installedApps = new Set(['notes', 'game2048', 'musicplayer', 'calculator', 'memory', 'dino']);
+const installedApps = new Set(['playstore', 'notes', 'game2048', 'musicplayer', 'calculator', 'memory', 'dino']);
 
 // Global error handler for better debugging
 window.addEventListener('error', (e) => {
@@ -499,8 +499,6 @@ function populateAllAppsList() {
     listContainer.innerHTML = '';
 
     for (const [appId, app] of Object.entries(APPS)) {
-        if (appId === 'playstore') continue;
-        
         const tile = document.createElement('div');
         tile.className = 'app-tile';
         tile.onclick = () => {
