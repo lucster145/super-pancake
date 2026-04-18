@@ -41,11 +41,18 @@ const APPS = {
         color: '#FF5722',
         minWidth: 500,
         minHeight: 450
+    },
+    dino: {
+        name: 'Chrome Dino',
+        icon: '🦕',
+        color: '#8B4513',
+        minWidth: 600,
+        minHeight: 300
     }
 };
 
 // Store app installation state
-const installedApps = new Set(['notes', 'game2048', 'musicplayer', 'calculator', 'memory']);
+const installedApps = new Set(['notes', 'game2048', 'musicplayer', 'calculator', 'memory', 'dino']);
 
 // Global error handler for better debugging
 window.addEventListener('error', (e) => {
@@ -286,6 +293,8 @@ class WindowManager {
                 return this.getCalculatorContent();
             case 'memory':
                 return this.getMemoryGameContent();
+            case 'dino':
+                return this.getDinoGameContent();
             default:
                 return '<p>App not implemented</p>';
         }
@@ -419,6 +428,26 @@ class WindowManager {
         `;
     }
 
+    getDinoGameContent() {
+        return `
+            <div class="game-content">
+                <div class="game-title">Chrome Dino</div>
+                <div style="text-align: center; margin-bottom: 20px; color: #666; font-size: 14px;">
+                    Press SPACEBAR or TAP to jump! Avoid the cacti!
+                </div>
+                <div id="dino-game" class="dino-game">
+                    <div id="dino-ground" class="dino-ground"></div>
+                    <div id="dino-player" class="dino-player">🦕</div>
+                    <div id="dino-score" class="dino-score">Score: 0</div>
+                    <div id="dino-game-over" class="dino-game-over hidden">
+                        <div class="game-over-text">GAME OVER</div>
+                        <button class="game-button" onclick="restartDinoGame()">Restart</button>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
     shadeColor(color, amount) {
         let usePound = false;
         if (color[0] === "#") {
@@ -445,6 +474,9 @@ class WindowManager {
                 break;
             case 'memory':
                 initMemoryGame();
+                break;
+            case 'dino':
+                initDinoGame();
                 break;
         }
     }
@@ -833,6 +865,151 @@ window.createNewWindow = function(appId) {
 window.refreshDesktop = function() {
     location.reload();
 };
+
+// ===== DINO GAME =====
+let dinoGameInterval;
+let dinoScore = 0;
+let dinoJumping = false;
+let dinoGameOver = false;
+
+function initDinoGame() {
+    const gameContainer = document.getElementById('dino-game');
+    if (!gameContainer) return;
+
+    // Reset game state
+    dinoScore = 0;
+    dinoJumping = false;
+    dinoGameOver = false;
+
+    // Clear any existing cacti
+    const existingCacti = gameContainer.querySelectorAll('.dino-cactus');
+    existingCacti.forEach(cactus => cactus.remove());
+
+    // Update score display
+    const scoreEl = document.getElementById('dino-score');
+    if (scoreEl) scoreEl.textContent = 'Score: 0';
+
+    // Hide game over screen
+    const gameOverEl = document.getElementById('dino-game-over');
+    if (gameOverEl) gameOverEl.classList.add('hidden');
+
+    // Add event listeners
+    gameContainer.addEventListener('click', dinoJump);
+    document.addEventListener('keydown', dinoKeyHandler);
+
+    // Start game loop
+    dinoGameInterval = setInterval(dinoGameLoop, 50);
+
+    // Spawn first cactus after a delay
+    setTimeout(spawnCactus, 2000);
+}
+
+function dinoJump() {
+    if (dinoGameOver) return;
+
+    const dinoEl = document.getElementById('dino-player');
+    if (!dinoEl || dinoJumping) return;
+
+    dinoJumping = true;
+    dinoEl.classList.add('jumping');
+
+    setTimeout(() => {
+        dinoEl.classList.remove('jumping');
+        dinoJumping = false;
+    }, 600);
+}
+
+function dinoKeyHandler(e) {
+    if (e.code === 'Space') {
+        e.preventDefault();
+        dinoJump();
+    }
+}
+
+function spawnCactus() {
+    if (dinoGameOver) return;
+
+    const gameContainer = document.getElementById('dino-game');
+    if (!gameContainer) return;
+
+    const cactus = document.createElement('div');
+    cactus.className = 'dino-cactus';
+    cactus.textContent = '🌵';
+    cactus.style.right = '-50px';
+
+    gameContainer.appendChild(cactus);
+
+    // Remove cactus after animation
+    setTimeout(() => {
+        if (cactus.parentNode) {
+            cactus.parentNode.removeChild(cactus);
+        }
+    }, 2000);
+
+    // Spawn next cactus
+    const nextSpawnTime = Math.random() * 2000 + 1500; // 1.5-3.5 seconds
+    setTimeout(spawnCactus, nextSpawnTime);
+}
+
+function dinoGameLoop() {
+    if (dinoGameOver) return;
+
+    dinoScore++;
+    const scoreEl = document.getElementById('dino-score');
+    if (scoreEl) scoreEl.textContent = `Score: ${Math.floor(dinoScore / 20)}`; // Slower score increase
+
+    // Check collisions
+    checkCollisions();
+}
+
+function checkCollisions() {
+    const dinoEl = document.getElementById('dino-player');
+    const cacti = document.querySelectorAll('.dino-cactus');
+
+    if (!dinoEl) return;
+
+    const dinoRect = dinoEl.getBoundingClientRect();
+
+    cacti.forEach(cactus => {
+        const cactusRect = cactus.getBoundingClientRect();
+
+        // Simple collision detection
+        if (dinoRect.right > cactusRect.left &&
+            dinoRect.left < cactusRect.right &&
+            dinoRect.bottom > cactusRect.top &&
+            !dinoJumping) {
+            gameOver();
+        }
+    });
+}
+
+function gameOver() {
+    dinoGameOver = true;
+    clearInterval(dinoGameInterval);
+
+    const gameOverEl = document.getElementById('dino-game-over');
+    if (gameOverEl) gameOverEl.classList.remove('hidden');
+
+    // Remove event listeners
+    const gameContainer = document.getElementById('dino-game');
+    if (gameContainer) {
+        gameContainer.removeEventListener('click', dinoJump);
+    }
+    document.removeEventListener('keydown', dinoKeyHandler);
+}
+
+function restartDinoGame() {
+    // Clean up
+    clearInterval(dinoGameInterval);
+    const gameContainer = document.getElementById('dino-game');
+    if (gameContainer) {
+        const existingCacti = gameContainer.querySelectorAll('.dino-cactus');
+        existingCacti.forEach(cactus => cactus.remove());
+    }
+
+    // Restart
+    initDinoGame();
+}
 
 // Initialize
 console.log('Windows 11 Game loaded successfully!');
