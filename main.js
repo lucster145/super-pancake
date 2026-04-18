@@ -1,0 +1,813 @@
+// App definitions with Play Store info
+const APPS = {
+    playstore: {
+        name: 'Play Store',
+        icon: '🎮',
+        color: '#4CAF50',
+        minWidth: 800,
+        minHeight: 600
+    },
+    notes: {
+        name: 'Notes',
+        icon: '📝',
+        color: '#FFB81C',
+        minWidth: 400,
+        minHeight: 300
+    },
+    game2048: {
+        name: '2048 Game',
+        icon: '🎯',
+        color: '#3498DB',
+        minWidth: 500,
+        minHeight: 400
+    },
+    musicplayer: {
+        name: 'Music Player',
+        icon: '🎵',
+        color: '#E91E63',
+        minWidth: 400,
+        minHeight: 350
+    },
+    calculator: {
+        name: 'Calculator',
+        icon: '🧮',
+        color: '#9C27B0',
+        minWidth: 350,
+        minHeight: 400
+    },
+    memory: {
+        name: 'Memory Game',
+        icon: '🧠',
+        color: '#FF5722',
+        minWidth: 500,
+        minHeight: 450
+    }
+};
+
+// Store app installation state
+const installedApps = new Set(['notes', 'game2048', 'musicplayer', 'calculator', 'memory']);
+
+// Window management
+class WindowManager {
+    constructor() {
+        this.windows = [];
+        this.zIndex = 10;
+        this.offsetX = 50;
+        this.offsetY = 50;
+        this.offsetCounter = 0;
+    }
+
+    createWindow(appId) {
+        const app = APPS[appId];
+        if (!app) return null;
+
+        const template = document.getElementById('window-template');
+        const windowEl = template.content.cloneNode(true).firstElementChild;
+        
+        windowEl.dataset.appId = appId;
+        windowEl.style.width = app.minWidth + 'px';
+        windowEl.style.height = app.minHeight + 'px';
+        windowEl.style.left = (this.offsetCounter * this.offsetX) + 'px';
+        windowEl.style.top = (this.offsetCounter * this.offsetY) + 'px';
+        
+        this.offsetCounter = (this.offsetCounter + 1) % 5;
+
+        const titleEl = windowEl.querySelector('.window-title');
+        titleEl.textContent = app.name;
+
+        const contentEl = windowEl.querySelector('.window-content');
+        contentEl.id = `content-${appId}`;
+        contentEl.innerHTML = this.getWindowContent(appId);
+
+        const container = document.getElementById('windows-container');
+        container.appendChild(windowEl);
+
+        // Setup window controls
+        this.setupWindowControls(windowEl);
+        this.makeWindowDraggable(windowEl);
+        this.makeWindowResizable(windowEl);
+        this.focusWindow(windowEl);
+
+        // Initialize app-specific logic
+        this.initializeAppLogic(appId, contentEl);
+
+        this.windows.push(windowEl);
+        
+        // Add to taskbar
+        this.addToTaskbar(appId, windowEl);
+
+        return windowEl;
+    }
+
+    focusWindow(windowEl) {
+        document.querySelectorAll('.window').forEach(w => w.classList.remove('active'));
+        windowEl.classList.add('active');
+        windowEl.style.zIndex = this.zIndex++;
+        
+        const appId = windowEl.dataset.appId;
+        document.querySelectorAll('.taskbar-app-icon').forEach(icon => {
+            if (icon.dataset.appId === appId) {
+                icon.classList.add('active');
+            } else {
+                icon.classList.remove('active');
+            }
+        });
+    }
+
+    setupWindowControls(windowEl) {
+        const minimizeBtn = windowEl.querySelector('.minimize-btn');
+        const maximizeBtn = windowEl.querySelector('.maximize-btn');
+        const closeBtn = windowEl.querySelector('.close-btn');
+        const header = windowEl.querySelector('.window-header');
+
+        minimizeBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            windowEl.style.display = 'none';
+        });
+
+        maximizeBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (windowEl.dataset.maximized === 'true') {
+                windowEl.style.width = windowEl.dataset.originalWidth;
+                windowEl.style.height = windowEl.dataset.originalHeight;
+                windowEl.style.left = windowEl.dataset.originalLeft;
+                windowEl.style.top = windowEl.dataset.originalTop;
+                windowEl.dataset.maximized = 'false';
+            } else {
+                windowEl.dataset.originalWidth = windowEl.style.width;
+                windowEl.data.originalHeight = windowEl.style.height;
+                windowEl.dataset.originalLeft = windowEl.style.left;
+                windowEl.dataset.originalTop = windowEl.style.top;
+                windowEl.style.width = '100%';
+                windowEl.style.height = 'calc(100% - 48px)';
+                windowEl.style.left = '0';
+                windowEl.style.top = '0';
+                windowEl.dataset.maximized = 'true';
+            }
+        });
+
+        closeBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.closeWindow(windowEl);
+        });
+
+        header.addEventListener('mousedown', () => {
+            this.focusWindow(windowEl);
+        });
+    }
+
+    makeWindowDraggable(windowEl) {
+        let isDragging = false;
+        let currentX;
+        let currentY;
+        let initialX;
+        let initialY;
+
+        const header = windowEl.querySelector('.window-header');
+
+        header.addEventListener('mousedown', (e) => {
+            if (e.target.closest('.window-controls')) return;
+            isDragging = true;
+            initialX = e.clientX - windowEl.offsetLeft;
+            initialY = e.clientY - windowEl.offsetTop;
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            currentX = e.clientX - initialX;
+            currentY = e.clientY - initialY;
+            windowEl.style.left = currentX + 'px';
+            windowEl.style.top = currentY + 'px';
+        });
+
+        document.addEventListener('mouseup', () => {
+            isDragging = false;
+        });
+    }
+
+    makeWindowResizable(windowEl) {
+        const content = windowEl.querySelector('.window-content');
+        let isResizing = false;
+        let startX;
+        let startY;
+        let startWidth;
+        let startHeight;
+
+        // Resize from bottom-right corner by using a pseudo-element
+        const resizeHandle = document.createElement('div');
+        resizeHandle.style.cssText = 'position: absolute; width: 15px; height: 15px; right: 0; bottom: 0; cursor: nwse-resize;';
+        windowEl.appendChild(resizeHandle);
+
+        resizeHandle.addEventListener('mousedown', (e) => {
+            isResizing = true;
+            startX = e.clientX;
+            startY = e.clientY;
+            startWidth = windowEl.offsetWidth;
+            startHeight = windowEl.offsetHeight;
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isResizing) return;
+            const newWidth = startWidth + (e.clientX - startX);
+            const newHeight = startHeight + (e.clientY - startY);
+            windowEl.style.width = Math.max(300, newWidth) + 'px';
+            windowEl.style.height = Math.max(200, newHeight) + 'px';
+        });
+
+        document.addEventListener('mouseup', () => {
+            isResizing = false;
+        });
+    }
+
+    addToTaskbar(appId, windowEl) {
+        const taskbarApps = document.getElementById('taskbar-apps');
+        
+        // Check if already in taskbar
+        if (document.querySelector(`[data-app-id="${appId}"]`)) {
+            return;
+        }
+
+        const app = APPS[appId];
+        const icon = document.createElement('div');
+        icon.className = 'taskbar-app-icon';
+        icon.dataset.appId = appId;
+        icon.textContent = app.icon;
+
+        icon.addEventListener('click', () => {
+            if (windowEl.style.display === 'none') {
+                windowEl.style.display = 'flex';
+            }
+            this.focusWindow(windowEl);
+        });
+
+        taskbarApps.appendChild(icon);
+    }
+
+    closeWindow(windowEl) {
+        const appId = windowEl.dataset.appId;
+        windowEl.remove();
+        this.windows = this.windows.filter(w => w !== windowEl);
+        
+        const taskbarIcon = document.querySelector(`[data-app-id="${appId}"]`);
+        if (taskbarIcon) {
+            taskbarIcon.remove();
+        }
+    }
+
+    getWindowContent(appId) {
+        const app = APPS[appId];
+        
+        switch(appId) {
+            case 'playstore':
+                return this.getPlayStoreContent();
+            case 'notes':
+                return this.getNotesContent();
+            case 'game2048':
+                return this.getGame2048Content();
+            case 'musicplayer':
+                return this.getMusicPlayerContent();
+            case 'calculator':
+                return this.getCalculatorContent();
+            case 'memory':
+                return this.getMemoryGameContent();
+            default:
+                return '<p>App not implemented</p>';
+        }
+    }
+
+    getPlayStoreContent() {
+        let html = '<div class="play-store-content">';
+        
+        for (const [appId, app] of Object.entries(APPS)) {
+            if (appId === 'playstore') continue;
+            
+            const isInstalled = installedApps.has(appId);
+            const btnText = isInstalled ? 'OPEN' : 'INSTALL';
+            const btnClass = isInstalled ? 'installed' : '';
+            
+            html += `
+                <div class="app-card" style="background: linear-gradient(135deg, ${app.color} 0%, ${this.shadeColor(app.color, -20)} 100%);">
+                    <div class="app-card-icon">${app.icon}</div>
+                    <div class="app-card-name">${app.name}</div>
+                    <div class="app-card-desc">Amazing app</div>
+                    <button class="app-card-btn ${btnClass}" onclick="installOrOpenApp('${appId}')">${btnText}</button>
+                </div>
+            `;
+        }
+        
+        html += '</div>';
+        return html;
+    }
+
+    getNotesContent() {
+        return `
+            <div class="notes-content">
+                <div class="notes-header">
+                    <button class="game-button" onclick="addNewNote()">+ New Note</button>
+                </div>
+                <div class="notes-list" id="notes-list">
+                    <div class="note-item" onclick="selectNote(this)">Click to add note</div>
+                </div>
+                <textarea class="note-text" id="note-text" placeholder="Write your note here..."></textarea>
+            </div>
+        `;
+    }
+
+    getGame2048Content() {
+        return `
+            <div class="game-content">
+                <div class="game-title">2048</div>
+                <div class="game-board">
+                    <div id="game-board" class="game-grid"></div>
+                    <button class="game-button" onclick="initGame2048()">New Game</button>
+                    <div style="margin-top: 20px; font-size: 18px; font-weight: 600;">
+                        Score: <span id="game-score">0</span>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    getMusicPlayerContent() {
+        return `
+            <div class="media-player">
+                <div class="now-playing">
+                    <div class="album-art" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">🎵</div>
+                    <div style="font-size: 18px; font-weight: 600; margin-bottom: 8px;">Now Playing</div>
+                    <div style="font-size: 14px; color: #666;">Summer Hit 2024</div>
+                    <div style="font-size: 12px; color: #999; margin-top: 8px;">Artist Name</div>
+                </div>
+                <input type="range" min="0" max="100" value="50" style="width: 80%; margin: 20px 0;">
+                <div style="font-size: 12px; color: #999; margin-bottom: 16px;">2:35 / 4:20</div>
+                <div class="player-controls">
+                    <button class="player-btn" title="Previous">⏮</button>
+                    <button class="player-btn" title="Play/Pause" onclick="toggleMusicPlay(this)">▶</button>
+                    <button class="player-btn" title="Next">⏭</button>
+                </div>
+                <div style="margin-top: 20px; font-size: 14px; font-weight: 600;">Playlist</div>
+                <div style="margin-top: 8px; font-size: 12px; color: #666;">
+                    <div>• Summer Hit 2024</div>
+                    <div>• Chill Vibes</div>
+                    <div>• Night Drive</div>
+                </div>
+            </div>
+        `;
+    }
+
+    getCalculatorContent() {
+        const buttons = [
+            ['7', '8', '9', '÷'],
+            ['4', '5', '6', '×'],
+            ['1', '2', '3', '−'],
+            ['0', '.', '=', '+']
+        ];
+
+        let html = `
+            <div class="calculator">
+                <div class="calc-display" id="calc-display">0</div>
+                <div style="margin-bottom: 12px;">
+                    <button class="calc-btn clear" onclick="clearCalc()">CLEAR</button>
+                </div>
+                <div class="calc-grid">
+        `;
+
+        for (const row of buttons) {
+            for (const btn of row) {
+                let classAdd = '';
+                if (['+', '−', '×', '÷'].includes(btn)) {
+                    classAdd = 'operator';
+                } else if (btn === '=') {
+                    classAdd = 'equals';
+                }
+                html += `<button class="calc-btn ${classAdd}" onclick="handleCalcClick('${btn}')">${btn}</button>`;
+            }
+        }
+
+        html += `
+                </div>
+            </div>
+        `;
+        return html;
+    }
+
+    getMemoryGameContent() {
+        return `
+            <div class="game-content">
+                <div class="game-title">Memory Game</div>
+                <button class="game-button" onclick="initMemoryGame()">New Game</button>
+                <div id="memory-board" class="game-grid" style="grid-template-columns: repeat(4, 60px); margin-top: 20px;"></div>
+                <div style="margin-top: 20px; font-size: 18px; font-weight: 600;">
+                    Matches: <span id="memory-score">0</span> / 8
+                </div>
+            </div>
+        `;
+    }
+
+    shadeColor(color, amount) {
+        let usePound = false;
+        if (color[0] === "#") {
+            color = color.slice(1);
+            usePound = true;
+        }
+        let num = parseInt(color, 16);
+        let r = Math.max(0, Math.min(255, (num >> 16) + amount));
+        let g = Math.max(0, Math.min(255, (num >> 8 & 0x00FF) + amount));
+        let b = Math.max(0, Math.min(255, (num & 0x0000FF) + amount));
+        return (usePound ? "#" : "") + (0x1000000 + (r << 16) + (g << 8) + b).toString(16).slice(1);
+    }
+
+    initializeAppLogic(appId, contentEl) {
+        switch(appId) {
+            case 'notes':
+                initNotesApp(contentEl);
+                break;
+            case 'game2048':
+                initGame2048();
+                break;
+            case 'calculator':
+                initCalculator();
+                break;
+            case 'memory':
+                initMemoryGame();
+                break;
+        }
+    }
+}
+
+// Global window manager
+const windowManager = new WindowManager();
+
+// Start menu toggle
+function toggleStartMenu() {
+    const menu = document.getElementById('start-menu');
+    menu.classList.toggle('hidden');
+    if (!menu.classList.contains('hidden')) {
+        populateAllAppsList();
+    }
+}
+
+function populateAllAppsList() {
+    const listContainer = document.getElementById('all-apps-list');
+    listContainer.innerHTML = '';
+
+    for (const [appId, app] of Object.entries(APPS)) {
+        if (appId === 'playstore') continue;
+        
+        const tile = document.createElement('div');
+        tile.className = 'app-tile';
+        tile.onclick = () => {
+            openApp(appId);
+            toggleStartMenu();
+        };
+
+        tile.innerHTML = `
+            <div class="app-tile-icon" style="background: ${app.color};">${app.icon}</div>
+            <div class="app-tile-name">${app.name}</div>
+        `;
+
+        listContainer.appendChild(tile);
+    }
+}
+
+// App launching
+function openApp(appId) {
+    const existingWindow = Array.from(windowManager.windows).find(w => w.dataset.appId === appId);
+    if (existingWindow) {
+        windowManager.focusWindow(existingWindow);
+        return;
+    }
+    windowManager.createWindow(appId);
+}
+
+function installOrOpenApp(appId) {
+    if (!installedApps.has(appId)) {
+        installedApps.add(appId);
+        const playStoreWindow = windowManager.windows.find(w => w.dataset.appId === 'playstore');
+        if (playStoreWindow) {
+            playStoreWindow.querySelector('.window-content').innerHTML = windowManager.getPlayStoreContent();
+        }
+    } else {
+        openApp(appId);
+        // Close play store window
+        let playStoreWin = windowManager.windows.find(w => w.dataset.appId === 'playstore');
+        if (playStoreWin) {
+            windowManager.focusWindow(playStoreWin);
+        }
+    }
+}
+
+// Desktop context menu
+document.getElementById('desktop').addEventListener('contextmenu', (e) => {
+    if (e.target.closest('.window') || e.target.closest('.desktop-icon') || e.target.closest('.taskbar')) {
+        return;
+    }
+    e.preventDefault();
+    const menu = document.getElementById('context-menu');
+    menu.style.left = e.clientX + 'px';
+    menu.style.top = e.clientY + 'px';
+    menu.classList.remove('hidden');
+});
+
+document.addEventListener('click', (e) => {
+    if (!e.target.closest('.context-menu')) {
+        document.getElementById('context-menu').classList.add('hidden');
+    }
+});
+
+// Desktop icon click
+document.querySelectorAll('.desktop-icon').forEach(icon => {
+    icon.addEventListener('click', () => {
+        const appId = icon.dataset.app;
+        openApp(appId);
+    });
+});
+
+// Start button
+document.getElementById('start-btn').addEventListener('click', toggleStartMenu);
+
+// Clock update
+function updateClock() {
+    const now = new Date();
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    document.getElementById('clock').textContent = `${hours}:${minutes}`;
+}
+
+setInterval(updateClock, 1000);
+updateClock();
+
+// ===== NOTES APP =====
+function initNotesApp(contentEl) {
+    const notesList = contentEl.querySelector('#notes-list');
+    const noteText = contentEl.querySelector('#note-text');
+    let currentNote = null;
+    const notes = JSON.parse(localStorage.getItem('notes')) || [];
+
+    function displayNotes() {
+        notesList.innerHTML = '';
+        if (notes.length === 0) {
+            notesList.innerHTML = '<div class="note-item" onclick="selectNote(this)">Click to add note</div>';
+            return;
+        }
+        notes.forEach((note, idx) => {
+            const item = document.createElement('div');
+            item.className = 'note-item';
+            item.textContent = note.title || 'Untitled';
+            item.onclick = () => {
+                selectNoteItem(item, idx);
+            };
+            notesList.appendChild(item);
+        });
+    }
+
+    window.selectNoteItem = (el, idx) => {
+        document.querySelectorAll('.note-item').forEach(n => n.classList.remove('selected'));
+        el.classList.add('selected');
+        currentNote = idx;
+        noteText.value = notes[idx].content || '';
+    };
+
+    window.addNewNote = () => {
+        notes.push({ title: 'New Note', content: '' });
+        localStorage.setItem('notes', JSON.stringify(notes));
+        displayNotes();
+        currentNote = notes.length - 1;
+        if (notes.length > 0) {
+            const items = document.querySelectorAll('.note-item');
+            items[items.length - 1].click();
+        }
+    };
+
+    window.selectNote = function(el) {
+        if (el.textContent === 'Click to add note') {
+            window.addNewNote();
+        }
+    };
+
+    noteText.addEventListener('change', () => {
+        if (currentNote !== null) {
+            notes[currentNote].content = noteText.value;
+            localStorage.setItem('notes', JSON.stringify(notes));
+        }
+    });
+
+    displayNotes();
+}
+
+// ===== 2048 GAME =====
+function initGame2048() {
+    const board = document.getElementById('game-board');
+    if (!board) return;
+    
+    board.innerHTML = '';
+    const gameState = {
+        tiles: Array(16).fill(0),
+        score: 0
+    };
+
+    function spawnTile() {
+        const empty = gameState.tiles.map((t, i) => t === 0 ? i : null).filter(i => i !== null);
+        if (empty.length > 0) {
+            gameState.tiles[empty[Math.floor(Math.random() * empty.length)]] = Math.random() > 0.9 ? 4 : 2;
+        }
+    }
+
+    function render() {
+        board.innerHTML = '';
+        gameState.tiles.forEach(tile => {
+            const el = document.createElement('div');
+            el.className = 'game-tile';
+            el.textContent = tile === 0 ? '' : tile;
+            el.style.background = tile ? `hsl(${Math.log2(tile) * 30}, 70%, 60%)` : '#ddd';
+            el.style.color = tile > 4 ? 'white' : '#333';
+            board.appendChild(el);
+        });
+        document.getElementById('game-score').textContent = gameState.score;
+    }
+
+    spawnTile();
+    spawnTile();
+    render();
+
+    window.addEventListener('keydown', (e) => {
+        if (!['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) return;
+        e.preventDefault();
+
+        const move = (tiles, left) => {
+            const process = (row) => {
+                row = row.filter(v => v);
+                for (let i = 0; i < row.length - 1; i++) {
+                    if (row[i] === row[i + 1]) {
+                        row[i] *= 2;
+                        gameState.score += row[i];
+                        row.splice(i + 1, 1);
+                    }
+                }
+                return row.concat(Array(4 - row.length).fill(0));
+            };
+
+            let changed = false;
+            if (left) {
+                for (let i = 0; i < 4; i++) {
+                    const newRow = process(tiles.slice(i * 4, i * 4 + 4));
+                    if (JSON.stringify(newRow) !== JSON.stringify(tiles.slice(i * 4, i * 4 + 4))) changed = true;
+                    tiles.splice(i * 4, 4, ...newRow);
+                }
+            }
+            return changed;
+        };
+
+        const oldState = JSON.stringify(gameState.tiles);
+        if (e.key === 'ArrowLeft') move(gameState.tiles, true);
+        else if (e.key === 'ArrowRight') {
+            gameState.tiles.reverse();
+            move(gameState.tiles, true);
+            gameState.tiles.reverse();
+        } else if (e.key === 'ArrowUp') {
+            const transposed = [];
+            for (let i = 0; i < 4; i++) {
+                for (let j = 0; j < 4; j++) {
+                    transposed.push(gameState.tiles[j * 4 + i]);
+                }
+            }
+            move(transposed, true);
+            for (let i = 0; i < 4; i++) {
+                for (let j = 0; j < 4; j++) {
+                    gameState.tiles[j * 4 + i] = transposed[i * 4 + j];
+                }
+            }
+        } else if (e.key === 'ArrowDown') {
+            const transposed = [];
+            for (let i = 0; i < 4; i++) {
+                for (let j = 0; j < 4; j++) {
+                    transposed.push(gameState.tiles[j * 4 + i]);
+                }
+            }
+            transposed.reverse();
+            move(transposed, true);
+            transposed.reverse();
+            for (let i = 0; i < 4; i++) {
+                for (let j = 0; j < 4; j++) {
+                    gameState.tiles[j * 4 + i] = transposed[i * 4 + j];
+                }
+            }
+        }
+
+        if (JSON.stringify(gameState.tiles) !== oldState) {
+            spawnTile();
+        }
+        render();
+    });
+}
+
+// ===== CALCULATOR =====
+function initCalculator() {
+    window.calcState = {
+        display: '0',
+        current: '',
+        operator: null,
+        previous: ''
+    };
+}
+
+window.handleCalcClick = function(btn) {
+    const display = document.getElementById('calc-display');
+    if (!display) return;
+
+    if (['+', '−', '×', '÷'].includes(btn)) {
+        if (window.calcState.current) {
+            window.calcState.previous = window.calcState.current;
+            window.calcState.operator = btn;
+            window.calcState.current = '';
+        }
+    } else if (btn === '=') {
+        if (window.calcState.operator && window.calcState.previous && window.calcState.current) {
+            let result;
+            const prev = parseFloat(window.calcState.previous);
+            const curr = parseFloat(window.calcState.current);
+            switch(window.calcState.operator) {
+                case '+': result = prev + curr; break;
+                case '−': result = prev - curr; break;
+                case '×': result = prev * curr; break;
+                case '÷': result = prev / curr; break;
+            }
+            window.calcState.current = result.toString();
+            window.calcState.operator = null;
+            window.calcState.previous = '';
+        }
+    } else if (btn === '.') {
+        if (!window.calcState.current.includes('.')) {
+            window.calcState.current += btn;
+        }
+    } else {
+        window.calcState.current += btn;
+    }
+
+    display.textContent = window.calcState.current || window.calcState.display;
+};
+
+window.clearCalc = function() {
+    window.calcState = { display: '0', current: '', operator: null, previous: '' };
+    const display = document.getElementById('calc-display');
+    if (display) display.textContent = '0';
+};
+
+// ===== MEMORY GAME =====
+function initMemoryGame() {
+    const board = document.getElementById('memory-board');
+    if (!board) return;
+
+    board.innerHTML = '';
+    const cards = ['🎮', '🎯', '🎲', '🎪', '🎨', '🎭', '🎬', '🎤'].flatMap(emoji => [emoji, emoji]);
+    const shuffled = cards.sort(() => Math.random() - 0.5);
+    
+    let revealed = [];
+    let matched = 0;
+
+    shuffled.forEach((card, idx) => {
+        const tile = document.createElement('div');
+        tile.className = 'game-tile';
+        tile.dataset.value = card;
+        tile.dataset.index = idx;
+        tile.textContent = '?';
+        tile.onclick = () => revealCard(tile);
+        board.appendChild(tile);
+    });
+
+    window.revealCard = function(tile) {
+        if (tile.classList.contains('matched') || revealed.includes(tile)) return;
+        
+        tile.textContent = tile.dataset.value;
+        revealed.push(tile);
+
+        if (revealed.length === 2) {
+            if (revealed[0].dataset.value === revealed[1].dataset.value) {
+                revealed.forEach(t => t.classList.add('matched'));
+                matched++;
+                document.getElementById('memory-score').textContent = matched;
+            } else {
+                setTimeout(() => {
+                    revealed.forEach(t => t.textContent = '?');
+                    revealed = [];
+                }, 600);
+            }
+        }
+    };
+}
+
+// Music player toggle
+window.toggleMusicPlay = function(btn) {
+    btn.textContent = btn.textContent === '▶' ? '⏸' : '▶';
+};
+
+window.createNewWindow = function(appId) {
+    toggleStartMenu();
+    openApp(appId);
+};
+
+window.refreshDesktop = function() {
+    location.reload();
+};
+
+// Initialize
+console.log('Windows 11 Game loaded successfully!');

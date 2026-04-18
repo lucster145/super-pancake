@@ -1,0 +1,666 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, html {
+    width: 100%;
+    height: 100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    overflow: hidden;
+}
+
+#desktop {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Wallpaper */
+.wallpaper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #0078d4 0%, #1084d7 50%, #1f51b6 100%);
+    z-index: 0;
+}
+
+/* Desktop Icons */
+.desktop-icons {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 2;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 60px;
+}
+
+.desktop-icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 80px;
+    cursor: pointer;
+    user-select: none;
+    padding: 8px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.desktop-icon:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.desktop-icon img {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 8px;
+}
+
+.desktop-icon p {
+    color: white;
+    font-size: 12px;
+    text-align: center;
+    word-wrap: break-word;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Windows Container */
+#windows-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 3;
+}
+
+/* Window Styles */
+.window {
+    position: absolute;
+    background: #f3f3f3;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    z-index: 10;
+    min-width: 300px;
+    min-height: 200px;
+}
+
+.window.active {
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+    z-index: 999;
+}
+
+.window-header {
+    background: linear-gradient(to right, #f3f3f3, #ebebeb);
+    border-bottom: 1px solid #d0d0d0;
+    padding: 12px;
+    border-radius: 8px 8px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: move;
+    user-select: none;
+}
+
+.window-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+}
+
+.window-controls {
+    display: flex;
+    gap: 8px;
+}
+
+.window-controls button {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 16px;
+    color: #333;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.window-controls button:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.close-btn:hover {
+    background-color: #fe4f56;
+    color: white;
+}
+
+.window-content {
+    flex: 1;
+    padding: 16px;
+    overflow: auto;
+    background: white;
+    border-radius: 0 0 8px 8px;
+}
+
+/* Taskbar */
+.taskbar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 48px;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    gap: 12px;
+    color: white;
+}
+
+.taskbar-start {
+    flex-shrink: 0;
+}
+
+.start-btn {
+    width: 40px;
+    height: 40px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+}
+
+.start-btn:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.taskbar-apps {
+    display: flex;
+    gap: 8px;
+    flex: 1;
+    align-items: center;
+}
+
+.taskbar-app-icon {
+    width: 36px;
+    height: 36px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    transition: all 0.2s;
+}
+
+.taskbar-app-icon:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.taskbar-app-icon.active {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+.taskbar-end {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.system-tray {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-left: auto;
+    font-size: 12px;
+}
+
+/* Start Menu */
+.start-menu {
+    position: absolute;
+    bottom: 60px;
+    left: 12px;
+    width: 400px;
+    max-height: 600px;
+    background: rgba(43, 43, 43, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    z-index: 2000;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    color: white;
+}
+
+.start-menu.hidden {
+    display: none;
+}
+
+.start-menu-header {
+    padding: 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.start-menu-header h2 {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.start-menu-header .close-btn {
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+}
+
+.all-apps-list {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    padding: 12px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.app-tile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 12px;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.2s;
+}
+
+.app-tile:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: scale(1.05);
+}
+
+.app-tile-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+}
+
+.app-tile-name {
+    font-size: 12px;
+    text-align: center;
+    word-break: break-word;
+    max-width: 70px;
+}
+
+/* Context Menu */
+.context-menu {
+    position: absolute;
+    background: rgba(43, 43, 43, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    z-index: 2001;
+    min-width: 200px;
+    overflow: hidden;
+}
+
+.context-menu.hidden {
+    display: none;
+}
+
+.context-item {
+    padding: 10px 16px;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.context-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.3);
+}
+
+/* App-specific content styling */
+.play-store-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 16px;
+    padding: 16px;
+}
+
+.app-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 8px;
+    padding: 16px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-align: center;
+}
+
+.app-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.app-card-icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+}
+
+.app-card-name {
+    font-weight: 600;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.app-card-desc {
+    font-size: 12px;
+    opacity: 0.9;
+    margin-bottom: 12px;
+}
+
+.app-card-btn {
+    background: white;
+    color: #667eea;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 12px;
+    transition: all 0.2s;
+}
+
+.app-card-btn:hover {
+    background: #f0f0f0;
+}
+
+.app-card-btn.installed {
+    background: rgba(255, 255, 255, 0.3);
+    color: white;
+}
+
+/* Notes App */
+.notes-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.notes-header {
+    padding: 12px;
+    border-bottom: 1px solid #e0e0e0;
+    background: #f9f9f9;
+}
+
+.notes-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px;
+}
+
+.note-item {
+    padding: 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.note-item:hover {
+    background: #f5f5f5;
+    border-color: #0078d4;
+}
+
+.note-item.selected {
+    background: #e7f3ff;
+    border-color: #0078d4;
+}
+
+.note-text {
+    padding: 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    resize: vertical;
+    font-family: 'Segoe UI', sans-serif;
+    min-height: 100px;
+    font-size: 14px;
+}
+
+/* Game apps content */
+.game-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    text-align: center;
+}
+
+.game-title {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: #333;
+}
+
+.game-board {
+    margin: 20px 0;
+}
+
+.game-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 60px);
+    gap: 10px;
+    margin: 20px auto;
+}
+
+.game-tile {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    user-select: none;
+    transition: all 0.2s;
+}
+
+.game-tile:hover {
+    transform: scale(1.05);
+}
+
+.game-tile.matched {
+    opacity: 0.3;
+    pointer-events: none;
+}
+
+.game-button {
+    background: #0078d4;
+    color: white;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    margin: 10px;
+    transition: all 0.2s;
+}
+
+.game-button:hover {
+    background: #106ebe;
+}
+
+/* Media player */
+.media-player {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.now-playing {
+    text-align: center;
+}
+
+.album-art {
+    width: 200px;
+    height: 200px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 64px;
+}
+
+.player-controls {
+    display: flex;
+    gap: 12px;
+}
+
+.player-btn {
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 50%;
+    background: #0078d4;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.player-btn:hover {
+    background: #106ebe;
+    transform: scale(1.1);
+}
+
+/* Calculator */
+.calculator {
+    max-width: 300px;
+    margin: auto;
+}
+
+.calc-display {
+    background: #333;
+    color: white;
+    padding: 16px;
+    border-radius: 4px;
+    text-align: right;
+    font-size: 24px;
+    margin-bottom: 12px;
+    font-weight: bold;
+    min-height: 40px;
+}
+
+.calc-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+}
+
+.calc-btn {
+    padding: 16px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    background: #e0e0e0;
+    transition: all 0.2s;
+}
+
+.calc-btn:hover {
+    background: #d0d0d0;
+}
+
+.calc-btn.operator {
+    background: #0078d4;
+    color: white;
+}
+
+.calc-btn.operator:hover {
+    background: #106ebe;
+}
+
+.calc-btn.equals {
+    background: #4caf50;
+    color: white;
+    grid-column: span 2;
+}
+
+.calc-btn.equals:hover {
+    background: #45a049;
+}
+
+.calc-btn.clear {
+    background: #ff6b6b;
+    color: white;
+    grid-column: span 2;
+}
+
+.calc-btn.clear:hover {
+    background: #ee5a52;
+}
