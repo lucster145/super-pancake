@@ -227,25 +227,22 @@ body, html {
     bottom: 20px;
     left: 50px;
     font-size: 40px;
-    transition: bottom 0.3s ease;
+    transition: bottom 0.05s linear;
     z-index: 10;
+    user-select: none;
 }
 
 .dino-player.jumping {
-    bottom: 80px;
+    bottom: 90px;
 }
 
 .dino-cactus {
     position: absolute;
     bottom: 20px;
     font-size: 30px;
-    animation: moveCactus 2s linear infinite;
     z-index: 5;
+    right: -10%;
 }
-
-@keyframes moveCactus {
-    from { right: -50px; }
-    to { right: 100%; }
 }
 
 .dino-score {

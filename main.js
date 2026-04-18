@@ -867,23 +867,29 @@ window.refreshDesktop = function() {
 };
 
 // ===== DINO GAME =====
-let dinoGameInterval;
-let dinoScore = 0;
-let dinoJumping = false;
-let dinoGameOver = false;
+let dinoGameState = {
+    interval: null,
+    spawnTimeout: null,
+    score: 0,
+    jumping: false,
+    gameOver: false
+};
 
 function initDinoGame() {
     const gameContainer = document.getElementById('dino-game');
     if (!gameContainer) return;
 
     // Reset game state
-    dinoScore = 0;
-    dinoJumping = false;
-    dinoGameOver = false;
+    dinoGameState.score = 0;
+    dinoGameState.jumping = false;
+    dinoGameState.gameOver = false;
 
     // Clear any existing cacti
     const existingCacti = gameContainer.querySelectorAll('.dino-cactus');
     existingCacti.forEach(cactus => cactus.remove());
+    
+    clearInterval(dinoGameState.interval);
+    if (dinoGameState.spawnTimeout) clearTimeout(dinoGameState.spawnTimeout);
 
     // Update score display
     const scoreEl = document.getElementById('dino-score');
@@ -893,41 +899,46 @@ function initDinoGame() {
     const gameOverEl = document.getElementById('dino-game-over');
     if (gameOverEl) gameOverEl.classList.add('hidden');
 
+    // Reset dino position
+    const dinoEl = document.getElementById('dino-player');
+    if (dinoEl) {
+        dinoEl.classList.remove('jumping');
+        dinoEl.style.bottom = '20px';
+    }
+
     // Add event listeners
-    gameContainer.addEventListener('click', dinoJump);
-    document.addEventListener('keydown', dinoKeyHandler);
+    gameContainer.addEventListener('click', () => dinoJump());
+    document.addEventListener('keydown', (e) => {
+        if (e.code === 'Space' || e.code === 'ArrowUp') {
+            e.preventDefault();
+            dinoJump();
+        }
+    });
 
     // Start game loop
-    dinoGameInterval = setInterval(dinoGameLoop, 50);
+    dinoGameState.interval = setInterval(dinoGameLoop, 30);
 
     // Spawn first cactus after a delay
-    setTimeout(spawnCactus, 2000);
+    dinoGameState.spawnTimeout = setTimeout(spawnCactus, 2000);
 }
 
 function dinoJump() {
-    if (dinoGameOver) return;
+    if (dinoGameState.gameOver || dinoGameState.jumping) return;
 
     const dinoEl = document.getElementById('dino-player');
-    if (!dinoEl || dinoJumping) return;
+    if (!dinoEl) return;
 
-    dinoJumping = true;
+    dinoGameState.jumping = true;
     dinoEl.classList.add('jumping');
 
     setTimeout(() => {
         dinoEl.classList.remove('jumping');
-        dinoJumping = false;
-    }, 600);
-}
-
-function dinoKeyHandler(e) {
-    if (e.code === 'Space') {
-        e.preventDefault();
-        dinoJump();
-    }
+        dinoGameState.jumping = false;
+    }, 500);
 }
 
 function spawnCactus() {
-    if (dinoGameOver) return;
+    if (dinoGameState.gameOver) return;
 
     const gameContainer = document.getElementById('dino-game');
     if (!gameContainer) return;
@@ -935,30 +946,39 @@ function spawnCactus() {
     const cactus = document.createElement('div');
     cactus.className = 'dino-cactus';
     cactus.textContent = '🌵';
-    cactus.style.right = '-50px';
+    cactus.style.right = '-10%';
 
     gameContainer.appendChild(cactus);
 
-    // Remove cactus after animation
-    setTimeout(() => {
-        if (cactus.parentNode) {
-            cactus.parentNode.removeChild(cactus);
+    // Animate cactus
+    let position = -10;
+    const moveInterval = setInterval(() => {
+        if (!gameContainer.contains(cactus)) {
+            clearInterval(moveInterval);
+            return;
         }
-    }, 2000);
+
+        position += 1.5;
+        cactus.style.right = position + '%';
+
+        if (position > 110) {
+            clearInterval(moveInterval);
+            if (cactus.parentNode) cactus.parentNode.removeChild(cactus);
+        }
+    }, 20);
 
     // Spawn next cactus
-    const nextSpawnTime = Math.random() * 2000 + 1500; // 1.5-3.5 seconds
-    setTimeout(spawnCactus, nextSpawnTime);
+    const nextSpawnTime = Math.random() * 1500 + 1000;
+    dinoGameState.spawnTimeout = setTimeout(spawnCactus, nextSpawnTime);
 }
 
 function dinoGameLoop() {
-    if (dinoGameOver) return;
+    if (dinoGameState.gameOver) return;
 
-    dinoScore++;
+    dinoGameState.score++;
     const scoreEl = document.getElementById('dino-score');
-    if (scoreEl) scoreEl.textContent = `Score: ${Math.floor(dinoScore / 20)}`; // Slower score increase
+    if (scoreEl) scoreEl.textContent = `Score: ${Math.floor(dinoGameState.score / 10)}`;
 
-    // Check collisions
     checkCollisions();
 }
 
@@ -966,36 +986,28 @@ function checkCollisions() {
     const dinoEl = document.getElementById('dino-player');
     const cacti = document.querySelectorAll('.dino-cactus');
 
-    if (!dinoEl) return;
+    if (!dinoEl || dinoGameState.jumping) return;
 
     const dinoRect = dinoEl.getBoundingClientRect();
 
     cacti.forEach(cactus => {
         const cactusRect = cactus.getBoundingClientRect();
 
-        // Simple collision detection
-        if (dinoRect.right > cactusRect.left &&
-            dinoRect.left < cactusRect.right &&
-            dinoRect.bottom > cactusRect.top &&
-            !dinoJumping) {
-            gameOver();
+        if (dinoRect.right > cactusRect.left + 5 &&
+            dinoRect.left < cactusRect.right - 5 &&
+            dinoRect.bottom > cactusRect.top) {
+            endDinoGame();
         }
     });
 }
 
-function gameOver() {
-    dinoGameOver = true;
-    clearInterval(dinoGameInterval);
+function endDinoGame() {
+    dinoGameState.gameOver = true;
+    clearInterval(dinoGameState.interval);
+    if (dinoGameState.spawnTimeout) clearTimeout(dinoGameState.spawnTimeout);
 
     const gameOverEl = document.getElementById('dino-game-over');
     if (gameOverEl) gameOverEl.classList.remove('hidden');
-
-    // Remove event listeners
-    const gameContainer = document.getElementById('dino-game');
-    if (gameContainer) {
-        gameContainer.removeEventListener('click', dinoJump);
-    }
-    document.removeEventListener('keydown', dinoKeyHandler);
 }
 
 function restartDinoGame() {
