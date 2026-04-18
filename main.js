@@ -57,7 +57,7 @@ const APPS = {
         minHeight: 500
     },
     football: {
-        name: 'Football Throw',
+        name: 'PlayBall',
         icon: '⚽',
         color: '#228B22',
         minWidth: 600,
@@ -522,9 +522,9 @@ class WindowManager {
         const highScore = localStorage.getItem('footballHighScore') || '0';
         return `
             <div class="game-content">
-                <div class="game-title">Football Throw</div>
+                <div class="game-title">PlayBall</div>
                 <div style="text-align: center; margin-bottom: 20px; color: #666; font-size: 14px;">
-                    Press SPACEBAR to throw the football! Hit the targets for points!
+                    Press SPACEBAR to charge and throw the ball! Hit the targets for points!
                 </div>
                 <div style="text-align: center; margin-bottom: 15px; font-weight: 600;">
                     High Score: <span id="football-high-score">${highScore}</span>
@@ -1199,7 +1199,7 @@ function initDinoGame() {
     existingCacti.forEach(cactus => cactus.remove());
 
     // Clear any existing timers
-    clearInterval(dinoGameState.interval);
+    cancelAnimationFrame(dinoGameState.interval);
     if (dinoGameState.spawnTimeout) clearTimeout(dinoGameState.spawnTimeout);
 
     // Update score display
