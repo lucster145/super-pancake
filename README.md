@@ -12,7 +12,7 @@ A fun web-based simulation of the Windows 11 desktop environment with a built-in
   - 🧮 Calculator - Basic calculator
   - 🧠 Memory Game - Card matching game
   - **🦕 Chrome Dino Game** - Jump over cacti and beat your high score!
-  - **📚 Books Library** - Read classic children's books and adventure stories
+  - **📚 Books Library** - Read original adventure stories for kids (Crystal Kingdom, Space Explorer's Quest, Mystery of Whispering Woods, The Rainbow Dragon's Secret, Code Breaker Academy, Underwater Secrets)
 - **Window Management**: Drag, resize, minimize, maximize, and close windows
 - **Desktop Icons**: Clickable app shortcuts
 - **Right-click Context Menu**: Quick actions

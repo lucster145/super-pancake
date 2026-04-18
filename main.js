@@ -1106,45 +1106,45 @@ function restartDinoGame() {
 const BOOKS = [
     {
         id: 0,
-        title: 'The Hobbit',
-        author: 'J.R.R. Tolkien',
-        emoji: '📖',
-        content: 'The Hobbit is a fantasy novel about a small hobbit named Bilbo Baggins who goes on an unexpected adventure with a wizard and dwarves. Together they search for treasure and face many dangers including dragons, goblins, and fierce creatures. It is a tale of courage, friendship, and discovery that has captivated readers for generations.'
+        title: 'The Crystal Kingdom',
+        author: 'Emma Sterling',
+        emoji: '💎',
+        content: 'Maya discovers an ancient portal hidden in her grandmother\'s attic that leads to the Crystal Kingdom, a magical realm where gems have special powers. With her newfound friends Kai and Luna, she must protect the kingdom from dark forces trying to steal its crystals. Together they learn that true strength comes from friendship and believing in themselves.'
     },
     {
         id: 1,
-        title: 'Percy Jackson and the Olympians',
-        author: 'Rick Riordan',
-        emoji: '⚡',
-        content: 'Percy Jackson discovers he is the son of a Greek god and must attend Camp Half-Blood where he learns about mythology and ancient powers. With his friends Annabeth and Grover, Percy goes on epic quests to save the world, battling monsters and gods. The series blends modern times with ancient mythology in an exciting adventure.'
+        title: 'Space Explorer\'s Quest',
+        author: 'Alex Rivera',
+        emoji: '🚀',
+        content: 'Zephyr joins an intergalactic exploration team and travels to distant planets searching for the legendary Nebula Stone. Along the way, Zephyr makes friends with aliens from different species and discovers that cooperation and kindness are more valuable than any treasure. The adventure teaches lessons about bravery, responsibility, and protecting the environment.'
     },
     {
         id: 2,
-        title: 'Harry Potter',
-        author: 'J.K. Rowling',
-        emoji: '🧙',
-        content: 'Harry Potter is an ordinary boy who discovers he is a wizard and attends Hogwarts School of Witchcraft and Wizardry. With his friends Ron and Hermione, Harry uncovers the mystery of a dark wizard named Voldemort and prepares for an epic battle. The series explores friendship, courage, love, and the power of choices.'
+        title: 'Mystery of Whispering Woods',
+        author: 'Jordan Blake',
+        emoji: '🔍',
+        content: 'Three friends stumble upon a hidden village in the ancient Whispering Woods where animals can talk and magic is real. They must solve the mystery of why the village is disappearing and help the forest creatures break a forgotten spell. A thrilling adventure that combines mystery, magic, and the importance of environmental conservation.'
     },
     {
         id: 3,
-        title: 'The Lion, the Witch and the Wardrobe',
-        author: 'C.S. Lewis',
-        emoji: '🦁',
-        content: 'Four children discover a magical world inside a wardrobe called Narnia, which is trapped in eternal winter under the spell of the White Witch. They meet Aslan, a powerful lion, and must help him defeat the witch and save Narnia. This classic tale teaches about good versus evil and the courage within us all.'
+        title: 'The Rainbow Dragon\'s Secret',
+        author: 'Sofia Chen',
+        emoji: '🐉',
+        content: 'When a mysterious rainbow dragon crash-lands in the village, young Olive becomes its guardian and caretaker. Together they discover the dragon has lost its colors and magical abilities. Olive embarks on a journey to find the five Sacred Gems scattered across fantastical lands, learning about courage and compassion along the way.'
     },
     {
         id: 4,
-        title: 'Treasure Island',
-        author: 'Robert Louis Stevenson',
-        emoji: '🏝️',
-        content: 'A young boy named Jim Hawkins finds a treasure map and sails to a remote island to search for buried treasure. Along the way he encounters pirates, including the famous Long John Silver, and must use his wits to survive. This adventure novel is full of action, mystery, and the romance of life on the high seas.'
+        title: 'Code Breaker Academy',
+        author: 'Marcus Webb',
+        emoji: '🔐',
+        content: 'Jasmine discovers she has a special talent for solving codes and puzzles, and is invited to attend the prestigious Code Breaker Academy. Here she trains with other talented kids to solve ancient mysteries and help recover lost treasures. The story shows how teamwork, persistence, and clever thinking can overcome any challenge.'
     },
     {
         id: 5,
-        title: 'Where the Wild Things Are',
-        author: 'Maurice Sendak',
-        emoji: '🌳',
-        content: 'A boy named Max wears his wolf suit and gets into mischief. As punishment, he is sent to bed without supper. Max escapes to a magical forest where he meets wild, imaginative creatures and becomes their king. After adventures and fun, Max misses home and returns to find his supper still hot. A tale about imagination and always being loved.'
+        title: 'Underwater Secrets',
+        author: 'Riley Jensen',
+        emoji: '🌊',
+        content: 'Finn inherits a magical amulet that allows him to breathe underwater and communicate with sea creatures. He discovers an underwater civilization facing extinction and must work with his new aquatic friends to save their home. An ocean adventure teaching about environmental awareness and the beauty of marine life.'
     }
 ];
 
