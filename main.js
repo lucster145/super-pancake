@@ -62,11 +62,25 @@ const APPS = {
         color: '#228B22',
         minWidth: 600,
         minHeight: 400
+    },
+    calendar: {
+        name: 'Calendar',
+        icon: '📅',
+        color: '#2196F3',
+        minWidth: 500,
+        minHeight: 400
+    },
+    net2: {
+        name: 'Net2',
+        icon: '🎬',
+        color: '#E50914',
+        minWidth: 800,
+        minHeight: 600
     }
 };
 
 // Store app installation state
-const installedApps = new Set(['playstore', 'notes', 'game2048', 'musicplayer', 'calculator', 'memory', 'dino', 'books', 'football']);
+const installedApps = new Set(['playstore', 'notes', 'game2048', 'musicplayer', 'calculator', 'memory', 'dino', 'books', 'football', 'calendar', 'net2']);
 
 // Global error handler for better debugging
 window.addEventListener('error', (e) => {
@@ -339,6 +353,10 @@ class WindowManager {
                 return this.getBooksContent();
             case 'football':
                 return this.getFootballGameContent();
+            case 'calendar':
+                return this.getCalendarContent();
+            case 'net2':
+                return this.getNet2Content();
             default:
                 return '<p>App not implemented</p>';
         }
@@ -531,6 +549,142 @@ class WindowManager {
         `;
     }
 
+    getCalendarContent() {
+        const now = new Date();
+        const currentMonth = now.getMonth();
+        const currentYear = now.getFullYear();
+        const currentDate = now.getDate();
+
+        const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                           'July', 'August', 'September', 'October', 'November', 'December'];
+
+        const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+        const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
+
+        let calendarHTML = `
+            <div class="calendar-content">
+                <div class="calendar-header">
+                    <button class="calendar-nav" onclick="changeMonth(-1)">◀</button>
+                    <h2 id="calendar-title">${monthNames[currentMonth]} ${currentYear}</h2>
+                    <button class="calendar-nav" onclick="changeMonth(1)">▶</button>
+                </div>
+                <div class="calendar-weekdays">
+                    <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+                </div>
+                <div class="calendar-grid" id="calendar-grid">
+        `;
+
+        // Add empty cells for days before the first day of the month
+        for (let i = 0; i < firstDayOfMonth; i++) {
+            calendarHTML += '<div class="calendar-day empty"></div>';
+        }
+
+        // Add days of the month
+        for (let day = 1; day <= daysInMonth; day++) {
+            const isToday = day === currentDate && currentMonth === now.getMonth() && currentYear === now.getFullYear();
+            const todayClass = isToday ? ' today' : '';
+            calendarHTML += `<div class="calendar-day${todayClass}" onclick="selectDate(${day})">${day}</div>`;
+        }
+
+        calendarHTML += `
+                </div>
+                <div class="calendar-events">
+                    <h3>Today's Events</h3>
+                    <div id="today-events">
+                        <div class="event-item">
+                            <div class="event-time">9:00 AM</div>
+                            <div class="event-title">Team Meeting</div>
+                        </div>
+                        <div class="event-item">
+                            <div class="event-time">2:00 PM</div>
+                            <div class="event-title">Project Review</div>
+                        </div>
+                        <div class="event-item">
+                            <div class="event-time">6:00 PM</div>
+                            <div class="event-title">Dinner with Friends</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        return calendarHTML;
+    }
+
+    getNet2Content() {
+        return `
+            <div class="net2-content">
+                <div class="net2-header">
+                    <div class="net2-logo">Net2</div>
+                    <div class="net2-nav">
+                        <button class="net2-nav-btn active" onclick="showNet2Category('home')">Home</button>
+                        <button class="net2-nav-btn" onclick="showNet2Category('movies')">Movies</button>
+                        <button class="net2-nav-btn" onclick="showNet2Category('tv')">TV Shows</button>
+                        <button class="net2-nav-btn" onclick="showNet2Category('my-list')">My List</button>
+                    </div>
+                    <div class="net2-search">
+                        <input type="text" placeholder="Search movies, TV shows..." id="net2-search">
+                    </div>
+                </div>
+
+                <div class="net2-main" id="net2-main">
+                    <div class="net2-hero">
+                        <div class="hero-content">
+                            <h1>Stranger Things</h1>
+                            <p>When a young boy vanishes, a small town uncovers a mystery involving secret experiments, terrifying supernatural forces, and one strange little girl.</p>
+                            <div class="hero-buttons">
+                                <button class="net2-play-btn">▶ Play</button>
+                                <button class="net2-info-btn">ℹ More Info</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="net2-row">
+                        <h2>Trending Now</h2>
+                        <div class="net2-row-content">
+                            <div class="net2-item" onclick="playNet2Content('The Crown')">
+                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'%3E%3Crect fill='%23333' width='200' height='300'/%3E%3Ctext x='100' y='150' font-size='24' fill='white' text-anchor='middle'%3E👑%3C/text%3E%3Ctext x='100' y='180' font-size='14' fill='white' text-anchor='middle'%3EThe Crown%3C/text%3E%3C/svg%3E" alt="The Crown">
+                            </div>
+                            <div class="net2-item" onclick="playNet2Content('Breaking Bad')">
+                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'%3E%3Crect fill='%23333' width='200' height='300'/%3E%3Ctext x='100' y='150' font-size='24' fill='white' text-anchor='middle'%3E🧪%3C/text%3E%3Ctext x='100' y='180' font-size='14' fill='white' text-anchor='middle'%3EBreaking Bad%3C/text%3E%3C/svg%3E" alt="Breaking Bad">
+                            </div>
+                            <div class="net2-item" onclick="playNet2Content('The Witcher')">
+                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'%3E%3Crect fill='%23333' width='200' height='300'/%3E%3Ctext x='100' y='150' font-size='24' fill='white' text-anchor='middle'%3E⚔️%3C/text%3E%3Ctext x='100' y='180' font-size='14' fill='white' text-anchor='middle'%3EThe Witcher%3C/text%3E%3C/svg%3E" alt="The Witcher">
+                            </div>
+                            <div class="net2-item" onclick="playNet2Content('Money Heist')">
+                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'%3E%3Crect fill='%23333' width='200' height='300'/%3E%3Ctext x='100' y='150' font-size='24' fill='white' text-anchor='middle'%3E💰%3C/text%3E%3Ctext x='100' y='180' font-size='14' fill='white' text-anchor='middle'%3EMoney Heist%3C/text%3E%3C/svg%3E" alt="Money Heist">
+                            </div>
+                            <div class="net2-item" onclick="playNet2Content('Dark')">
+                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'%3E%3Crect fill='%23333' width='200' height='300'/%3E%3Ctext x='100' y='150' font-size='24' fill='white' text-anchor='middle'%3E🌑%3C/text%3E%3Ctext x='100' y='180' font-size='14' fill='white' text-anchor='middle'%3EDark%3C/text%3E%3C/svg%3E" alt="Dark">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="net2-row">
+                        <h2>Popular on Net2</h2>
+                        <div class="net2-row-content">
+                            <div class="net2-item" onclick="playNet2Content('Inception')">
+                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'%3E%3Crect fill='%23333' width='200' height='300'/%3E%3Ctext x='100' y='150' font-size='24' fill='white' text-anchor='middle'%3E🧠%3C/text%3E%3Ctext x='100' y='180' font-size='14' fill='white' text-anchor='middle'%3EInception%3C/text%3E%3C/svg%3E" alt="Inception">
+                            </div>
+                            <div class="net2-item" onclick="playNet2Content('Interstellar')">
+                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'%3E%3Crect fill='%23333' width='200' height='300'/%3E%3Ctext x='100' y='150' font-size='24' fill='white' text-anchor='middle'%3E🚀%3C/text%3E%3Ctext x='100' y='180' font-size='14' fill='white' text-anchor='middle'%3EInterstellar%3C/text%3E%3C/svg%3E" alt="Interstellar">
+                            </div>
+                            <div class="net2-item" onclick="playNet2Content('The Matrix')">
+                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'%3E%3Crect fill='%23333' width='200' height='300'/%3E%3Ctext x='100' y='150' font-size='24' fill='white' text-anchor='middle'%3E💊%3C/text%3E%3Ctext x='100' y='180' font-size='14' fill='white' text-anchor='middle'%3EThe Matrix%3C/text%3E%3C/svg%3E" alt="The Matrix">
+                            </div>
+                            <div class="net2-item" onclick="playNet2Content('Pulp Fiction')">
+                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'%3E%3Crect fill='%23333' width='200' height='300'/%3E%3Ctext x='100' y='150' font-size='24' fill='white' text-anchor='middle'%3E🔫%3C/text%3E%3Ctext x='100' y='180' font-size='14' fill='white' text-anchor='middle'%3EPulp Fiction%3C/text%3E%3C/svg%3E" alt="Pulp Fiction">
+                            </div>
+                            <div class="net2-item" onclick="playNet2Content('Fight Club')">
+                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'%3E%3Crect fill='%23333' width='200' height='300'/%3E%3Ctext x='100' y='150' font-size='24' fill='white' text-anchor='middle'%3E👊%3C/text%3E%3Ctext x='100' y='180' font-size='14' fill='white' text-anchor='middle'%3EFight Club%3C/text%3E%3C/svg%3E" alt="Fight Club">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
     getBooksContent() {
         return `
             <div class="books-content">
@@ -613,6 +767,12 @@ class WindowManager {
                 break;
             case 'football':
                 initFootballGame();
+                break;
+            case 'calendar':
+                initCalendar();
+                break;
+            case 'net2':
+                initNet2();
                 break;
         }
     }
@@ -1459,6 +1619,80 @@ function endFootballRound() {
 function restartFootballGame() {
     footballGameState.round++;
     initFootballGame();
+}
+
+// ===== CALENDAR APP =====
+let currentCalendarDate = new Date();
+
+function initCalendar() {
+    // Calendar is mostly static HTML, but we could add dynamic features here
+    updateCalendarDisplay();
+}
+
+function changeMonth(delta) {
+    currentCalendarDate.setMonth(currentCalendarDate.getMonth() + delta);
+    updateCalendarDisplay();
+}
+
+function selectDate(day) {
+    // Could add date selection functionality here
+    console.log(`Selected date: ${day}`);
+}
+
+function updateCalendarDisplay() {
+    const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                       'July', 'August', 'September', 'October', 'November', 'December'];
+
+    const titleEl = document.getElementById('calendar-title');
+    if (titleEl) {
+        titleEl.textContent = `${monthNames[currentCalendarDate.getMonth()]} ${currentCalendarDate.getFullYear()}`;
+    }
+
+    // Update calendar grid
+    const gridEl = document.getElementById('calendar-grid');
+    if (gridEl) {
+        const year = currentCalendarDate.getFullYear();
+        const month = currentCalendarDate.getMonth();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const firstDayOfMonth = new Date(year, month, 1).getDay();
+        const now = new Date();
+
+        let html = '';
+
+        // Empty cells
+        for (let i = 0; i < firstDayOfMonth; i++) {
+            html += '<div class="calendar-day empty"></div>';
+        }
+
+        // Days
+        for (let day = 1; day <= daysInMonth; day++) {
+            const isToday = day === now.getDate() && month === now.getMonth() && year === now.getFullYear();
+            const todayClass = isToday ? ' today' : '';
+            html += `<div class="calendar-day${todayClass}" onclick="selectDate(${day})">${day}</div>`;
+        }
+
+        gridEl.innerHTML = html;
+    }
+}
+
+// ===== NET2 APP =====
+function initNet2() {
+    // Net2 is mostly static HTML with interactive elements
+}
+
+function showNet2Category(category) {
+    // Update navigation buttons
+    document.querySelectorAll('.net2-nav-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    event.target.classList.add('active');
+
+    // Could implement category switching here
+    console.log(`Showing category: ${category}`);
+}
+
+function playNet2Content(title) {
+    alert(`🎬 Now playing: ${title}\n\nEnjoy your movie! 🍿`);
 }
 
 // ===== BOOKS APP =====
