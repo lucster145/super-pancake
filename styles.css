@@ -800,3 +800,76 @@ body, html {
 .calc-btn.clear:hover {
     background: #ee5a52;
 }
+
+/* ===== BOOKS APP ===== */
+.books-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.books-header {
+    padding: 16px;
+    background: linear-gradient(135deg, #FF6B6B 0%, #FF5252 100%);
+    color: white;
+    border-radius: 8px;
+    margin-bottom: 16px;
+}
+
+.books-header h2 {
+    margin: 0;
+    font-size: 20px;
+}
+
+.books-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 16px;
+    overflow-y: auto;
+    padding-right: 8px;
+}
+
+.book-item {
+    background: white;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    padding: 12px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.book-item:hover {
+    border-color: #FF6B6B;
+    box-shadow: 0 4px 12px rgba(255, 107, 107, 0.2);
+    transform: translateY(-2px);
+}
+
+.book-cover {
+    font-size: 36px;
+    margin-bottom: 8px;
+}
+
+.book-title {
+    font-weight: 600;
+    font-size: 12px;
+    color: #333;
+    margin-bottom: 4px;
+    min-height: 24px;
+    line-height: 1.2;
+}
+
+.book-author {
+    font-size: 10px;
+    color: #999;
+}
+
+.book-reader {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 8px;
+}
+
+.book-reader.hidden {
+    display: none;
+}

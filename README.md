@@ -1,17 +1,18 @@
 # Windows 11 Desktop Simulator
 
-A fun web-based simulation of the Windows 11 desktop environment with a built-in Play Store featuring 6 interactive apps, including a Chrome Dino game!
+A fun web-based simulation of the Windows 11 desktop environment with a built-in Play Store featuring 7 interactive apps, including a Chrome Dino game and Books Library!
 
 ## Features
 
 - **Windows 11-style Interface**: Modern desktop with taskbar, Start menu, and window management
-- **Play Store**: Install and launch 6 different apps:
+- **Play Store**: Install and launch 7 different apps:
   - 📝 Notes - Simple note-taking app
   - 🎯 2048 Game - Classic number puzzle game
   - 🎵 Music Player - Audio player with playlist
   - 🧮 Calculator - Basic calculator
   - 🧠 Memory Game - Card matching game
   - **🦕 Chrome Dino Game** - Jump over cacti and beat your high score!
+  - **📚 Books Library** - Read classic children's books and adventure stories
 - **Window Management**: Drag, resize, minimize, maximize, and close windows
 - **Desktop Icons**: Clickable app shortcuts
 - **Right-click Context Menu**: Quick actions

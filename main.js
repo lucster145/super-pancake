@@ -48,11 +48,18 @@ const APPS = {
         color: '#8B4513',
         minWidth: 600,
         minHeight: 300
+    },
+    books: {
+        name: 'Books Library',
+        icon: '📚',
+        color: '#FF6B6B',
+        minWidth: 600,
+        minHeight: 500
     }
 };
 
 // Store app installation state
-const installedApps = new Set(['playstore', 'notes', 'game2048', 'musicplayer', 'calculator', 'memory', 'dino']);
+const installedApps = new Set(['playstore', 'notes', 'game2048', 'musicplayer', 'calculator', 'memory', 'dino', 'books']);
 
 // Global error handler for better debugging
 window.addEventListener('error', (e) => {
@@ -295,6 +302,8 @@ class WindowManager {
                 return this.getMemoryGameContent();
             case 'dino':
                 return this.getDinoGameContent();
+            case 'books':
+                return this.getBooksContent();
             default:
                 return '<p>App not implemented</p>';
         }
@@ -453,6 +462,53 @@ class WindowManager {
         `;
     }
 
+    getBooksContent() {
+        return `
+            <div class="books-content">
+                <div class="books-header">
+                    <h2>📚 Books Library</h2>
+                    <p style="font-size: 12px; color: #666; margin-top: 5px;">Popular books for 10 year olds</p>
+                </div>
+                <div class="books-list">
+                    <div class="book-item" onclick="openBook(0)">
+                        <div class="book-cover">📖</div>
+                        <div class="book-title">The Hobbit</div>
+                        <div class="book-author">by J.R.R. Tolkien</div>
+                    </div>
+                    <div class="book-item" onclick="openBook(1)">
+                        <div class="book-cover">⚡</div>
+                        <div class="book-title">Percy Jackson</div>
+                        <div class="book-author">by Rick Riordan</div>
+                    </div>
+                    <div class="book-item" onclick="openBook(2)">
+                        <div class="book-cover">🧙</div>
+                        <div class="book-title">Harry Potter</div>
+                        <div class="book-author">by J.K. Rowling</div>
+                    </div>
+                    <div class="book-item" onclick="openBook(3)">
+                        <div class="book-cover">🦁</div>
+                        <div class="book-title">The Lion The Witch & Wardrobe</div>
+                        <div class="book-author">by C.S. Lewis</div>
+                    </div>
+                    <div class="book-item" onclick="openBook(4)">
+                        <div class="book-cover">🏝️</div>
+                        <div class="book-title">Treasure Island</div>
+                        <div class="book-author">by Robert Stevenson</div>
+                    </div>
+                    <div class="book-item" onclick="openBook(5)">
+                        <div class="book-cover">🌳</div>
+                        <div class="book-title">Where The Wild Things Are</div>
+                        <div class="book-author">by Maurice Sendak</div>
+                    </div>
+                </div>
+                <div id="book-reader" class="book-reader hidden">
+                    <button onclick="closeBook()" style="margin-bottom: 15px;">← Back to Library</button>
+                    <div id="book-content" style="background: white; padding: 15px; border-radius: 8px; line-height: 1.6; max-height: 300px; overflow-y: auto;"></div>
+                </div>
+            </div>
+        `;
+    }
+
     shadeColor(color, amount) {
         let usePound = false;
         if (color[0] === "#") {
@@ -482,6 +538,9 @@ class WindowManager {
                 break;
             case 'dino':
                 initDinoGame();
+                break;
+            case 'books':
+                initBooksApp(contentEl);
                 break;
         }
     }
@@ -1041,6 +1100,81 @@ function restartDinoGame() {
 
     // Restart
     initDinoGame();
+}
+
+// ===== BOOKS APP =====
+const BOOKS = [
+    {
+        id: 0,
+        title: 'The Hobbit',
+        author: 'J.R.R. Tolkien',
+        emoji: '📖',
+        content: 'The Hobbit is a fantasy novel about a small hobbit named Bilbo Baggins who goes on an unexpected adventure with a wizard and dwarves. Together they search for treasure and face many dangers including dragons, goblins, and fierce creatures. It is a tale of courage, friendship, and discovery that has captivated readers for generations.'
+    },
+    {
+        id: 1,
+        title: 'Percy Jackson and the Olympians',
+        author: 'Rick Riordan',
+        emoji: '⚡',
+        content: 'Percy Jackson discovers he is the son of a Greek god and must attend Camp Half-Blood where he learns about mythology and ancient powers. With his friends Annabeth and Grover, Percy goes on epic quests to save the world, battling monsters and gods. The series blends modern times with ancient mythology in an exciting adventure.'
+    },
+    {
+        id: 2,
+        title: 'Harry Potter',
+        author: 'J.K. Rowling',
+        emoji: '🧙',
+        content: 'Harry Potter is an ordinary boy who discovers he is a wizard and attends Hogwarts School of Witchcraft and Wizardry. With his friends Ron and Hermione, Harry uncovers the mystery of a dark wizard named Voldemort and prepares for an epic battle. The series explores friendship, courage, love, and the power of choices.'
+    },
+    {
+        id: 3,
+        title: 'The Lion, the Witch and the Wardrobe',
+        author: 'C.S. Lewis',
+        emoji: '🦁',
+        content: 'Four children discover a magical world inside a wardrobe called Narnia, which is trapped in eternal winter under the spell of the White Witch. They meet Aslan, a powerful lion, and must help him defeat the witch and save Narnia. This classic tale teaches about good versus evil and the courage within us all.'
+    },
+    {
+        id: 4,
+        title: 'Treasure Island',
+        author: 'Robert Louis Stevenson',
+        emoji: '🏝️',
+        content: 'A young boy named Jim Hawkins finds a treasure map and sails to a remote island to search for buried treasure. Along the way he encounters pirates, including the famous Long John Silver, and must use his wits to survive. This adventure novel is full of action, mystery, and the romance of life on the high seas.'
+    },
+    {
+        id: 5,
+        title: 'Where the Wild Things Are',
+        author: 'Maurice Sendak',
+        emoji: '🌳',
+        content: 'A boy named Max wears his wolf suit and gets into mischief. As punishment, he is sent to bed without supper. Max escapes to a magical forest where he meets wild, imaginative creatures and becomes their king. After adventures and fun, Max misses home and returns to find his supper still hot. A tale about imagination and always being loved.'
+    }
+];
+
+function initBooksApp(contentEl) {
+    const bookList = contentEl.querySelector('.books-list');
+    const bookReader = contentEl.querySelector('#book-reader');
+    
+    window.openBook = (bookId) => {
+        bookList.style.display = 'none';
+        bookReader.classList.remove('hidden');
+        
+        const book = BOOKS[bookId];
+        const bookContentEl = contentEl.querySelector('#book-content');
+        
+        if (bookContentEl) {
+            bookContentEl.innerHTML = `
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <div style="font-size: 48px; margin-bottom: 10px;">${book.emoji}</div>
+                    <h3 style="margin: 0; color: #333;">${book.title}</h3>
+                    <p style="color: #666; font-size: 14px; margin: 5px 0 0 0;">by ${book.author}</p>
+                </div>
+                <p>${book.content}</p>
+            `;
+        }
+    };
+    
+    window.closeBook = () => {
+        bookList.style.display = 'grid';
+        bookReader.classList.add('hidden');
+    };
 }
 
 // Initialize
