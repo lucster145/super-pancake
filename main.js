@@ -429,11 +429,15 @@ class WindowManager {
     }
 
     getDinoGameContent() {
+        const highScore = localStorage.getItem('dinoHighScore') || '0';
         return `
             <div class="game-content">
                 <div class="game-title">Chrome Dino</div>
                 <div style="text-align: center; margin-bottom: 20px; color: #666; font-size: 14px;">
                     Press SPACEBAR or TAP to jump! Avoid the cacti!
+                </div>
+                <div style="text-align: center; margin-bottom: 15px; font-weight: 600;">
+                    High Score: <span id="dino-high-score">${highScore}</span>
                 </div>
                 <div id="dino-game" class="dino-game">
                     <div id="dino-ground" class="dino-ground"></div>
@@ -441,6 +445,7 @@ class WindowManager {
                     <div id="dino-score" class="dino-score">Score: 0</div>
                     <div id="dino-game-over" class="dino-game-over hidden">
                         <div class="game-over-text">GAME OVER</div>
+                        <div id="dino-final-score" style="font-size: 18px; margin-bottom: 15px;"></div>
                         <button class="game-button" onclick="restartDinoGame()">Restart</button>
                     </div>
                 </div>
@@ -1004,8 +1009,25 @@ function endDinoGame() {
     clearInterval(dinoGameState.interval);
     if (dinoGameState.spawnTimeout) clearTimeout(dinoGameState.spawnTimeout);
 
+    // Calculate final score
+    const finalScore = Math.floor(dinoGameState.score / 10);
+    const currentHighScore = parseInt(localStorage.getItem('dinoHighScore') || '0');
+    
+    // Update high score if needed
+    let scoreMessage = `Final Score: ${finalScore}`;
+    if (finalScore > currentHighScore) {
+        localStorage.setItem('dinoHighScore', finalScore);
+        scoreMessage += ' 🎉 NEW HIGH SCORE!';
+        const highScoreEl = document.getElementById('dino-high-score');
+        if (highScoreEl) highScoreEl.textContent = finalScore;
+    }
+
     const gameOverEl = document.getElementById('dino-game-over');
-    if (gameOverEl) gameOverEl.classList.remove('hidden');
+    if (gameOverEl) {
+        gameOverEl.classList.remove('hidden');
+        const finalScoreEl = document.getElementById('dino-final-score');
+        if (finalScoreEl) finalScoreEl.textContent = scoreMessage;
+    }
 }
 
 function restartDinoGame() {
