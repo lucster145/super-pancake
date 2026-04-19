@@ -2168,4 +2168,4 @@ function initBooksApp(contentEl) {
 }
 
 // Initialize
-console.log('Windows 11 Game loaded successfully!');
+console.log('Simple PC loaded successfully!');
