@@ -213,11 +213,12 @@ body, html {
     width: 100%;
     max-width: 620px;
     height: 220px;
-    border-radius: 10px;
-    border: 2px solid #90caf9;
+    border-radius: 4px;
+    border: 2px solid #ddd;
     cursor: pointer;
     display: block;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+    background: #f7f7f7;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
 }
 
 /* ===== FOOTBALL GAME STYLES ===== */

@@ -1309,105 +1309,127 @@ function initDinoGame() {
 
     function drawPlayer() {
         const px = PLAYER_X;
-        const py = playerY;
-        const size = 36;
+        const py = playerY; // py = bottom of dino feet
+        const dead = phase === 'dead';
 
-        // Body
-        ctx.fillStyle = '#4caf50';
-        ctx.beginPath();
-        ctx.ellipse(px, py - size * 0.5, size * 0.32, size * 0.42, 0, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Head
-        ctx.fillStyle = '#81c784';
-        ctx.beginPath();
-        ctx.ellipse(px + size * 0.22, py - size * 0.85, size * 0.28, size * 0.24, -0.3, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Eye
-        ctx.fillStyle = '#1b5e20';
-        ctx.beginPath();
-        ctx.arc(px + size * 0.34, py - size * 0.9, 3, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillStyle = 'white';
-        ctx.beginPath();
-        ctx.arc(px + size * 0.33, py - size * 0.91, 1.2, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Legs (animate when running)
+        // Animate legs
         if (phase === 'running') legFrame++;
-        const legSwing = Math.sin(legFrame * 0.3) * 6;
-        ctx.strokeStyle = '#388e3c';
-        ctx.lineWidth = 4;
-        ctx.lineCap = 'round';
+        const onGround = playerY >= GROUND_Y - 1;
+        const legPhase = Math.floor(legFrame / 6) % 2; // alternates 0/1
 
-        // Front leg
-        ctx.beginPath();
-        ctx.moveTo(px, py - size * 0.15);
-        ctx.lineTo(px + legSwing, py + 2);
-        ctx.stroke();
+        ctx.fillStyle = dead ? '#888' : '#555';
 
-        // Back leg
-        ctx.beginPath();
-        ctx.moveTo(px - 6, py - size * 0.15);
-        ctx.lineTo(px - legSwing, py + 2);
-        ctx.stroke();
+        // --- Body (main rectangle) ---
+        //  body: 28w × 20h
+        const bx = px - 14, by = py - 44;
+        ctx.fillRect(bx, by, 28, 20);
 
-        // Tail
-        ctx.strokeStyle = '#4caf50';
-        ctx.lineWidth = 5;
-        ctx.beginPath();
-        ctx.moveTo(px - size * 0.28, py - size * 0.4);
-        ctx.quadraticCurveTo(px - size * 0.55, py - size * 0.25, px - size * 0.42, py - size * 0.05);
-        ctx.stroke();
+        // --- Neck bump ---
+        ctx.fillRect(bx + 16, by - 6, 14, 10);
 
-        // Jump indicator (second jump available = blue tint)
-        if (jumpsLeft === 2) {
-            ctx.strokeStyle = 'rgba(33,150,243,0.35)';
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.ellipse(px, py - size * 0.5, size * 0.38, size * 0.48, 0, 0, Math.PI * 2);
-            ctx.stroke();
+        // --- Head ---
+        ctx.fillRect(bx + 16, by - 18, 22, 16);
+
+        // --- Snout ---
+        ctx.fillRect(bx + 34, by - 14, 8, 8);
+
+        // --- Eye ---
+        ctx.fillStyle = dead ? '#ccc' : 'white';
+        ctx.fillRect(bx + 30, by - 16, 6, 6);
+        ctx.fillStyle = dead ? '#888' : '#222';
+        ctx.fillRect(bx + 32, by - 15, 3, 3);
+
+        // --- Dead X eyes ---
+        if (dead) {
+            ctx.fillStyle = '#888';
+            ctx.fillRect(bx + 29, by - 17, 2, 2);
+            ctx.fillRect(bx + 33, by - 17, 2, 2);
+            ctx.fillRect(bx + 31, by - 15, 2, 2);
+            ctx.fillRect(bx + 29, by - 13, 2, 2);
+            ctx.fillRect(bx + 33, by - 13, 2, 2);
+        }
+
+        // --- Arm ---
+        ctx.fillStyle = dead ? '#888' : '#555';
+        ctx.fillRect(bx + 18, by + 10, 10, 6);
+
+        // --- Tail ---
+        ctx.fillRect(bx - 10, by + 6, 12, 8);
+        ctx.fillRect(bx - 14, by + 10, 6, 6);
+
+        // --- Legs ---
+        ctx.fillStyle = dead ? '#888' : '#555';
+        if (!onGround) {
+            // Both legs tucked when airborne
+            ctx.fillRect(bx + 2,  by + 20, 8, 16);
+            ctx.fillRect(bx + 14, by + 20, 8, 16);
+        } else if (legPhase === 0) {
+            // Stride A
+            ctx.fillRect(bx + 2,  by + 20, 8, 20);   // back leg forward
+            ctx.fillRect(bx + 14, by + 20, 8, 12);   // front leg back
+            ctx.fillRect(bx + 14, by + 30, 12, 8);   // front foot
+        } else {
+            // Stride B
+            ctx.fillRect(bx + 2,  by + 20, 8, 12);   // back leg back
+            ctx.fillRect(bx - 4,  by + 28, 12, 8);   // back foot
+            ctx.fillRect(bx + 14, by + 20, 8, 20);   // front leg forward
         }
     }
 
     function drawObstacle(obs) {
-        // Cactus body
-        ctx.fillStyle = '#2e7d32';
+        ctx.fillStyle = '#4a7c3f';
+        const x = obs.x, w = obs.w, h = obs.h;
+        const trunkW = Math.max(6, Math.floor(w * 0.28));
+        const tx = x + Math.floor((w - trunkW) / 2);
+
         // Main trunk
-        const tx = obs.x + obs.w * 0.35;
-        ctx.fillRect(tx, GROUND_Y - obs.h, obs.w * 0.3, obs.h);
+        ctx.fillRect(tx, GROUND_Y - h, trunkW, h);
+
         // Left arm
-        ctx.fillRect(obs.x, GROUND_Y - obs.h * 0.65, obs.w * 0.38, obs.w * 0.28);
-        ctx.fillRect(obs.x, GROUND_Y - obs.h * 0.65 - obs.w * 0.28, obs.w * 0.28, obs.w * 0.28);
+        const laW = Math.floor(w * 0.32), laH = Math.floor(h * 0.32);
+        ctx.fillRect(x, GROUND_Y - h * 0.62, laW, trunkW);          // horizontal
+        ctx.fillRect(x, GROUND_Y - h * 0.62 - laH, trunkW, laH);    // vertical up
+
         // Right arm
-        ctx.fillRect(obs.x + obs.w * 0.62, GROUND_Y - obs.h * 0.55, obs.w * 0.38, obs.w * 0.28);
-        ctx.fillRect(obs.x + obs.w * 0.72, GROUND_Y - obs.h * 0.55 - obs.w * 0.28, obs.w * 0.28, obs.w * 0.28);
+        const raX = tx + trunkW;
+        const raW = Math.floor(w * 0.32), raH = Math.floor(h * 0.28);
+        ctx.fillRect(raX, GROUND_Y - h * 0.52, raW, trunkW);         // horizontal
+        ctx.fillRect(raX + raW - trunkW, GROUND_Y - h * 0.52 - raH, trunkW, raH); // vertical up
+
+        // Darker outline shade
+        ctx.fillStyle = '#2e5429';
+        ctx.fillRect(tx, GROUND_Y - h, 2, h);                         // left edge trunk
+        ctx.fillRect(x, GROUND_Y - h * 0.62, 2, trunkW);              // left arm left edge
+        ctx.fillRect(raX, GROUND_Y - h * 0.52, 2, trunkW);            // right arm left edge
     }
 
     function drawCloud(c) {
-        ctx.fillStyle = 'rgba(255,255,255,0.82)';
+        // Simple outlined cloud (Chrome dino style)
+        ctx.strokeStyle = '#ccc';
+        ctx.lineWidth = 1.5;
         ctx.beginPath();
-        ctx.ellipse(c.x, c.y, c.w * 0.5, c.w * 0.2, 0, 0, Math.PI * 2);
-        ctx.ellipse(c.x - c.w * 0.22, c.y + c.w * 0.06, c.w * 0.28, c.w * 0.16, 0, 0, Math.PI * 2);
-        ctx.ellipse(c.x + c.w * 0.22, c.y + c.w * 0.06, c.w * 0.28, c.w * 0.16, 0, 0, Math.PI * 2);
-        ctx.fill();
+        ctx.ellipse(c.x, c.y, c.w * 0.5, c.w * 0.18, 0, 0, Math.PI * 2);
+        ctx.ellipse(c.x - c.w * 0.2, c.y + c.w * 0.05, c.w * 0.24, c.w * 0.14, 0, 0, Math.PI * 2);
+        ctx.ellipse(c.x + c.w * 0.2, c.y + c.w * 0.05, c.w * 0.24, c.w * 0.14, 0, 0, Math.PI * 2);
+        ctx.stroke();
     }
 
     function drawGround() {
-        // Scrolling ground strip
-        ctx.fillStyle = '#795548';
-        ctx.fillRect(0, GROUND_Y, W, H - GROUND_Y);
+        // Ground line (like Chrome dino)
+        ctx.fillStyle = '#555';
+        ctx.fillRect(0, GROUND_Y, W, 2);
 
-        // Top grass line
-        ctx.fillStyle = '#558b2f';
-        ctx.fillRect(0, GROUND_Y, W, 4);
-
-        // Ground detail dots
-        ctx.fillStyle = '#6d4c41';
-        for (let i = 0; i < 12; i++) {
-            const gx = ((groundX * 0.5 + i * 50) % W + W) % W;
-            ctx.fillRect(gx, GROUND_Y + 8, 12, 3);
+        // Scrolling dashes below the line
+        ctx.fillStyle = '#999';
+        for (let i = 0; i < 20; i++) {
+            const gx = ((W - (groundX * 1.0 + i * 60) % W) + W) % W;
+            ctx.fillRect(gx, GROUND_Y + 5, 30, 2);
+        }
+        // Second row of shorter dashes
+        ctx.fillStyle = '#bbb';
+        for (let i = 0; i < 15; i++) {
+            const gx = ((W - (groundX * 0.6 + i * 80 + 20) % W) + W) % W;
+            ctx.fillRect(gx, GROUND_Y + 10, 14, 2);
         }
     }
 
@@ -1432,12 +1454,9 @@ function initDinoGame() {
         frame++;
         ctx.clearRect(0, 0, W, H);
 
-        // Sky gradient
-        const sky = ctx.createLinearGradient(0, 0, 0, GROUND_Y);
-        sky.addColorStop(0, '#87ceeb');
-        sky.addColorStop(1, '#e0f7fa');
-        ctx.fillStyle = sky;
-        ctx.fillRect(0, 0, W, GROUND_Y);
+        // White background (Chrome dino style)
+        ctx.fillStyle = '#f7f7f7';
+        ctx.fillRect(0, 0, W, H);
 
         if (phase === 'start') {
             drawGround();
@@ -1445,18 +1464,17 @@ function initDinoGame() {
             playerY = GROUND_Y;
             drawPlayer();
 
-            // Prompt card
-            drawRoundRect(W / 2 - 130, H / 2 - 45, 260, 70, 10, 'rgba(0,0,0,0.55)');
-            ctx.fillStyle = 'white';
-            ctx.font = 'bold 18px sans-serif';
+            // Prompt text (Chrome dino style — dark on white)
+            ctx.fillStyle = '#535353';
+            ctx.font = 'bold 16px "Courier New", monospace';
             ctx.textAlign = 'center';
-            ctx.fillText('🦕 Jumper Game', W / 2, H / 2 - 18);
-            ctx.font = '13px sans-serif';
-            ctx.fillStyle = '#ccc';
+            ctx.fillText('JUMPER GAME', W / 2, H / 2 - 14);
+            ctx.font = '12px "Courier New", monospace';
+            ctx.fillStyle = '#888';
             ctx.fillText('Press Space / Tap to start', W / 2, H / 2 + 8);
             if (highScore > 0) {
-                ctx.fillStyle = '#ffd54f';
-                ctx.fillText(`Best: ${highScore}`, W / 2, H / 2 + 26);
+                ctx.fillStyle = '#535353';
+                ctx.fillText(`HI ${highScore}`, W / 2, H / 2 + 26);
             }
             ctx.textAlign = 'left';
 
@@ -1518,50 +1536,26 @@ function initDinoGame() {
         obstacles.forEach(drawObstacle);
         drawPlayer();
 
-        // HUD
-        ctx.fillStyle = 'rgba(255,255,255,0.85)';
-        ctx.beginPath();
-        ctx.roundRect(W - 130, 8, 122, 40, 6);
-        ctx.fill();
-        ctx.fillStyle = '#333';
-        ctx.font = 'bold 13px sans-serif';
+        // HUD — Chrome dino style monospace score
+        ctx.font = 'bold 14px "Courier New", monospace';
+        ctx.fillStyle = '#535353';
         ctx.textAlign = 'right';
-        ctx.fillText(`Score: ${score}`, W - 12, 24);
-        ctx.fillStyle = '#f57c00';
-        ctx.font = '11px sans-serif';
-        ctx.fillText(`Best: ${highScore}`, W - 12, 42);
+        ctx.fillText(`HI ${String(highScore).padStart(5,'0')}  ${String(score).padStart(5,'0')}`, W - 10, 22);
         ctx.textAlign = 'left';
 
-        // Speed badge
-        const stars = Math.min(5, Math.floor((speed - BASE_SPEED) / ((MAX_SPEED - BASE_SPEED) / 5)));
-        if (stars > 0) {
-            ctx.fillStyle = 'rgba(255,193,7,0.9)';
-            ctx.font = '11px sans-serif';
-            ctx.fillText('⚡'.repeat(stars), 8, 22);
-        }
-
         if (phase === 'dead') {
-            // Overlay
-            ctx.fillStyle = 'rgba(0,0,0,0.5)';
-            ctx.fillRect(0, 0, W, H);
-            drawRoundRect(W / 2 - 140, H / 2 - 60, 280, 110, 12, 'rgba(30,30,30,0.92)');
-
             ctx.textAlign = 'center';
-            ctx.fillStyle = '#ef5350';
-            ctx.font = 'bold 24px sans-serif';
-            ctx.fillText('💀 Game Over', W / 2, H / 2 - 28);
-
-            ctx.fillStyle = 'white';
-            ctx.font = '15px sans-serif';
-            ctx.fillText(`Score: ${score}${newHS ? '  🏆 New Best!' : ''}`, W / 2, H / 2 + 2);
-
-            ctx.fillStyle = '#aaa';
-            ctx.font = '12px sans-serif';
-            ctx.fillText('Space / R / Tap to restart', W / 2, H / 2 + 26);
-
-            ctx.fillStyle = '#ffd54f';
-            ctx.font = '12px sans-serif';
-            ctx.fillText(`High Score: ${highScore}`, W / 2, H / 2 + 44);
+            ctx.fillStyle = '#535353';
+            ctx.font = 'bold 14px "Courier New", monospace';
+            ctx.fillText('G A M E  O V E R', W / 2, H / 2 - 22);
+            if (newHS) {
+                ctx.font = '11px "Courier New", monospace';
+                ctx.fillStyle = '#888';
+                ctx.fillText('NEW HIGH SCORE!', W / 2, H / 2 - 4);
+            }
+            ctx.font = '11px "Courier New", monospace';
+            ctx.fillStyle = '#888';
+            ctx.fillText('Space / R / Tap to restart', W / 2, H / 2 + 14);
             ctx.textAlign = 'left';
         }
 
