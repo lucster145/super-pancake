@@ -746,9 +746,9 @@ class WindowManager {
                             <div class="shortcut" onclick="browserNavigate('robots')">🤖 Robots</div>
                             <div class="shortcut" onclick="browserNavigate('football')">⚽ Football</div>
                             <div class="shortcut" onclick="browserNavigate('history')">📜 History</div>
-                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.funfacts.com')">🌟 FunFacts.com</div>
-                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.simplegames.com')">🎮 SimpleGames.com</div>
-                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.dailynews.com')">📰 DailyNews.com</div>
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.zappycook.net')">🍳 ZappyCook.net</div>
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.pixelvault.io')">🖼️ PixelVault.io</div>
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.cosmicblog.org')">🌌 CosmicBlog.org</div>
                         </div>
                     </div>
                 </div>
@@ -1942,12 +1942,12 @@ function browserNavigate(query) {
 
     // Check for website URLs
     const websites = {
-        'www.funfacts.com': getFunFactsWebsite,
-        'funfacts.com': getFunFactsWebsite,
-        'www.simplegames.com': getSimpleGamesWebsite,
-        'simplegames.com': getSimpleGamesWebsite,
-        'www.dailynews.com': getDailyNewsWebsite,
-        'dailynews.com': getDailyNewsWebsite,
+        'www.zappycook.net': getZappyCookWebsite,
+        'zappycook.net': getZappyCookWebsite,
+        'www.pixelvault.io': getPixelVaultWebsite,
+        'pixelvault.io': getPixelVaultWebsite,
+        'www.cosmicblog.org': getCosmicBlogWebsite,
+        'cosmicblog.org': getCosmicBlogWebsite,
     };
     const siteKey = Object.keys(websites).find(k => query.toLowerCase().includes(k));
 
@@ -1957,7 +1957,7 @@ function browserNavigate(query) {
     } else if (key) {
         content = results[key];
     } else {
-        content = `<div class="result-item"><h3>🔍 No results found for "${query}"</h3><p>Try searching: space, dinosaurs, minecraft, animals, ocean, science, robots, football, or history.</p><p>Or visit a website: <a onclick="browserNavigate('www.funfacts.com')" style="cursor:pointer;color:#4285f4">www.funfacts.com</a> · <a onclick="browserNavigate('www.simplegames.com')" style="cursor:pointer;color:#4285f4">www.simplegames.com</a> · <a onclick="browserNavigate('www.dailynews.com')" style="cursor:pointer;color:#4285f4">www.dailynews.com</a></p></div>`;
+        content = `<div class="result-item"><h3>🔍 No results found for "${query}"</h3><p>Try searching: space, dinosaurs, minecraft, animals, ocean, science, robots, football, or history.</p><p>Or visit a website: <a onclick="browserNavigate('www.zappycook.net')" style="cursor:pointer;color:#4285f4">www.zappycook.net</a> · <a onclick="browserNavigate('www.pixelvault.io')" style="cursor:pointer;color:#4285f4">www.pixelvault.io</a> · <a onclick="browserNavigate('www.cosmicblog.org')" style="cursor:pointer;color:#4285f4">www.cosmicblog.org</a></p></div>`;
     }
 
     resultsDiv.innerHTML = `
@@ -1968,31 +1968,39 @@ function browserNavigate(query) {
     `;
 }
 
-function getFunFactsWebsite() {
+function getZappyCookWebsite() {
     return `
         <div class="fake-website">
-            <div class="fake-site-header" style="background:linear-gradient(135deg,#ff6b6b,#feca57);padding:20px;border-radius:8px 8px 0 0;color:white;">
-                <h1 style="margin:0;font-size:28px;">🌟 FunFacts.com</h1>
-                <p style="margin:4px 0 0;opacity:0.9;">Learn something amazing every day!</p>
+            <div class="fake-site-header" style="background:linear-gradient(135deg,#e17055,#fdcb6e);padding:20px;border-radius:8px 8px 0 0;color:white;">
+                <h1 style="margin:0;font-size:28px;">🍳 ZappyCook.net</h1>
+                <p style="margin:4px 0 0;opacity:0.9;">Quick & delicious recipes for everyone</p>
             </div>
-            <div class="fake-site-body" style="background:white;padding:20px;border-radius:0 0 8px 8px;border:1px solid #eee;">
-                <h2 style="color:#ff6b6b;">Today's Top Facts</h2>
+            <div class="fake-site-body" style="background:#fffdf8;padding:20px;border-radius:0 0 8px 8px;border:1px solid #eee;">
+                <h2 style="color:#e17055;">Today's Recipes</h2>
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:12px;">
-                    <div style="background:#fff5f5;padding:16px;border-radius:8px;border-left:4px solid #ff6b6b;">
-                        <h3>🐙 Octopus Facts</h3>
-                        <p>Octopuses have 3 hearts, 9 brains, and blue blood! Each arm has its own mini-brain.</p>
+                    <div style="background:white;padding:16px;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+                        <div style="font-size:40px;text-align:center;">🍕</div>
+                        <h3 style="margin:8px 0 4px;text-align:center;">Cheesy Pizza Pockets</h3>
+                        <p style="font-size:13px;color:#888;">⏱ 20 mins &nbsp;|&nbsp; 🍽 Serves 4</p>
+                        <p style="font-size:13px;">Wrap pizza dough around mozzarella, tomato sauce, and pepperoni. Bake at 200°C for 15 mins until golden!</p>
                     </div>
-                    <div style="background:#fff9e6;padding:16px;border-radius:8px;border-left:4px solid #feca57;">
-                        <h3>🍯 Honey Facts</h3>
-                        <p>Honey never expires! Archaeologists found 3,000-year-old honey in Egyptian tombs that was still edible.</p>
+                    <div style="background:white;padding:16px;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+                        <div style="font-size:40px;text-align:center;">🥞</div>
+                        <h3 style="margin:8px 0 4px;text-align:center;">Fluffy Banana Pancakes</h3>
+                        <p style="font-size:13px;color:#888;">⏱ 15 mins &nbsp;|&nbsp; 🍽 Serves 2</p>
+                        <p style="font-size:13px;">Mash 1 banana, mix with 1 egg and 3 tbsp flour. Fry in a pan for 2 mins each side. Top with honey!</p>
                     </div>
-                    <div style="background:#e8f8e8;padding:16px;border-radius:8px;border-left:4px solid #55efc4;">
-                        <h3>⚡ Lightning Facts</h3>
-                        <p>Lightning strikes Earth about 100 times per second — that's 8 million times a day!</p>
+                    <div style="background:white;padding:16px;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+                        <div style="font-size:40px;text-align:center;">🍜</div>
+                        <h3 style="margin:8px 0 4px;text-align:center;">Speedy Noodle Soup</h3>
+                        <p style="font-size:13px;color:#888;">⏱ 10 mins &nbsp;|&nbsp; 🍽 Serves 2</p>
+                        <p style="font-size:13px;">Boil noodles, add veggie broth, soy sauce, a soft-boiled egg, and spring onions. Done in a flash!</p>
                     </div>
-                    <div style="background:#e8f0ff;padding:16px;border-radius:8px;border-left:4px solid #74b9ff;">
-                        <h3>🧠 Brain Facts</h3>
-                        <p>Your brain generates about 23 watts of electricity — enough to power a small light bulb!</p>
+                    <div style="background:white;padding:16px;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+                        <div style="font-size:40px;text-align:center;">🍫</div>
+                        <h3 style="margin:8px 0 4px;text-align:center;">Mug Chocolate Cake</h3>
+                        <p style="font-size:13px;color:#888;">⏱ 5 mins &nbsp;|&nbsp; 🍽 Serves 1</p>
+                        <p style="font-size:13px;">Mix cocoa, flour, sugar, egg and milk in a mug. Microwave for 90 seconds. Enjoy warm!</p>
                     </div>
                 </div>
             </div>
@@ -2000,33 +2008,51 @@ function getFunFactsWebsite() {
     `;
 }
 
-function getSimpleGamesWebsite() {
+function getPixelVaultWebsite() {
     return `
         <div class="fake-website">
-            <div class="fake-site-header" style="background:linear-gradient(135deg,#6c5ce7,#a29bfe);padding:20px;border-radius:8px 8px 0 0;color:white;">
-                <h1 style="margin:0;font-size:28px;">🎮 SimpleGames.com</h1>
-                <p style="margin:4px 0 0;opacity:0.9;">Free fun games for everyone!</p>
+            <div class="fake-site-header" style="background:linear-gradient(135deg,#0f0c29,#302b63,#24243e);padding:20px;border-radius:8px 8px 0 0;color:white;">
+                <h1 style="margin:0;font-size:28px;">🖼️ PixelVault.io</h1>
+                <p style="margin:4px 0 0;opacity:0.9;">Your home for pixel art & digital creativity</p>
             </div>
-            <div class="fake-site-body" style="background:white;padding:20px;border-radius:0 0 8px 8px;border:1px solid #eee;">
-                <h2 style="color:#6c5ce7;">Featured Games</h2>
-                <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-top:12px;">
-                    <div style="background:#f8f5ff;padding:16px;border-radius:8px;text-align:center;cursor:pointer;border:2px solid #a29bfe;" onclick="openApp('dino')">
-                        <div style="font-size:36px;">🦕</div>
-                        <h3 style="margin:8px 0 4px;">Jumper Game</h3>
-                        <p style="font-size:12px;color:#888;">Jump over obstacles!</p>
-                        <button style="margin-top:8px;background:#6c5ce7;color:white;border:none;padding:6px 16px;border-radius:20px;cursor:pointer;">Play</button>
+            <div class="fake-site-body" style="background:#1a1a2e;padding:20px;border-radius:0 0 8px 8px;border:1px solid #333;">
+                <h2 style="color:#a29bfe;">Featured Artworks</h2>
+                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:12px;">
+                    <div style="background:#16213e;border-radius:10px;padding:12px;text-align:center;border:1px solid #302b63;">
+                        <div style="font-size:48px;line-height:1.2;">🌄</div>
+                        <p style="color:#dfe6e9;margin:8px 0 2px;font-weight:600;">Pixel Sunset</p>
+                        <p style="color:#636e72;font-size:12px;">by artlover99</p>
+                        <p style="color:#a29bfe;font-size:12px;">❤️ 482 likes</p>
                     </div>
-                    <div style="background:#f8f5ff;padding:16px;border-radius:8px;text-align:center;cursor:pointer;border:2px solid #a29bfe;" onclick="openApp('game2048')">
-                        <div style="font-size:36px;">🎯</div>
-                        <h3 style="margin:8px 0 4px;">2048</h3>
-                        <p style="font-size:12px;color:#888;">Merge the tiles!</p>
-                        <button style="margin-top:8px;background:#6c5ce7;color:white;border:none;padding:6px 16px;border-radius:20px;cursor:pointer;">Play</button>
+                    <div style="background:#16213e;border-radius:10px;padding:12px;text-align:center;border:1px solid #302b63;">
+                        <div style="font-size:48px;line-height:1.2;">🏯</div>
+                        <p style="color:#dfe6e9;margin:8px 0 2px;font-weight:600;">Castle Night</p>
+                        <p style="color:#636e72;font-size:12px;">by pixelwiz</p>
+                        <p style="color:#a29bfe;font-size:12px;">❤️ 317 likes</p>
                     </div>
-                    <div style="background:#f8f5ff;padding:16px;border-radius:8px;text-align:center;cursor:pointer;border:2px solid #a29bfe;" onclick="openApp('memory')">
-                        <div style="font-size:36px;">🧠</div>
-                        <h3 style="margin:8px 0 4px;">Memory</h3>
-                        <p style="font-size:12px;color:#888;">Match the cards!</p>
-                        <button style="margin-top:8px;background:#6c5ce7;color:white;border:none;padding:6px 16px;border-radius:20px;cursor:pointer;">Play</button>
+                    <div style="background:#16213e;border-radius:10px;padding:12px;text-align:center;border:1px solid #302b63;">
+                        <div style="font-size:48px;line-height:1.2;">🌊</div>
+                        <p style="color:#dfe6e9;margin:8px 0 2px;font-weight:600;">Ocean Depths</p>
+                        <p style="color:#636e72;font-size:12px;">by deepblue</p>
+                        <p style="color:#a29bfe;font-size:12px;">❤️ 254 likes</p>
+                    </div>
+                    <div style="background:#16213e;border-radius:10px;padding:12px;text-align:center;border:1px solid #302b63;">
+                        <div style="font-size:48px;line-height:1.2;">🚀</div>
+                        <p style="color:#dfe6e9;margin:8px 0 2px;font-weight:600;">Space Launch</p>
+                        <p style="color:#636e72;font-size:12px;">by starmaker</p>
+                        <p style="color:#a29bfe;font-size:12px;">❤️ 601 likes</p>
+                    </div>
+                    <div style="background:#16213e;border-radius:10px;padding:12px;text-align:center;border:1px solid #302b63;">
+                        <div style="font-size:48px;line-height:1.2;">🦊</div>
+                        <p style="color:#dfe6e9;margin:8px 0 2px;font-weight:600;">Pixel Fox</p>
+                        <p style="color:#636e72;font-size:12px;">by tokyodream</p>
+                        <p style="color:#a29bfe;font-size:12px;">❤️ 738 likes</p>
+                    </div>
+                    <div style="background:#16213e;border-radius:10px;padding:12px;text-align:center;border:1px solid #302b63;">
+                        <div style="font-size:48px;line-height:1.2;">🌲</div>
+                        <p style="color:#dfe6e9;margin:8px 0 2px;font-weight:600;">Forest Path</p>
+                        <p style="color:#636e72;font-size:12px;">by naturedraw</p>
+                        <p style="color:#a29bfe;font-size:12px;">❤️ 412 likes</p>
                     </div>
                 </div>
             </div>
@@ -2034,50 +2060,42 @@ function getSimpleGamesWebsite() {
     `;
 }
 
-function getDailyNewsWebsite() {
+function getCosmicBlogWebsite() {
     return `
         <div class="fake-website">
-            <div class="fake-site-header" style="background:linear-gradient(135deg,#2d3436,#636e72);padding:20px;border-radius:8px 8px 0 0;color:white;">
-                <h1 style="margin:0;font-size:28px;">📰 DailyNews.com</h1>
-                <p style="margin:4px 0 0;opacity:0.9;">Your trusted source for daily news</p>
+            <div class="fake-site-header" style="background:linear-gradient(135deg,#0984e3,#00cec9);padding:20px;border-radius:8px 8px 0 0;color:white;">
+                <h1 style="margin:0;font-size:28px;">🌌 CosmicBlog.org</h1>
+                <p style="margin:4px 0 0;opacity:0.9;">Exploring the universe one post at a time</p>
             </div>
             <div class="fake-site-body" style="background:white;padding:20px;border-radius:0 0 8px 8px;border:1px solid #eee;">
-                <h2 style="color:#2d3436;">Top Stories</h2>
-                <div style="display:flex;flex-direction:column;gap:12px;margin-top:12px;">
-                    <div style="padding:16px;border-bottom:1px solid #eee;display:flex;gap:16px;align-items:flex-start;">
-                        <span style="font-size:32px;">🚀</span>
-                        <div>
-                            <h3 style="margin:0 0 6px;">Scientists Discover New Earth-Like Planet</h3>
-                            <p style="margin:0;color:#636e72;font-size:14px;">Astronomers at the Space Research Institute have confirmed a new planet in the habitable zone just 40 light years away.</p>
-                            <span style="font-size:12px;color:#b2bec3;">2 hours ago · Science</span>
+                <h2 style="color:#0984e3;">Latest Posts</h2>
+                <div style="display:flex;flex-direction:column;gap:16px;margin-top:12px;">
+                    <div style="background:#f0f8ff;border-radius:10px;padding:16px;border-left:4px solid #0984e3;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;">
+                            <h3 style="margin:0;color:#2d3436;">🪐 Why Saturn's Rings Are Disappearing</h3>
+                            <span style="font-size:12px;color:#b2bec3;">Apr 17, 2026</span>
                         </div>
+                        <p style="color:#636e72;margin:8px 0 0;font-size:14px;">Scientists have discovered that Saturn's iconic rings are slowly being pulled into the planet by gravity. At the current rate, they could vanish within 100 million years...</p>
+                        <span style="font-size:12px;color:#0984e3;">✍️ by CosmosWriter &nbsp;|&nbsp; 💬 23 comments</span>
                     </div>
-                    <div style="padding:16px;border-bottom:1px solid #eee;display:flex;gap:16px;align-items:flex-start;">
-                        <span style="font-size:32px;">⚽</span>
-                        <div>
-                            <h3 style="margin:0 0 6px;">World Cup Qualifying Begins This Weekend</h3>
-                            <p style="margin:0;color:#636e72;font-size:14px;">Over 200 nations kick off their World Cup qualifying campaigns in matches across all continents.</p>
-                            <span style="font-size:12px;color:#b2bec3;">4 hours ago · Sports</span>
+                    <div style="background:#f0fff8;border-radius:10px;padding:16px;border-left:4px solid #00cec9;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;">
+                            <h3 style="margin:0;color:#2d3436;">🌙 Top 5 Things to See With a Telescope</h3>
+                            <span style="font-size:12px;color:#b2bec3;">Apr 15, 2026</span>
                         </div>
+                        <p style="color:#636e72;margin:8px 0 0;font-size:14px;">You don't need a fancy telescope to explore the night sky. Even a basic model can reveal the Moon's craters, Jupiter's moons, and star clusters in amazing detail...</p>
+                        <span style="font-size:12px;color:#00cec9;">✍️ by StargazerX &nbsp;|&nbsp; 💬 41 comments</span>
                     </div>
-                    <div style="padding:16px;display:flex;gap:16px;align-items:flex-start;">
-                        <span style="font-size:32px;">🤖</span>
-                        <div>
-                            <h3 style="margin:0 0 6px;">New AI Robot Can Cook Full Meals in Minutes</h3>
-                            <p style="margin:0;color:#636e72;font-size:14px;">A new household robot prototype demonstrated the ability to cook a three-course meal entirely on its own using AI vision.</p>
-                            <span style="font-size:12px;color:#b2bec3;">6 hours ago · Technology</span>
+                    <div style="background:#fff8f0;border-radius:10px;padding:16px;border-left:4px solid #fdcb6e;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;">
+                            <h3 style="margin:0;color:#2d3436;">☄️ A Comet Is Passing Earth Next Month!</h3>
+                            <span style="font-size:12px;color:#b2bec3;">Apr 12, 2026</span>
                         </div>
+                        <p style="color:#636e72;margin:8px 0 0;font-size:14px;">Comet ZX-7 will pass within 40 million km of Earth in May 2026 — the closest approach in 50 years. Here's how and when to spot it in the night sky...</p>
+                        <span style="font-size:12px;color:#fdcb6e;">✍️ by NightSky99 &nbsp;|&nbsp; 💬 88 comments</span>
                     </div>
                 </div>
             </div>
-        </div>
-    `;
-}
-
-    resultsDiv.innerHTML = `
-        <div class="search-results">
-            <h2>Search Results for "${query}"</h2>
-            ${content}
         </div>
     `;
 }
@@ -2102,9 +2120,9 @@ function browserGoBack() {
                 <div class="shortcut" onclick="browserNavigate('robots')">🤖 Robots</div>
                 <div class="shortcut" onclick="browserNavigate('football')">⚽ Football</div>
                 <div class="shortcut" onclick="browserNavigate('history')">📜 History</div>
-                <div class="shortcut website-shortcut" onclick="browserNavigate('www.funfacts.com')">🌟 FunFacts.com</div>
-                <div class="shortcut website-shortcut" onclick="browserNavigate('www.simplegames.com')">🎮 SimpleGames.com</div>
-                <div class="shortcut website-shortcut" onclick="browserNavigate('www.dailynews.com')">📜 DailyNews.com</div>
+                <div class="shortcut website-shortcut" onclick="browserNavigate('www.zappycook.net')">🍳 ZappyCook.net</div>
+                <div class="shortcut website-shortcut" onclick="browserNavigate('www.pixelvault.io')">🖼️ PixelVault.io</div>
+                <div class="shortcut website-shortcut" onclick="browserNavigate('www.cosmicblog.org')">🌌 CosmicBlog.org</div>
             </div>
         </div>
     `;
