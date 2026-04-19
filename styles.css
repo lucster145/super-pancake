@@ -597,42 +597,19 @@ body, html {
     position: relative;
     width: 100%;
     height: 180px;
-    background: linear-gradient(45deg, #1a1a1a, #2a2a2a);
+    background: #000;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 8px;
+    overflow: hidden;
 }
 
-.net2-video-scene {
-    position: absolute;
-    top: 0;
-    left: 0;
+.net2-canvas {
     width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    animation: net2SceneChange 0.5s ease-in-out;
-}
-
-@keyframes net2SceneChange {
-    0% { opacity: 0; transform: scale(0.95); }
-    100% { opacity: 1; transform: scale(1); }
-}
-
-.net2-video-text {
-    font-size: 24px;
-    color: white;
-    text-align: center;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-    animation: net2TextPulse 2s ease-in-out infinite;
-}
-
-@keyframes net2TextPulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.05); }
+    height: 180px;
+    display: block;
+    image-rendering: pixelated;
 }
 
 .net2-video-overlay {
