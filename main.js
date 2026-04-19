@@ -760,7 +760,7 @@ class WindowManager {
                         <div class="browser-shortcuts">
                             <div class="shortcut" onclick="browserNavigate('space')">🚀 Space</div>
                             <div class="shortcut" onclick="browserNavigate('dinosaurs')">🦕 Dinosaurs</div>
-                            <div class="shortcut" onclick="browserNavigate('minecraft')">⛏️ Minecraft</div>
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.novaspark.tech')">⚡ NovaSpark.tech</div>
                             <div class="shortcut" onclick="browserNavigate('animals')">🐘 Animals</div>
                             <div class="shortcut" onclick="browserNavigate('ocean')">🌊 Ocean</div>
                             <div class="shortcut" onclick="browserNavigate('science')">🔬 Science</div>
@@ -2027,7 +2027,7 @@ function browserNavigate(query) {
     const results = {
         'space': `<div class="result-item"><h3>🚀 Space & The Universe</h3><p>Space is an almost perfect vacuum containing a thin scattering of particles — mostly hydrogen and helium plasma — and electromagnetic radiation, magnetic fields, neutrinos, dust, and cosmic rays.</p><p><strong>Fun Facts:</strong></p><ul><li>The Sun makes up 99.86% of the mass of our Solar System</li><li>A day on Venus is longer than a year on Venus</li><li>There are more stars in the universe than grains of sand on Earth</li><li>The footprints on the Moon will last 100 million years</li></ul></div>`,
         'dinosaurs': `<div class="result-item"><h3>🦕 Dinosaurs</h3><p>Dinosaurs were a group of reptiles that dominated Earth for over 165 million years. They first appeared during the Triassic period.</p><p><strong>Cool Dinos:</strong></p><ul><li>T-Rex - King of the dinosaurs, 40 feet long</li><li>Triceratops - Had 3 horns and a giant frill</li><li>Velociraptor - Fast and intelligent hunter</li><li>Brachiosaurus - Giraffe-like neck, 85 feet tall</li></ul></div>`,
-        'minecraft': `<div class="result-item"><h3>⛏️ Minecraft</h3><p>Minecraft is the best-selling video game of all time with over 238 million copies sold. It was created by Markus "Notch" Persson in 2009.</p><p><strong>Game Modes:</strong></p><ul><li>Survival - Gather resources, fight mobs, survive</li><li>Creative - Unlimited blocks, fly freely, build anything</li><li>Adventure - Play custom maps made by others</li><li>Hardcore - One life only, permadeath mode</li></ul></div>`,
+
         'animals': `<div class="result-item"><h3>🐘 Amazing Animals</h3><p>Earth is home to over 8.7 million species of animals. From the tiniest insects to the largest whales, the animal kingdom is incredibly diverse.</p><p><strong>Record Holders:</strong></p><ul><li>Cheetah - Fastest land animal at 70 mph</li><li>Blue Whale - Largest animal ever, 100 feet long</li><li>Peregrine Falcon - Fastest bird at 240 mph diving</li><li>Elephant - Largest land animal, incredible memory</li></ul></div>`,
         'ocean': `<div class="result-item"><h3>🌊 The Ocean</h3><p>Oceans cover over 70% of Earth's surface and contain about 97% of all water. The deepest point is the Mariana Trench at nearly 36,000 feet deep.</p><p><strong>Ocean Facts:</strong></p><ul><li>Over 80% of the ocean remains unexplored</li><li>The ocean is home to 94% of all life on Earth</li><li>Coral reefs support 25% of all marine species</li><li>A whale's heartbeat can be heard from 2 miles away</li></ul></div>`,
         'science': `<div class="result-item"><h3>🔬 Science</h3><p>Science is the systematic study of the world around us through observation and experiment. It covers everything from atoms to galaxies.</p><p><strong>Fields of Science:</strong></p><ul><li>Biology - Study of living organisms</li><li>Chemistry - Study of matter and reactions</li><li>Physics - Study of energy and forces</li><li>Astronomy - Study of stars and planets</li></ul></div>`,
@@ -2046,6 +2046,8 @@ function browserNavigate(query) {
         'pixelvault.io': getPixelVaultWebsite,
         'www.cosmicblog.org': getCosmicBlogWebsite,
         'cosmicblog.org': getCosmicBlogWebsite,
+        'www.novaspark.tech': getNovaSparkWebsite,
+        'novaspark.tech': getNovaSparkWebsite,
     };
     const siteKey = Object.keys(websites).find(k => query.toLowerCase().includes(k));
 
@@ -2055,7 +2057,7 @@ function browserNavigate(query) {
     } else if (key) {
         content = results[key];
     } else {
-        content = `<div class="result-item"><h3>🔍 No results found for "${query}"</h3><p>Try searching: space, dinosaurs, minecraft, animals, ocean, science, robots, football, or history.</p><p>Or visit a website: <a onclick="browserNavigate('www.zappycook.net')" style="cursor:pointer;color:#4285f4">www.zappycook.net</a> · <a onclick="browserNavigate('www.pixelvault.io')" style="cursor:pointer;color:#4285f4">www.pixelvault.io</a> · <a onclick="browserNavigate('www.cosmicblog.org')" style="cursor:pointer;color:#4285f4">www.cosmicblog.org</a></p></div>`;
+        content = `<div class="result-item"><h3>🔍 No results found for "${query}"</h3><p>Try searching: space, dinosaurs, animals, ocean, science, robots, football, or history.</p><p>Or visit a website: <a onclick="browserNavigate('www.zappycook.net')" style="cursor:pointer;color:#4285f4">www.zappycook.net</a> · <a onclick="browserNavigate('www.pixelvault.io')" style="cursor:pointer;color:#4285f4">www.pixelvault.io</a> · <a onclick="browserNavigate('www.cosmicblog.org')" style="cursor:pointer;color:#4285f4">www.cosmicblog.org</a> · <a onclick="browserNavigate('www.novaspark.tech')" style="cursor:pointer;color:#4285f4">www.novaspark.tech</a></p></div>`;
     }
 
     resultsDiv.innerHTML = `
@@ -2198,6 +2200,46 @@ function getCosmicBlogWebsite() {
     `;
 }
 
+function getNovaSparkWebsite() {
+    return `
+        <div class="fake-website">
+            <div class="fake-site-header" style="background:linear-gradient(135deg,#6c5ce7,#fd79a8);padding:20px;border-radius:8px 8px 0 0;color:white;">
+                <h1 style="margin:0;font-size:28px;">⚡ NovaSpark.tech</h1>
+                <p style="margin:4px 0 0;opacity:0.9;">Daily tech news, gadget reviews & how-tos</p>
+            </div>
+            <div class="fake-site-body" style="background:#fafafa;padding:20px;border-radius:0 0 8px 8px;border:1px solid #eee;">
+                <h2 style="color:#6c5ce7;">Top Stories Today</h2>
+                <div style="display:flex;flex-direction:column;gap:14px;margin-top:12px;">
+                    <div style="background:white;border-radius:10px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.06);display:flex;gap:14px;align-items:flex-start;">
+                        <div style="font-size:36px;">🤖</div>
+                        <div>
+                            <h3 style="margin:0 0 4px;color:#2d3436;">New AI Chip Runs 10x Faster on a Single Battery</h3>
+                            <p style="color:#636e72;font-size:13px;margin:0 0 6px;">Startup NeuralEdge unveiled a chip that processes AI tasks locally without needing the cloud — promising huge privacy and speed improvements.</p>
+                            <span style="font-size:12px;color:#6c5ce7;">✍️ by TechReporter &nbsp;|&nbsp; Apr 19, 2026 &nbsp;|&nbsp; 💬 57 comments</span>
+                        </div>
+                    </div>
+                    <div style="background:white;border-radius:10px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.06);display:flex;gap:14px;align-items:flex-start;">
+                        <div style="font-size:36px;">🕶️</div>
+                        <div>
+                            <h3 style="margin:0 0 4px;color:#2d3436;">Smart Glasses That Translate Signs in Real Time</h3>
+                            <p style="color:#636e72;font-size:13px;margin:0 0 6px;">A new pair of AR glasses can read street signs, menus, and text in 40 languages and display a live translation right in your field of view.</p>
+                            <span style="font-size:12px;color:#6c5ce7;">✍️ by GadgetGuru &nbsp;|&nbsp; Apr 18, 2026 &nbsp;|&nbsp; 💬 34 comments</span>
+                        </div>
+                    </div>
+                    <div style="background:white;border-radius:10px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.06);display:flex;gap:14px;align-items:flex-start;">
+                        <div style="font-size:36px;">🔋</div>
+                        <div>
+                            <h3 style="margin:0 0 4px;color:#2d3436;">Solar Paint That Charges Your Phone Through Walls</h3>
+                            <p style="color:#636e72;font-size:13px;margin:0 0 6px;">Researchers have developed a photovoltaic paint that can be applied to any surface and generate electricity from ambient light — indoors or outdoors.</p>
+                            <span style="font-size:12px;color:#6c5ce7;">✍️ by GreenTechNow &nbsp;|&nbsp; Apr 17, 2026 &nbsp;|&nbsp; 💬 102 comments</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
 function browserGoBack() {
     // Simple back - just go to homepage
     const resultsDiv = document.getElementById('browser-results');
@@ -2211,7 +2253,7 @@ function browserGoBack() {
                 <div class="browser-shortcuts">
                 <div class="shortcut" onclick="browserNavigate('space')">🚀 Space</div>
                 <div class="shortcut" onclick="browserNavigate('dinosaurs')">🦕 Dinosaurs</div>
-                <div class="shortcut" onclick="browserNavigate('minecraft')">⛏️ Minecraft</div>
+                <div class="shortcut website-shortcut" onclick="browserNavigate('www.novaspark.tech')">⚡ NovaSpark.tech</div>
                 <div class="shortcut" onclick="browserNavigate('animals')">🐘 Animals</div>
                 <div class="shortcut" onclick="browserNavigate('ocean')">🌊 Ocean</div>
                 <div class="shortcut" onclick="browserNavigate('science')">🔬 Science</div>
