@@ -1453,9 +1453,9 @@ body, html {
 
 .browser-shortcuts {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 16px;
-    max-width: 400px;
+    max-width: 600px;
     margin: 0 auto;
 }
 
@@ -1477,6 +1477,17 @@ body, html {
 .shortcut:hover {
     background: #e8eaed;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.shortcut.website-shortcut {
+    background: #e8f0fe;
+    border-color: #4285f4;
+    color: #1a73e8;
+    font-weight: 600;
+}
+
+.shortcut.website-shortcut:hover {
+    background: #d2e3fc;
 }
 
 .search-results {
