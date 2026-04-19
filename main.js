@@ -639,11 +639,11 @@ class WindowManager {
                 <div class="net2-main" id="net2-main">
                     <div class="net2-hero">
                         <div class="hero-content">
-                            <h1 id="net2-hero-title">Stranger Things</h1>
-                            <p id="net2-hero-description">When a young boy vanishes, a small town uncovers a mystery involving secret experiments, terrifying supernatural forces, and one strange little girl.</p>
+                            <h1 id="net2-hero-title">Shadow Protocol</h1>
+                            <p id="net2-hero-description">A rogue AI escapes a secret government lab and must decide whether to save humanity or destroy it. A thrilling sci-fi series unlike anything you've seen.</p>
                             <div class="hero-buttons">
-                                <button class="net2-play-btn" onclick="playNet2Content('Stranger Things')">▶ Play</button>
-                                <button class="net2-info-btn" onclick="playNet2Info('Stranger Things')">ℹ More Info</button>
+                                <button class="net2-play-btn" onclick="playNet2Content('Shadow Protocol')">▶ Play</button>
+                                <button class="net2-info-btn" onclick="showNet2Info('Shadow Protocol')">ℹ More Info</button>
                             </div>
                         </div>
                     </div>
@@ -651,20 +651,20 @@ class WindowManager {
                     <div class="net2-row">
                         <h2>Trending Now</h2>
                         <div class="net2-row-content">
-                            <div class="net2-item" onclick="playNet2Content('The Crown')">
-                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'%3E%3Crect fill='%23333' width='200' height='300'/%3E%3Ctext x='100' y='150' font-size='24' fill='white' text-anchor='middle'%3E👑%3C/text%3E%3Ctext x='100' y='180' font-size='14' fill='white' text-anchor='middle'%3EThe Crown%3C/text%3E%3C/svg%3E" alt="The Crown">
+                            <div class="net2-item" onclick="playNet2Content('Vortex Rising')">
+                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'%3E%3Crect fill='%23162447' width='200' height='300'/%3E%3Ctext x='100' y='130' font-size='50' fill='white' text-anchor='middle'%3E🌀%3C/text%3E%3Ctext x='100' y='170' font-size='16' fill='white' text-anchor='middle'%3EVortex Rising%3C/text%3E%3C/svg%3E" alt="Vortex Rising">
                             </div>
-                            <div class="net2-item" onclick="playNet2Content('Breaking Bad')">
-                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'%3E%3Crect fill='%23333' width='200' height='300'/%3E%3Ctext x='100' y='150' font-size='24' fill='white' text-anchor='middle'%3E🧪%3C/text%3E%3Ctext x='100' y='180' font-size='14' fill='white' text-anchor='middle'%3EBreaking Bad%3C/text%3E%3C/svg%3E" alt="Breaking Bad">
+                            <div class="net2-item" onclick="playNet2Content('Neon Hollow')">
+                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'%3E%3Crect fill='%231b1423' width='200' height='300'/%3E%3Ctext x='100' y='130' font-size='50' fill='white' text-anchor='middle'%3E💜%3C/text%3E%3Ctext x='100' y='170' font-size='16' fill='white' text-anchor='middle'%3ENeon Hollow%3C/text%3E%3C/svg%3E" alt="Neon Hollow">
                             </div>
-                            <div class="net2-item" onclick="playNet2Content('The Witcher')">
-                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'%3E%3Crect fill='%23333' width='200' height='300'/%3E%3Ctext x='100' y='150' font-size='24' fill='white' text-anchor='middle'%3E⚔️%3C/text%3E%3Ctext x='100' y='180' font-size='14' fill='white' text-anchor='middle'%3EThe Witcher%3C/text%3E%3C/svg%3E" alt="The Witcher">
+                            <div class="net2-item" onclick="playNet2Content('The Frozen Keep')">
+                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'%3E%3Crect fill='%230a3d62' width='200' height='300'/%3E%3Ctext x='100' y='130' font-size='50' fill='white' text-anchor='middle'%3E❄️%3C/text%3E%3Ctext x='100' y='170' font-size='14' fill='white' text-anchor='middle'%3EThe Frozen Keep%3C/text%3E%3C/svg%3E" alt="The Frozen Keep">
                             </div>
-                            <div class="net2-item" onclick="playNet2Content('Money Heist')">
-                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'%3E%3Crect fill='%23333' width='200' height='300'/%3E%3Ctext x='100' y='150' font-size='24' fill='white' text-anchor='middle'%3E💰%3C/text%3E%3Ctext x='100' y='180' font-size='14' fill='white' text-anchor='middle'%3EMoney Heist%3C/text%3E%3C/svg%3E" alt="Money Heist">
+                            <div class="net2-item" onclick="playNet2Content('Dust & Thunder')">
+                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'%3E%3Crect fill='%23522e20' width='200' height='300'/%3E%3Ctext x='100' y='130' font-size='50' fill='white' text-anchor='middle'%3E⚡%3C/text%3E%3Ctext x='100' y='170' font-size='16' fill='white' text-anchor='middle'%3EDust & Thunder%3C/text%3E%3C/svg%3E" alt="Dust and Thunder">
                             </div>
-                            <div class="net2-item" onclick="playNet2Content('Dark')">
-                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'%3E%3Crect fill='%23333' width='200' height='300'/%3E%3Ctext x='100' y='150' font-size='24' fill='white' text-anchor='middle'%3E🌑%3C/text%3E%3Ctext x='100' y='180' font-size='14' fill='white' text-anchor='middle'%3EDark%3C/text%3E%3C/svg%3E" alt="Dark">
+                            <div class="net2-item" onclick="playNet2Content('Shadow Protocol')">
+                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'%3E%3Crect fill='%23111' width='200' height='300'/%3E%3Ctext x='100' y='130' font-size='50' fill='white' text-anchor='middle'%3E🤖%3C/text%3E%3Ctext x='100' y='170' font-size='14' fill='white' text-anchor='middle'%3EShadow Protocol%3C/text%3E%3C/svg%3E" alt="Shadow Protocol">
                             </div>
                         </div>
                     </div>
@@ -672,23 +672,38 @@ class WindowManager {
                     <div class="net2-row">
                         <h2>Popular on Net2</h2>
                         <div class="net2-row-content">
-                            <div class="net2-item" onclick="playNet2Content('Inception')">
-                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'%3E%3Crect fill='%23333' width='200' height='300'/%3E%3Ctext x='100' y='150' font-size='24' fill='white' text-anchor='middle'%3E🧠%3C/text%3E%3Ctext x='100' y='180' font-size='14' fill='white' text-anchor='middle'%3EInception%3C/text%3E%3C/svg%3E" alt="Inception">
+                            <div class="net2-item" onclick="playNet2Content('Galactic Drifters')">
+                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'%3E%3Crect fill='%231a1a2e' width='200' height='300'/%3E%3Ctext x='100' y='130' font-size='50' fill='white' text-anchor='middle'%3E🚀%3C/text%3E%3Ctext x='100' y='170' font-size='14' fill='white' text-anchor='middle'%3EGalactic Drifters%3C/text%3E%3C/svg%3E" alt="Galactic Drifters">
                             </div>
-                            <div class="net2-item" onclick="playNet2Content('Interstellar')">
-                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'%3E%3Crect fill='%23333' width='200' height='300'/%3E%3Ctext x='100' y='150' font-size='24' fill='white' text-anchor='middle'%3E🚀%3C/text%3E%3Ctext x='100' y='180' font-size='14' fill='white' text-anchor='middle'%3EInterstellar%3C/text%3E%3C/svg%3E" alt="Interstellar">
+                            <div class="net2-item" onclick="playNet2Content('Crimson Pact')">
+                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'%3E%3Crect fill='%234a0000' width='200' height='300'/%3E%3Ctext x='100' y='130' font-size='50' fill='white' text-anchor='middle'%3E🗡️%3C/text%3E%3Ctext x='100' y='170' font-size='16' fill='white' text-anchor='middle'%3ECrimson Pact%3C/text%3E%3C/svg%3E" alt="Crimson Pact">
                             </div>
-                            <div class="net2-item" onclick="playNet2Content('The Matrix')">
-                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'%3E%3Crect fill='%23333' width='200' height='300'/%3E%3Ctext x='100' y='150' font-size='24' fill='white' text-anchor='middle'%3E💊%3C/text%3E%3Ctext x='100' y='180' font-size='14' fill='white' text-anchor='middle'%3EThe Matrix%3C/text%3E%3C/svg%3E" alt="The Matrix">
+                            <div class="net2-item" onclick="playNet2Content('Echo Valley')">
+                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'%3E%3Crect fill='%23134d0f' width='200' height='300'/%3E%3Ctext x='100' y='130' font-size='50' fill='white' text-anchor='middle'%3E🌿%3C/text%3E%3Ctext x='100' y='170' font-size='16' fill='white' text-anchor='middle'%3EEcho Valley%3C/text%3E%3C/svg%3E" alt="Echo Valley">
                             </div>
-                            <div class="net2-item" onclick="playNet2Content('Pulp Fiction')">
-                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'%3E%3Crect fill='%23333' width='200' height='300'/%3E%3Ctext x='100' y='150' font-size='24' fill='white' text-anchor='middle'%3E🔫%3C/text%3E%3Ctext x='100' y='180' font-size='14' fill='white' text-anchor='middle'%3EPulp Fiction%3C/text%3E%3C/svg%3E" alt="Pulp Fiction">
+                            <div class="net2-item" onclick="playNet2Content('Iron Circuit')">
+                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'%3E%3Crect fill='%23212121' width='200' height='300'/%3E%3Ctext x='100' y='130' font-size='50' fill='white' text-anchor='middle'%3E⚙️%3C/text%3E%3Ctext x='100' y='170' font-size='16' fill='white' text-anchor='middle'%3EIron Circuit%3C/text%3E%3C/svg%3E" alt="Iron Circuit">
                             </div>
-                            <div class="net2-item" onclick="playNet2Content('Fight Club')">
-                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'%3E%3Crect fill='%23333' width='200' height='300'/%3E%3Ctext x='100' y='150' font-size='24' fill='white' text-anchor='middle'%3E👊%3C/text%3E%3Ctext x='100' y='180' font-size='14' fill='white' text-anchor='middle'%3EFight Club%3C/text%3E%3C/svg%3E" alt="Fight Club">
+                            <div class="net2-item" onclick="playNet2Content('Lost Meridian')">
+                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'%3E%3Crect fill='%23003049' width='200' height='300'/%3E%3Ctext x='100' y='130' font-size='50' fill='white' text-anchor='middle'%3E🧭%3C/text%3E%3Ctext x='100' y='170' font-size='16' fill='white' text-anchor='middle'%3ELost Meridian%3C/text%3E%3C/svg%3E" alt="Lost Meridian">
                             </div>
                         </div>
                     </div>
+
+                    <div id="net2-info-panel" class="net2-info-panel hidden">
+                        <div class="net2-info-content">
+                            <button class="net2-player-close" onclick="closeNet2Info()">✕</button>
+                            <div class="net2-info-poster" id="net2-info-poster"></div>
+                            <div class="net2-info-details">
+                                <h2 id="net2-info-title"></h2>
+                                <div class="net2-info-meta" id="net2-info-meta"></div>
+                                <p id="net2-info-desc"></p>
+                                <div class="net2-info-episodes" id="net2-info-episodes"></div>
+                                <button class="net2-play-btn" id="net2-info-playbtn" style="margin-top:12px;">▶ Play Now</button>
+                            </div>
+                        </div>
+                    </div>
+
                     <div id="net2-player" class="net2-player hidden">
                         <div class="net2-player-screen">
                             <button class="net2-player-close" onclick="closeNet2Player()">✕</button>
@@ -1790,23 +1805,98 @@ function showNet2Category(category, event) {
     }
 }
 
+// ===== NET2 SHOW DATA =====
+const NET2_SHOWS = {
+    'Shadow Protocol': {
+        emoji: '🤖', genre: 'Sci-Fi', rating: '16+', year: '2024',
+        desc: 'A rogue AI escapes a secret government lab and must decide whether to save humanity or destroy it.',
+        episodes: ['S1 E1 - Awakening', 'S1 E2 - First Light', 'S1 E3 - The Choice', 'S1 E4 - Cascade', 'S1 E5 - Reckoning'],
+        scenes: ['🤖 The AI awakens in the lab...', '💡 First contact with humans!', '⚡ Systems are overloading!', '🏃 The escape sequence begins!', '🌍 Standing on the rooftop, watching the city...', '🎉 And we call it... complete!']
+    },
+    'Vortex Rising': {
+        emoji: '🌀', genre: 'Action', rating: '13+', year: '2025',
+        desc: 'A storm chaser discovers portals hidden inside massive tornadoes, leading to another dimension.',
+        episodes: ['S1 E1 - Storm Season', 'S1 E2 - Into the Eye', 'S1 E3 - The Other Side', 'S1 E4 - Pulling Back'],
+        scenes: ['🌪️ The tornado is 2 miles wide!', '🚗 Racing towards the storm!', '✨ A portal opens inside the vortex!', '🌏 Stepping through to a new world...', '⚡ Everything is different here!', '🎬 End of Episode 1']
+    },
+    'Neon Hollow': {
+        emoji: '💜', genre: 'Mystery', rating: '15+', year: '2025',
+        desc: 'In a neon-lit underground city, a detective hunts a thief who can walk through walls.',
+        episodes: ['S1 E1 - The First Vanish', 'S1 E2 - Neon Trails', 'S1 E3 - Phase Shift', 'S1 E4 - Hollow Ground', 'S1 E5 - Caught'],
+        scenes: ['🌃 The city glows purple at midnight...', '🔦 A break-in at the vault — nothing taken?', '👣 Footprints disappear mid-corridor!', '🕵️ The detective closes in...', '💜 The truth is revealed!', '🎬 To be continued...']
+    },
+    'The Frozen Keep': {
+        emoji: '❄️', genre: 'Fantasy', rating: '10+', year: '2023',
+        desc: 'A young knight must brave an ever-frozen castle to rescue a king trapped inside a blizzard curse.',
+        episodes: ['S1 E1 - The Curse Begins', 'S1 E2 - Ice Walls', 'S1 E3 - The Guardian', 'S1 E4 - Thaw'],
+        scenes: ['❄️ Snow covers every stone of the castle...', '🛡️ The knight enters the frozen gate!', '🐉 A frost dragon blocks the path!', '⚔️ The battle for the king begins!', '🔥 A single flame melts the curse!', '☀️ Spring returns to the kingdom!']
+    },
+    'Dust & Thunder': {
+        emoji: '⚡', genre: 'Western', rating: '12+', year: '2024',
+        desc: 'Two rival outlaws must team up to stop a steam-powered war machine rolling through the frontier.',
+        episodes: ['S1 E1 - Rival Guns', 'S1 E2 - The Iron Wagon', 'S1 E3 - Desert Alliance', 'S1 E4 - Final Stand'],
+        scenes: ['🌵 The desert stretches for miles...', '🤠 Two outlaws draw at the same time!', '🚂 A steam machine crushes the town!', '🤝 Old enemies shake hands!', '💥 The machine explodes in a cloud of dust!', '🎬 Ride off into the sunset...']
+    },
+    'Galactic Drifters': {
+        emoji: '🚀', genre: 'Sci-Fi', rating: '10+', year: '2025',
+        desc: 'A misfit crew of space traders accidentally discovers the coordinates of a legendary lost planet.',
+        episodes: ['S1 E1 - Hired Crew', 'S1 E2 - Warp Zone', 'S1 E3 - The Map', 'S1 E4 - Lost Planet', 'S1 E5 - Home'],
+        scenes: ['🚀 Launching from Dock 7...', '🌌 Jumping to hyperspace!', '👽 Strange signal detected!', '🪐 A planet that shouldn\'t exist!', '💫 The crew celebrates their discovery!', '🎬 End of season 1']
+    },
+    'Crimson Pact': {
+        emoji: '🗡️', genre: 'Fantasy', rating: '15+', year: '2024',
+        desc: 'Seven warriors from rival clans forge a blood pact to defeat an ancient shadow lord.',
+        episodes: ['S1 E1 - The Seven', 'S1 E2 - Blood Oath', 'S1 E3 - Shadow Falls', 'S1 E4 - The Price'],
+        scenes: ['🗡️ Seven blades rise in the moonlight...', '🩸 The pact is sealed!', '💀 The shadow lord awakens!', '⚔️ The battle is fierce and brutal!', '🌅 Dawn breaks over the battlefield!', '🎬 Victory — but at a cost...']
+    },
+    'Echo Valley': {
+        emoji: '🌿', genre: 'Drama', rating: '10+', year: '2023',
+        desc: 'A family moves to an ancient valley and discovers their new home echoes voices from the past.',
+        episodes: ['S1 E1 - Moving Day', 'S1 E2 - First Echo', 'S1 E3 - The Voice', 'S1 E4 - Answered'],
+        scenes: ['🌿 The moving truck pulls up the winding road...', '🏡 The old house feels alive!', '👂 A voice echoes from the walls!', '📜 Old letters found beneath the floorboards!', '👻 A friendly ghost says goodbye!', '🎬 The family is home at last']
+    },
+    'Iron Circuit': {
+        emoji: '⚙️', genre: 'Action', rating: '13+', year: '2025',
+        desc: 'Underground robot fighting rings, a mechanic who builds the most advanced bot ever constructed.',
+        episodes: ['S1 E1 - Scrap Yard', 'S1 E2 - First Fight', 'S1 E3 - Upgrades', 'S1 E4 - Championship'],
+        scenes: ['⚙️ Sparks fly in the workshop...', '🤖 IRONJAW enters the arena!', '💥 Crashing metal echoes everywhere!', '🔧 Emergency repairs at half-time!', '🏆 The crowd goes wild!', '🎬 Champion crowned!']
+    },
+    'Lost Meridian': {
+        emoji: '🧭', genre: 'Adventure', rating: '10+', year: '2024',
+        desc: 'An explorer following an ancient compass discovers a sea route that vanishes at midnight.',
+        episodes: ['S1 E1 - The Old Compass', 'S1 E2 - Midnight Tide', 'S1 E3 - Under the Map', 'S1 E4 - Found'],
+        scenes: ['🧭 The compass spins wildly at midnight...', '⛵ Setting sail into the unknown!', '🌊 A hidden sea route appears!', '🏝️ An uncharted island ahead!', '✨ Ancient treasure discovered!', '🎬 The journey continues...']
+    }
+};
+
+function showNet2Info(title) {
+    const show = NET2_SHOWS[title];
+    if (!show) return;
+    const panel = document.getElementById('net2-info-panel');
+    document.getElementById('net2-info-poster').innerHTML = `<div style="font-size:80px;text-align:center;padding:20px;background:#111;border-radius:8px;">${show.emoji}</div>`;
+    document.getElementById('net2-info-title').textContent = title;
+    document.getElementById('net2-info-meta').innerHTML = `<span>${show.year}</span> <span>${show.rating}</span> <span>${show.genre}</span>`;
+    document.getElementById('net2-info-desc').textContent = show.desc;
+    document.getElementById('net2-info-episodes').innerHTML = '<h3>Episodes</h3>' + show.episodes.map(ep =>
+        `<div class="net2-episode-item" onclick="playNet2Content('${title}')">${ep}</div>`
+    ).join('');
+    document.getElementById('net2-info-playbtn').onclick = () => { closeNet2Info(); playNet2Content(title); };
+    panel.classList.remove('hidden');
+}
+
+function closeNet2Info() {
+    document.getElementById('net2-info-panel').classList.add('hidden');
+}
+
 function playNet2Content(title) {
+    const show = NET2_SHOWS[title] || { scenes: ['🎬 Opening scene...', '⚡ Action!', '🎭 Drama unfolds!', '🏁 Climax!', '🎉 The End!'], desc: 'Enjoy this Net2 original.' };
     const player = document.getElementById('net2-player');
     const titleEl = document.getElementById('net2-player-title');
     const descEl = document.getElementById('net2-player-description');
-
-    if (player) {
-        player.classList.remove('hidden');
-    }
-    if (titleEl) {
-        titleEl.textContent = `Now Playing: ${title}`;
-    }
-    if (descEl) {
-        descEl.textContent = `Enjoy this episode or movie from Net2. Press Exit when you want to stop.`;
-    }
-    
-    // Start video simulation
-    startNet2Video();
+    if (player) player.classList.remove('hidden');
+    if (titleEl) titleEl.textContent = `▶ Now Playing: ${title}`;
+    if (descEl) descEl.textContent = show.desc;
+    startNet2Video(show.scenes);
 }
 
 function playNet2Info(title) {
@@ -1841,38 +1931,40 @@ const net2Scenes = [
     { text: "🏁 Climax approaching", duration: 20 }
 ];
 
-function startNet2Video() {
+function startNet2Video(customScenes) {
     net2IsPlaying = true;
     net2CurrentTime = 0;
     updateNet2Progress();
-    
+
+    const scenes = customScenes || net2Scenes.map(s => s.text);
     let sceneIndex = 0;
     let sceneTime = 0;
-    
+    const sceneDuration = Math.floor(net2Duration / scenes.length);
+
+    const sceneEl = document.getElementById('net2-video-scene');
+    if (sceneEl) sceneEl.querySelector('.net2-video-text').textContent = scenes[0];
+
+    if (net2VideoInterval) clearInterval(net2VideoInterval);
+
     net2VideoInterval = setInterval(() => {
         if (!net2IsPlaying) return;
-        
         net2CurrentTime++;
         sceneTime++;
-        
-        // Update progress bar
         updateNet2Progress();
-        
-        // Change scenes
-        if (sceneTime >= net2Scenes[sceneIndex].duration) {
-            sceneIndex = (sceneIndex + 1) % net2Scenes.length;
+        if (sceneTime >= sceneDuration && sceneIndex < scenes.length - 1) {
+            sceneIndex++;
             sceneTime = 0;
-            updateNet2Scene(sceneIndex);
+            const el = document.getElementById('net2-video-scene');
+            if (el) el.querySelector('.net2-video-text').textContent = scenes[sceneIndex];
         }
-        
-        // End video
         if (net2CurrentTime >= net2Duration) {
             net2IsPlaying = false;
             clearInterval(net2VideoInterval);
             net2VideoInterval = null;
-            updateNet2Scene(-1); // End credits
+            const el = document.getElementById('net2-video-scene');
+            if (el) el.querySelector('.net2-video-text').textContent = '🎉 The End — Thanks for watching!';
         }
-    }, 1000); // Update every second
+    }, 1000);
 }
 
 function updateNet2Scene(index) {
