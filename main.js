@@ -292,10 +292,16 @@ class WindowManager {
         icon.textContent = app.icon;
 
         icon.addEventListener('click', () => {
-            if (windowEl.style.display === 'none') {
+            const isVisible = windowEl.style.display !== 'none';
+            const isFocused = windowEl.classList.contains('active');
+            if (isVisible && isFocused) {
+                // Minimize
+                windowEl.style.display = 'none';
+                icon.classList.remove('active');
+            } else {
                 windowEl.style.display = 'flex';
+                this.focusWindow(windowEl);
             }
-            this.focusWindow(windowEl);
         });
 
         taskbarApps.appendChild(icon);
