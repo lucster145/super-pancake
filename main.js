@@ -694,9 +694,7 @@ class WindowManager {
                             <p id="net2-player-description">Enjoy your show on Net2.</p>
                             <div class="net2-video-window" id="net2-video-window">
                                 <div class="net2-video-content">
-                                    <div class="net2-video-scene" id="net2-video-scene">
-                                        <div class="net2-video-text">Loading...</div>
-                                    </div>
+                                    <canvas id="net2-canvas" class="net2-canvas" width="480" height="180"></canvas>
                                     <div class="net2-video-overlay">
                                         <div class="net2-progress-bar">
                                             <div class="net2-progress-fill" id="net2-progress-fill"></div>
@@ -1876,61 +1874,141 @@ const NET2_SHOWS = {
         emoji: '🤖', genre: 'Sci-Fi', rating: '16+', year: '2024',
         desc: 'A rogue AI escapes a secret government lab and must decide whether to save humanity or destroy it.',
         episodes: ['S1 E1 - Awakening', 'S1 E2 - First Light', 'S1 E3 - The Choice', 'S1 E4 - Cascade', 'S1 E5 - Reckoning'],
-        scenes: ['🤖 The AI awakens in the lab...', '💡 First contact with humans!', '⚡ Systems are overloading!', '🏃 The escape sequence begins!', '🌍 Standing on the rooftop, watching the city...', '🎉 And we call it... complete!']
+        scenes: ['🤖 The AI awakens in the lab...', '💡 First contact with humans!', '⚡ Systems are overloading!', '🏃 The escape sequence begins!', '🌍 Standing on the rooftop, watching the city...', '🎉 And we call it... complete!'],
+        frames: [
+            ['   _____    ', '  /     \\   ', ' | () () |  ', '  \\  ^  /   ', '   |||||    ', '  |||||     ', ' BOOTING UP '],
+            ['  [SERVER]  ', '  |     |   ', '  | ??? |   ', '  |_____|   ', '  SCANNING  ', ' PERIMETER  ', '  . . . .   '],
+            [' +--------+ ', ' |01001001| ', ' |11010110| ', ' |00111001| ', ' +--------+ ', '  DATA LEAK ', '  DETECTED  '],
+            [' >>RUNNING  ', ' if alive:  ', '   escape() ', ' else:      ', '   wait()   ', '            ', ' EXECUTING  '],
+            ['   /|/|\\    ', '  / | | \\   ', ' /  | |  \\  ', '    |_|     ', '  ROOFTOP   ', '  DECISION  ', '  MOMENT    '],
+            ['  ______    ', ' /      \\   ', '| CHOICE |  ', '|  SAVE  |  ', '| HUMANS |  ', ' \\______/   ', '  CHOSEN    '],
+        ]
     },
     'Vortex Rising': {
         emoji: '🌀', genre: 'Action', rating: '13+', year: '2025',
         desc: 'A storm chaser discovers portals hidden inside massive tornadoes, leading to another dimension.',
         episodes: ['S1 E1 - Storm Season', 'S1 E2 - Into the Eye', 'S1 E3 - The Other Side', 'S1 E4 - Pulling Back'],
-        scenes: ['🌪️ The tornado is 2 miles wide!', '🚗 Racing towards the storm!', '✨ A portal opens inside the vortex!', '🌏 Stepping through to a new world...', '⚡ Everything is different here!', '🎬 End of Episode 1']
+        scenes: ['🌪️ The tornado is 2 miles wide!', '🚗 Racing towards the storm!', '✨ A portal opens inside the vortex!', '🌏 Stepping through to a new world...', '⚡ Everything is different here!', '🎬 End of Episode 1'],
+        frames: [
+            ['    _____   ', '   / ___ \\  ', '  | /   \\ | ', '  | |   | | ', '  | \\___/ | ', '   \\_____/  ', ' STORM F5   '],
+            [' \\\\  //  /  ', '  \\\\/  /    ', '   >\\ /     ', '   / X \\    ', '  / /\\ \\    ', ' / /  \\ \\   ', ' CHASING IT '],
+            [' **  **  ** ', '*  \\/ \\/*   ', '  * \\/ *    ', '   *()*     ', '  * /\\ *    ', '   /    \\   ', ' PORTAL!!!  '],
+            ['  ~~~~~~~   ', ' ~WORLD TWO~', '  ~~~~~~~   ', '  skyblue   ', '  two suns  ', '  no roads  ', 'OTHERWORLD  '],
+            ['  ??? !!!   ', ' different  ', '  physics   ', '  rules     ', '  here      ', '  hold on   ', ' ADAPTING   '],
+            ['  FADE OUT  ', '            ', '    THE     ', '    END     ', '     OF     ', '    EP.1    ', '            '],
+        ]
     },
     'Neon Hollow': {
         emoji: '💜', genre: 'Mystery', rating: '15+', year: '2025',
         desc: 'In a neon-lit underground city, a detective hunts a thief who can walk through walls.',
         episodes: ['S1 E1 - The First Vanish', 'S1 E2 - Neon Trails', 'S1 E3 - Phase Shift', 'S1 E4 - Hollow Ground', 'S1 E5 - Caught'],
-        scenes: ['🌃 The city glows purple at midnight...', '🔦 A break-in at the vault — nothing taken?', '👣 Footprints disappear mid-corridor!', '🕵️ The detective closes in...', '💜 The truth is revealed!', '🎬 To be continued...']
+        scenes: ['🌃 The city glows purple at midnight...', '🔦 A break-in at the vault — nothing taken?', '👣 Footprints disappear mid-corridor!', '🕵️ The detective closes in...', '💜 The truth is revealed!', '🎬 To be continued...'],
+        frames: [
+            [' |  |  |  | ', ' |  |  |  | ', '  NEON CITY ', ' ___________', '/purple haze\\', '\\___________/', ' UNDERGROUND'],
+            [' [=VAULT==] ', ' |        | ', ' |  EMPTY  | ', ' |        | ', ' [========] ', ' NO PRINTS  ', ' FOUND HERE '],
+            [' . . . . .  ', ' . . . .    ', ' . . .      ', ' . .        ', ' .          ', '            ', ' TRAIL GONE '],
+            ['  DETECTIVE ', '   []_[]    ', '   (o.o)    ', '   (| |)    ', '   / | \\    ', '  searching ', ' CLOSING IN '],
+            [' PHASE SUIT ', '  _______   ', ' |       |  ', ' | ghost |  ', ' |_______|  ', ' walks thru ', '   WALLS!   '],
+            [' CAUGHT!    ', '  _/\\_      ', ' (X . X)    ', '  >| |<     ', '   | |      ', '  / | \\     ', ' GAME OVER  '],
+        ]
     },
     'The Frozen Keep': {
         emoji: '❄️', genre: 'Fantasy', rating: '10+', year: '2023',
         desc: 'A young knight must brave an ever-frozen castle to rescue a king trapped inside a blizzard curse.',
         episodes: ['S1 E1 - The Curse Begins', 'S1 E2 - Ice Walls', 'S1 E3 - The Guardian', 'S1 E4 - Thaw'],
-        scenes: ['❄️ Snow covers every stone of the castle...', '🛡️ The knight enters the frozen gate!', '🐉 A frost dragon blocks the path!', '⚔️ The battle for the king begins!', '🔥 A single flame melts the curse!', '☀️ Spring returns to the kingdom!']
+        scenes: ['❄️ Snow covers every stone of the castle...', '🛡️ The knight enters the frozen gate!', '🐉 A frost dragon blocks the path!', '⚔️ The battle for the king begins!', '🔥 A single flame melts the curse!', '☀️ Spring returns to the kingdom!'],
+        frames: [
+            [' *  *  *  * ', '*  CASTLE  *', ' * * * * * ', '/|  FROZEN |\\', '|| []  [] ||', '||  ____  ||', '|/__________\\|'],
+            [' >>> ENTER  ', '  [  GATE ] ', '  |      |  ', '  |  ICE  | ', '  | WALLS | ', '  |______|  ', ' STEP IN!   '],
+            ['  /\\    /\\  ', ' /  \\  /  \\ ', '/FROST\\DRAG \\ ', '|  ()    () |', '|    /\\    |', ' \\  /  \\  / ', '  GUARDIAN  '],
+            ['  *CLANG*   ', '  /|      | ', ' / |  VS  | ', '/  |  DR  | ', '   |  AG  | ', '   |  ON  | ', '  BATTLE!   '],
+            ['    ~~~     ', '   ~fire~   ', '  ~~~~~~~   ', '   melting  ', '   cracking ', '   falling  ', ' ICE BREAKS '],
+            ['  * * * *   ', ' SPRING SUN ', '   (  )     ', '  ------    ', ' FLOWERS!   ', ' KING SAVED ', ' THE END    '],
+        ]
     },
     'Dust & Thunder': {
         emoji: '⚡', genre: 'Western', rating: '12+', year: '2024',
         desc: 'Two rival outlaws must team up to stop a steam-powered war machine rolling through the frontier.',
         episodes: ['S1 E1 - Rival Guns', 'S1 E2 - The Iron Wagon', 'S1 E3 - Desert Alliance', 'S1 E4 - Final Stand'],
-        scenes: ['🌵 The desert stretches for miles...', '🤠 Two outlaws draw at the same time!', '🚂 A steam machine crushes the town!', '🤝 Old enemies shake hands!', '💥 The machine explodes in a cloud of dust!', '🎬 Ride off into the sunset...']
+        scenes: ['🌵 The desert stretches for miles...', '🤠 Two outlaws draw at the same time!', '🚂 A steam machine crushes the town!', '🤝 Old enemies shake hands!', '💥 The machine explodes in a cloud of dust!', '🎬 Ride off into the sunset...'],
+        frames: [
+            [' ___________', ' WILD  WEST ', '  |    |    ', '  |  /\\|    ', '  | /  |    ', ' cactus land', ' DUSTY ROAD '],
+            [' o_   _o    ', ' )|___|  (  ', '  |   |  o  ', '  |___|  )  ', ' DRAW!!!    ', ' both guns  ', ' at once... '],
+            [' [==STEAM==]', ' | ( ) ( )  ', ' |_MACHINE_ ', ' /  /  /  / ', '/ / / / /   ', 'CRUSHING IT ', '   TOWN!    '],
+            ['   o  o     ', '   )  (     ', '  /|  |\     ', ' shake shake', '  hands     ', ' TRUCE TIME ', ' TEAM UP!   '],
+            ['   K  A  B  ', ' * BOOM!  * ', '  *      *  ', '   *    *   ', '    *  *    ', '     **     ', ' EXPLOSION! '],
+            ['  sunset    ', ' ___________', '/           \\', '  ride away ', '  together  ', '  THE END   ', '            '],
+        ]
     },
     'Galactic Drifters': {
         emoji: '🚀', genre: 'Sci-Fi', rating: '10+', year: '2025',
         desc: 'A misfit crew of space traders accidentally discovers the coordinates of a legendary lost planet.',
         episodes: ['S1 E1 - Hired Crew', 'S1 E2 - Warp Zone', 'S1 E3 - The Map', 'S1 E4 - Lost Planet', 'S1 E5 - Home'],
-        scenes: ['🚀 Launching from Dock 7...', '🌌 Jumping to hyperspace!', '👽 Strange signal detected!', '🪐 A planet that shouldn\'t exist!', '💫 The crew celebrates their discovery!', '🎬 End of season 1']
+        scenes: ['🚀 Launching from Dock 7...', '🌌 Jumping to hyperspace!', '👽 Strange signal detected!', '🪐 A planet that shouldn\'t exist!', '💫 The crew celebrates their discovery!', '🎬 End of season 1'],
+        frames: [
+            ['   [DOCK 7] ', '      |     ', '     /|\     ', '    / | \\   ', '   /  |  \\  ', ' LIFTOFF!!! ', ' 3.. 2.. 1..'],
+            [' * . * . *  ', '.  HYPER  . ', ' * SPACE  * ', '.  **** .. . ', ' .  ** .  . ', '  . * .  .  ', ' WARP!!!!   '],
+            [' . . ! . .  ', '. . ??? . . ', ' beep boop  ', ' SIGNAL!!!  ', ' origin:    ', ' UNKNOWN    ', ' TRACK IT!  '],
+            ['    ____    ', '   /    \\   ', '  | LOST |  ', '  |WORLD |  ', '   \\____/   ', ' shouldnt   ', ' EXIST HERE '],
+            ['   \\o/ \\o/  ', '    |   |   ', '  CELEBRATE ', '   * * * *  ', '  * * * * * ', '  FOUND IT  ', ' LEGENDARY! '],
+            ['  SEASON 1  ', '  _________ ', ' |  FINAL  |', ' | EPISODE |', ' |_________|', '  THE END   ', '            '],
+        ]
     },
     'Crimson Pact': {
         emoji: '🗡️', genre: 'Fantasy', rating: '15+', year: '2024',
         desc: 'Seven warriors from rival clans forge a blood pact to defeat an ancient shadow lord.',
         episodes: ['S1 E1 - The Seven', 'S1 E2 - Blood Oath', 'S1 E3 - Shadow Falls', 'S1 E4 - The Price'],
-        scenes: ['🗡️ Seven blades rise in the moonlight...', '🩸 The pact is sealed!', '💀 The shadow lord awakens!', '⚔️ The battle is fierce and brutal!', '🌅 Dawn breaks over the battlefield!', '🎬 Victory — but at a cost...']
+        scenes: ['🗡️ Seven blades rise in the moonlight...', '🩸 The pact is sealed!', '💀 The shadow lord awakens!', '⚔️ The battle is fierce and brutal!', '🌅 Dawn breaks over the battlefield!', '🎬 Victory — but at a cost...'],
+        frames: [
+            [' / | | | \\ ', '   | | |   ', '  7 BLADES  ', '  rise up   ', '  moonlight ', '  gleaming  ', ' CLAN MEET  '],
+            ['   ~~~~     ', '  ~ BLOOD ~ ', '   ~ PACT ~ ', '  ~ SEALED~ ', '   ~~~~     ', ' 7 warriors ', ' AS ONE NOW '],
+            ['  DARKNESS  ', ' /\\  /\\  /\\ ', '/  \\/  \\/  \\', '  SHADOW    ', '  LORD      ', '  AWAKENS!  ', ' !!!!!!!!!  '],
+            [' *clash*    ', ' *BANG*     ', ' *CRUNCH*   ', '  BATTLE    ', '  RAGES ON  ', '  7 vs 1    ', ' FIGHTING!  '],
+            ['  .......   ', '   .....    ', '    ...     ', '     .      ', '   DAWN     ', '  BREAKS!   ', ' SURVIVORS? '],
+            [' VICTORY!   ', '  but...    ', '  losses    ', '  were      ', '  great     ', '  ...       ', ' THE PRICE  '],
+        ]
     },
     'Echo Valley': {
         emoji: '🌿', genre: 'Drama', rating: '10+', year: '2023',
         desc: 'A family moves to an ancient valley and discovers their new home echoes voices from the past.',
         episodes: ['S1 E1 - Moving Day', 'S1 E2 - First Echo', 'S1 E3 - The Voice', 'S1 E4 - Answered'],
-        scenes: ['🌿 The moving truck pulls up the winding road...', '🏡 The old house feels alive!', '👂 A voice echoes from the walls!', '📜 Old letters found beneath the floorboards!', '👻 A friendly ghost says goodbye!', '🎬 The family is home at last']
+        scenes: ['🌿 The moving truck pulls up the winding road...', '🏡 The old house feels alive!', '👂 A voice echoes from the walls!', '📜 Old letters found beneath the floorboards!', '👻 A friendly ghost says goodbye!', '🎬 The family is home at last'],
+        frames: [
+            [' [  TRUCK ]>', '  /______/ ', ' |  move  | ', ' | day :) | ', '  --------  ', ' VALLEY RD  ', ' WINDING... '],
+            ['  ________  ', ' /  HOME  \\ ', '|  ______  |', '| |      | |', '| | door | |', '|_|______|_|', ' OLD HOUSE! '],
+            ['   ------   ', '  | ECHO |  ', '   ------   ', '  ------    ', ' | ECHO |   ', '  ------    ', ' ECHO ECHO  '],
+            ['  [LETTER]  ', '  ________  ', ' |dear..  | ', ' |friends | ', ' |in 1902 | ', ' |________|  ', ' FROM PAST  '],
+            ['   o O O    ', '  FRIENDLY  ', '   GHOST    ', '  (  ^  )   ', '   waves    ', '  goodbye   ', ' FAREWELL!  '],
+            ['  HOME! :)  ', '  family    ', '  is safe   ', '  at last   ', '   THE END  ', '            ', '            '],
+        ]
     },
     'Iron Circuit': {
         emoji: '⚙️', genre: 'Action', rating: '13+', year: '2025',
         desc: 'Underground robot fighting rings, a mechanic who builds the most advanced bot ever constructed.',
         episodes: ['S1 E1 - Scrap Yard', 'S1 E2 - First Fight', 'S1 E3 - Upgrades', 'S1 E4 - Championship'],
-        scenes: ['⚙️ Sparks fly in the workshop...', '🤖 IRONJAW enters the arena!', '💥 Crashing metal echoes everywhere!', '🔧 Emergency repairs at half-time!', '🏆 The crowd goes wild!', '🎬 Champion crowned!']
+        scenes: ['⚙️ Sparks fly in the workshop...', '🤖 IRONJAW enters the arena!', '💥 Crashing metal echoes everywhere!', '🔧 Emergency repairs at half-time!', '🏆 The crowd goes wild!', '🎬 Champion crowned!'],
+        frames: [
+            [' * sparks * ', '  ~~fire~~  ', '  WORKSHOP  ', ' [  PARTS ] ', '  building  ', '  BOT #1    ', ' IRONJAW!   '],
+            ['  [ARENA]   ', ' /--------\\ ', '|  IRONJAW  |', '|   ___    |', '|  [   ]   |', ' \\--------/ ', ' ENTER BOT! '],
+            [' *SMASH!!!* ', ' *CRUNCH!!* ', '  *BANG!! * ', ' metal floor', ' everywhere ', '  half time ', ' REPAIR NOW '],
+            [' REPAIR KIT ', '  o--[wrench]', '  FIX IT!   ', '  weld weld ', '  good good ', '  READY!    ', ' BACK IN!   '],
+            ['  (CHAMP)   ', '  \\  o  /   ', '  -( | )-   ', '   / | \\    ', '  IRONJAW   ', '  WINS!!!   ', ' CROWD!!!   '],
+            ['  [TROPHY]  ', '    /|\\     ', '   / | \\    ', '   |___|    ', ' CHAMPION   ', '  CROWNED   ', ' THE END!   '],
+        ]
     },
     'Lost Meridian': {
         emoji: '🧭', genre: 'Adventure', rating: '10+', year: '2024',
         desc: 'An explorer following an ancient compass discovers a sea route that vanishes at midnight.',
         episodes: ['S1 E1 - The Old Compass', 'S1 E2 - Midnight Tide', 'S1 E3 - Under the Map', 'S1 E4 - Found'],
-        scenes: ['🧭 The compass spins wildly at midnight...', '⛵ Setting sail into the unknown!', '🌊 A hidden sea route appears!', '🏝️ An uncharted island ahead!', '✨ Ancient treasure discovered!', '🎬 The journey continues...']
+        scenes: ['🧭 The compass spins wildly at midnight...', '⛵ Setting sail into the unknown!', '🌊 A hidden sea route appears!', '🏝️ An uncharted island ahead!', '✨ Ancient treasure discovered!', '🎬 The journey continues...'],
+        frames: [
+            ['  COMPASS:  ', '     N      ', '  W  +  E   ', '     S      ', '  spinning  ', '  MIDNIGHT  ', ' ??? ??? ???'],
+            ['  _/\\/\\_    ', ' /  SAIL \\  ', '|   BOAT   |', ' \\________/ ', '~~~waves~~~~', ' INTO THE   ', ' UNKNOWN!   '],
+            ['  ~~SEA~~   ', ' ~ROUTE>>~  ', '  ~~SEA~~   ', '  appears   ', '  at        ', '  midnight  ', ' GO! GO!    '],
+            ['  ISLAND!   ', '  /\\        ', ' /  \\  palm ', '/    \\  tree ', ' sand sand  ', ' uncharted  ', ' LAND HO!   '],
+            ['  X MARKS   ', '  THE SPOT  ', '  [  $$  ]  ', '  [TREASURE]', '  [  $$  ]  ', ' FOUND IT!  ', ' ANCIENT!   '],
+            [' TO BE CONT ', '  .......   ', '   season   ', '     2      ', '  coming    ', '   soon!    ', ' ADVENTURE! '],
+        ]
     }
 };
 
@@ -1954,14 +2032,15 @@ function closeNet2Info() {
 }
 
 function playNet2Content(title) {
-    const show = NET2_SHOWS[title] || { scenes: ['🎬 Opening scene...', '⚡ Action!', '🎭 Drama unfolds!', '🏁 Climax!', '🎉 The End!'], desc: 'Enjoy this Net2 original.' };
+    const show = NET2_SHOWS[title] || { emoji: '🎬', scenes: [], frames: [['🎬','PLAYING','...']], desc: 'Enjoy this Net2 original.' };
     const player = document.getElementById('net2-player');
     const titleEl = document.getElementById('net2-player-title');
     const descEl = document.getElementById('net2-player-description');
     if (player) player.classList.remove('hidden');
     if (titleEl) titleEl.textContent = `▶ Now Playing: ${title}`;
     if (descEl) descEl.textContent = show.desc;
-    startNet2Video(show.scenes);
+    net2CurrentPalette = SHOW_PALETTE[title] || 'default';
+    startNet2Video(show.scenes, show.frames, show.emoji);
 }
 
 function playNet2Info(title) {
@@ -1970,14 +2049,9 @@ function playNet2Info(title) {
 
 function closeNet2Player() {
     const player = document.getElementById('net2-player');
-    if (player) {
-        player.classList.add('hidden');
-    }
-    // Stop video simulation
-    if (net2VideoInterval) {
-        clearInterval(net2VideoInterval);
-        net2VideoInterval = null;
-    }
+    if (player) player.classList.add('hidden');
+    if (net2Raf) { cancelAnimationFrame(net2Raf); net2Raf = null; }
+    if (net2VideoInterval) { clearInterval(net2VideoInterval); net2VideoInterval = null; }
     net2IsPlaying = false;
 }
 
@@ -1985,63 +2059,178 @@ function closeNet2Player() {
 let net2VideoInterval = null;
 let net2IsPlaying = false;
 let net2CurrentTime = 0;
-let net2Duration = 120; // 2 minutes for demo
+let net2Duration = 120;
+let net2Raf = null;
+let net2LastFrameTime = 0;
+let net2ArtFrameIndex = 0;
+let net2ActiveFrames = [];
+let net2ShowEmoji = '🎬';
 
-const net2Scenes = [
-    { text: "🎬 Opening scene...", duration: 10 },
-    { text: "🏃 Action sequence!", duration: 15 },
-    { text: "💬 Dialogue moment", duration: 20 },
-    { text: "🌟 Dramatic reveal", duration: 25 },
-    { text: "🎭 Character development", duration: 30 },
-    { text: "🏁 Climax approaching", duration: 20 }
-];
+// 30 frames per minute = 1 new art frame every 2000ms
+const NET2_FRAME_INTERVAL = 2000;
+// Canvas tick every ~33ms (≈30fps render loop) for smooth progress bar
+const NET2_TICK_MS = 33;
 
-function startNet2Video(customScenes) {
+function startNet2Video(customScenes, frames, emoji) {
     net2IsPlaying = true;
     net2CurrentTime = 0;
+    net2ArtFrameIndex = 0;
+    net2LastFrameTime = performance.now();
+    net2ActiveFrames = frames && frames.length ? frames : [['🎬','PLAYING','...']];
+    net2ShowEmoji = emoji || '🎬';
     updateNet2Progress();
 
-    const scenes = customScenes || net2Scenes.map(s => s.text);
-    let sceneIndex = 0;
-    let sceneTime = 0;
-    const sceneDuration = Math.floor(net2Duration / scenes.length);
+    if (net2VideoInterval) { clearInterval(net2VideoInterval); net2VideoInterval = null; }
+    if (net2Raf) { cancelAnimationFrame(net2Raf); net2Raf = null; }
 
-    const sceneEl = document.getElementById('net2-video-scene');
-    if (sceneEl) sceneEl.querySelector('.net2-video-text').textContent = scenes[0];
+    let lastTick = performance.now();
 
-    if (net2VideoInterval) clearInterval(net2VideoInterval);
-
-    net2VideoInterval = setInterval(() => {
+    function renderFrame(now) {
         if (!net2IsPlaying) return;
-        net2CurrentTime++;
-        sceneTime++;
+
+        // Advance wall-clock seconds
+        const delta = now - lastTick;
+        lastTick = now;
+        net2CurrentTime += delta / 1000;
+        if (net2CurrentTime > net2Duration) net2CurrentTime = net2Duration;
         updateNet2Progress();
-        if (sceneTime >= sceneDuration && sceneIndex < scenes.length - 1) {
-            sceneIndex++;
-            sceneTime = 0;
-            const el = document.getElementById('net2-video-scene');
-            if (el) el.querySelector('.net2-video-text').textContent = scenes[sceneIndex];
+
+        // Advance art frame every 2 seconds (30 frames/min)
+        if (now - net2LastFrameTime >= NET2_FRAME_INTERVAL) {
+            net2LastFrameTime = now;
+            net2ArtFrameIndex = (net2ArtFrameIndex + 1) % net2ActiveFrames.length;
         }
+
+        drawNet2Canvas(net2ActiveFrames[net2ArtFrameIndex], net2CurrentTime, net2Duration);
+
         if (net2CurrentTime >= net2Duration) {
             net2IsPlaying = false;
-            clearInterval(net2VideoInterval);
-            net2VideoInterval = null;
-            const el = document.getElementById('net2-video-scene');
-            if (el) el.querySelector('.net2-video-text').textContent = '🎉 The End — Thanks for watching!';
+            drawNet2CanvasEnd(net2ShowEmoji);
+            return;
         }
-    }, 1000);
+
+        net2Raf = requestAnimationFrame(renderFrame);
+    }
+
+    drawNet2Canvas(net2ActiveFrames[0], 0, net2Duration);
+    net2Raf = requestAnimationFrame(renderFrame);
 }
 
-function updateNet2Scene(index) {
-    const sceneEl = document.getElementById('net2-video-scene');
-    const textEl = sceneEl.querySelector('.net2-video-text');
-    
-    if (index === -1) {
-        textEl.textContent = "🎉 The End - Thanks for watching!";
-        return;
+// Colour palette per show genre (keyed by emoji for simplicity)
+const NET2_PALETTES = {
+    default:  { bg: '#0a0a1a', line: '#00ff88', dim: '#005533', title: '#ffffff', border: '#00ff8855' },
+    orange:   { bg: '#1a0a00', line: '#ff8800', dim: '#552200', title: '#ffffff', border: '#ff880055' },
+    purple:   { bg: '#0d0014', line: '#cc88ff', dim: '#440066', title: '#ffffff', border: '#cc88ff55' },
+    blue:     { bg: '#000d1a', line: '#44aaff', dim: '#003366', title: '#ffffff', border: '#44aaff55' },
+    red:      { bg: '#1a0000', line: '#ff4455', dim: '#550011', title: '#ffffff', border: '#ff445555' },
+    green:    { bg: '#001a00', line: '#55ff77', dim: '#004411', title: '#ffffff', border: '#55ff7755' },
+};
+
+const SHOW_PALETTE = {
+    'Shadow Protocol': 'default',
+    'Vortex Rising':   'orange',
+    'Neon Hollow':     'purple',
+    'The Frozen Keep': 'blue',
+    'Dust & Thunder':  'orange',
+    'Galactic Drifters':'default',
+    'Crimson Pact':    'red',
+    'Echo Valley':     'green',
+    'Iron Circuit':    'orange',
+    'Lost Meridian':   'blue',
+};
+let net2CurrentPalette = 'default';
+
+function drawNet2Canvas(lines, currentTime, duration) {
+    const canvas = document.getElementById('net2-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const W = canvas.width, H = canvas.height;
+    const pal = NET2_PALETTES[net2CurrentPalette] || NET2_PALETTES.default;
+
+    // Background
+    ctx.fillStyle = pal.bg;
+    ctx.fillRect(0, 0, W, H);
+
+    // Scanline effect
+    for (let y = 0; y < H; y += 4) {
+        ctx.fillStyle = 'rgba(0,0,0,0.18)';
+        ctx.fillRect(0, y, W, 2);
     }
-    
-    textEl.textContent = net2Scenes[index].text;
+
+    // Border glow
+    ctx.strokeStyle = pal.border;
+    ctx.lineWidth = 2;
+    ctx.strokeRect(4, 4, W - 8, H - 8);
+
+    // Corner brackets
+    const b = 16;
+    ctx.strokeStyle = pal.line;
+    ctx.lineWidth = 2;
+    [[4,4],[W-4,4],[4,H-4],[W-4,H-4]].forEach(([cx,cy]) => {
+        const sx = cx < W/2 ? 1 : -1, sy = cy < H/2 ? 1 : -1;
+        ctx.beginPath(); ctx.moveTo(cx, cy + sy*b); ctx.lineTo(cx, cy); ctx.lineTo(cx + sx*b, cy); ctx.stroke();
+    });
+
+    // Frame counter badge top-left
+    const frameNum = net2ArtFrameIndex + 1;
+    ctx.fillStyle = pal.line;
+    ctx.font = 'bold 10px monospace';
+    ctx.textAlign = 'left';
+    ctx.fillText(`FR:${String(frameNum).padStart(2,'0')}  30/min`, 20, 22);
+
+    // Time top-right
+    const elapsed = Math.floor(currentTime);
+    const tot = Math.floor(duration);
+    ctx.textAlign = 'right';
+    ctx.fillText(`${fmtTime(elapsed)} / ${fmtTime(tot)}`, W - 20, 22);
+    ctx.textAlign = 'left';
+
+    // ASCII art lines (centred)
+    const lineH = 17;
+    const totalH = (lines.length) * lineH;
+    const startY = (H - totalH) / 2 + 8;
+
+    ctx.font = 'bold 13px "Courier New", monospace';
+    ctx.textAlign = 'center';
+    lines.forEach((line, i) => {
+        // Alternate brightness for depth
+        const brightness = i % 2 === 0 ? pal.line : pal.dim;
+        ctx.fillStyle = i === Math.floor(lines.length / 2) ? '#ffffff' : brightness;
+        ctx.fillText(line, W / 2, startY + i * lineH);
+    });
+    ctx.textAlign = 'left';
+
+    // Blinking cursor bottom
+    if (Math.floor(performance.now() / 500) % 2 === 0) {
+        ctx.fillStyle = pal.line;
+        ctx.fillText('█', W / 2 - 4, startY + lines.length * lineH + 4);
+    }
+}
+
+function drawNet2CanvasEnd(emoji) {
+    const canvas = document.getElementById('net2-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const W = canvas.width, H = canvas.height;
+    const pal = NET2_PALETTES[net2CurrentPalette] || NET2_PALETTES.default;
+
+    ctx.fillStyle = pal.bg;
+    ctx.fillRect(0, 0, W, H);
+
+    ctx.fillStyle = pal.line;
+    ctx.font = 'bold 18px monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('— THE END —', W/2, H/2 - 18);
+    ctx.font = '13px monospace';
+    ctx.fillStyle = '#aaa';
+    ctx.fillText('Thanks for watching on Net2', W/2, H/2 + 4);
+    ctx.font = '28px sans-serif';
+    ctx.fillText(emoji, W/2, H/2 + 38);
+    ctx.textAlign = 'left';
+}
+
+function fmtTime(s) {
+    return `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;
 }
 
 function updateNet2Progress() {
