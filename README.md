@@ -1,10 +1,10 @@
-# Windows 11 Desktop Simulator
+# Simple PC
 
-A fun web-based simulation of the Windows 11 desktop environment with a built-in Play Store featuring 7 interactive apps, including a Chrome Dino game and Books Library!
+A fun web-based simulation of a Simple PC desktop environment with a built-in Play Store featuring 7 interactive apps, including a Chrome Dino game and Books Library!
 
 ## Features
 
-- **Windows 11-style Interface**: Modern desktop with taskbar, Start menu, and window management
+- **Simple PC Interface**: Modern desktop with taskbar, Start menu, and window management
 - **Play Store**: Install and launch 7 different apps:
   - 📝 Notes - Simple note-taking app
   - 🎯 2048 Game - Classic number puzzle game
