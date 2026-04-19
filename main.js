@@ -10,7 +10,7 @@ const APPS = {
     notes: {
         name: 'Notes',
         icon: '📝',
-        color: '#FFB81C',
+        color: '#a6750c',
         minWidth: 400,
         minHeight: 300
     },
@@ -24,7 +24,7 @@ const APPS = {
     musicplayer: {
         name: 'Music Player',
         icon: '🎵',
-        color: '#E91E63',
+        color: '#39e91e',
         minWidth: 400,
         minHeight: 350
     },
@@ -708,7 +708,7 @@ class WindowManager {
                         <h1>Welcome to Web Browser</h1>
                         <p>Search for anything or enter a website address.</p>
                         <div class="browser-shortcuts">
-                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.crazygames.fun')">🎮 CrazyGames.fun</div>
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.hazygames.fun')">🎮 HazyGames.fun</div>
                             <div class="shortcut" onclick="browserNavigate('space')">🚀 Space</div>
                             <div class="shortcut" onclick="browserNavigate('dinosaurs')">🦕 Dinosaurs</div>
                             <div class="shortcut website-shortcut" onclick="browserNavigate('www.novaspark.tech')">⚡ NovaSpark.tech</div>
@@ -1913,8 +1913,8 @@ function browserNavigate(query) {
 
     // Check for website URLs
     const websites = {
-        'www.crazygames.fun': getCrazyGamesWebsite,
-        'crazygames.fun': getCrazyGamesWebsite,
+        'www.hazygames.fun': getHazyGamesWebsite,
+        'hazygames.fun': getHazyGamesWebsite,
         'www.zappycook.net': getZappyCookWebsite,
         'zappycook.net': getZappyCookWebsite,
         'www.pixelvault.io': getPixelVaultWebsite,
@@ -1943,43 +1943,43 @@ function browserNavigate(query) {
     `;
 }
 
-function getCrazyGamesWebsite() {
+function getHazyGamesWebsite() {
     return `
         <div class="fake-website">
             <div class="fake-site-header" style="background:linear-gradient(135deg,#6c3483,#1a5276);padding:20px;border-radius:8px 8px 0 0;color:white;">
-                <h1 style="margin:0;font-size:28px;">🎮 CrazyGames.fun</h1>
+                <h1 style="margin:0;font-size:28px;">🎮 HazyGames.fun</h1>
                 <p style="margin:4px 0 0;opacity:0.9;">Free online games — play instantly, no download needed!</p>
             </div>
             <div class="fake-site-body" style="background:#1a1a2e;padding:20px;border-radius:0 0 8px 8px;">
                 <h2 style="color:#a29bfe;margin:0 0 14px;">🕹️ Featured Games</h2>
                 <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px;">
-                    <div onclick="crazyGame('snake')" style="background:#2d2d5e;border-radius:10px;padding:14px;text-align:center;cursor:pointer;border:2px solid transparent;transition:border 0.2s;" onmouseover="this.style.borderColor='#a29bfe'" onmouseout="this.style.borderColor='transparent'">
+                    <div onclick="hazyGame('snake')" style="background:#2d2d5e;border-radius:10px;padding:14px;text-align:center;cursor:pointer;border:2px solid transparent;transition:border 0.2s;" onmouseover="this.style.borderColor='#a29bfe'" onmouseout="this.style.borderColor='transparent'">
                         <div style="font-size:40px;">🐍</div>
                         <p style="color:white;margin:8px 0 2px;font-weight:600;">Snake</p>
                         <p style="color:#aaa;font-size:11px;">Eat dots, grow longer!</p>
                         <span style="background:#27ae60;color:white;font-size:10px;padding:2px 8px;border-radius:20px;">PLAY NOW</span>
                     </div>
-                    <div onclick="crazyGame('tictactoe')" style="background:#2d2d5e;border-radius:10px;padding:14px;text-align:center;cursor:pointer;border:2px solid transparent;" onmouseover="this.style.borderColor='#a29bfe'" onmouseout="this.style.borderColor='transparent'">
+                    <div onclick="hazyGame('tictactoe')" style="background:#2d2d5e;border-radius:10px;padding:14px;text-align:center;cursor:pointer;border:2px solid transparent;" onmouseover="this.style.borderColor='#a29bfe'" onmouseout="this.style.borderColor='transparent'">
                         <div style="font-size:40px;">❌⭕</div>
                         <p style="color:white;margin:8px 0 2px;font-weight:600;">Tic Tac Toe</p>
                         <p style="color:#aaa;font-size:11px;">Play vs the computer!</p>
                         <span style="background:#27ae60;color:white;font-size:10px;padding:2px 8px;border-radius:20px;">PLAY NOW</span>
                     </div>
-                    <div onclick="crazyGame('reaction')" style="background:#2d2d5e;border-radius:10px;padding:14px;text-align:center;cursor:pointer;border:2px solid transparent;" onmouseover="this.style.borderColor='#a29bfe'" onmouseout="this.style.borderColor='transparent'">
+                    <div onclick="hazyGame('reaction')" style="background:#2d2d5e;border-radius:10px;padding:14px;text-align:center;cursor:pointer;border:2px solid transparent;" onmouseover="this.style.borderColor='#a29bfe'" onmouseout="this.style.borderColor='transparent'">
                         <div style="font-size:40px;">⚡</div>
                         <p style="color:white;margin:8px 0 2px;font-weight:600;">Reaction Time</p>
                         <p style="color:#aaa;font-size:11px;">How fast are you?</p>
                         <span style="background:#27ae60;color:white;font-size:10px;padding:2px 8px;border-radius:20px;">PLAY NOW</span>
                     </div>
                 </div>
-                <div id="crazy-game-area"></div>
+                <div id="hazy-game-area"></div>
             </div>
         </div>
     `;
 }
 
-function crazyGame(name) {
-    const area = document.getElementById('crazy-game-area');
+function hazyGame(name) {
+    const area = document.getElementById('hazy-game-area');
     if (!area) return;
     if (name === 'snake') {
         area.innerHTML = `
@@ -2336,7 +2336,7 @@ function browserGoBack() {
             <h1>Welcome to Web Browser</h1>
             <p>Search for anything or enter a website address.</p>
                 <div class="browser-shortcuts">
-                <div class="shortcut website-shortcut" onclick="browserNavigate('www.crazygames.fun')">🎮 CrazyGames.fun</div>
+                <div class="shortcut website-shortcut" onclick="browserNavigate('www.hazygames.fun')">🎮 HazyGames.fun</div>
                 <div class="shortcut" onclick="browserNavigate('space')">🚀 Space</div>
                 <div class="shortcut" onclick="browserNavigate('dinosaurs')">🦕 Dinosaurs</div>
                 <div class="shortcut website-shortcut" onclick="browserNavigate('www.novaspark.tech')">⚡ NovaSpark.tech</div>
