@@ -737,10 +737,18 @@ class WindowManager {
                         <h1>Welcome to Web Browser</h1>
                         <p>Search for anything or enter a website address.</p>
                         <div class="browser-shortcuts">
-                            <div class="shortcut" onclick="browserNavigate('cats')">🐱 Cats</div>
-                            <div class="shortcut" onclick="browserNavigate('dogs')">🐶 Dogs</div>
-                            <div class="shortcut" onclick="browserNavigate('food')">🍕 Food</div>
-                            <div class="shortcut" onclick="browserNavigate('games')">🎮 Games</div>
+                            <div class="shortcut" onclick="browserNavigate('space')">🚀 Space</div>
+                            <div class="shortcut" onclick="browserNavigate('dinosaurs')">🦕 Dinosaurs</div>
+                            <div class="shortcut" onclick="browserNavigate('minecraft')">⛏️ Minecraft</div>
+                            <div class="shortcut" onclick="browserNavigate('animals')">🐘 Animals</div>
+                            <div class="shortcut" onclick="browserNavigate('ocean')">🌊 Ocean</div>
+                            <div class="shortcut" onclick="browserNavigate('science')">🔬 Science</div>
+                            <div class="shortcut" onclick="browserNavigate('robots')">🤖 Robots</div>
+                            <div class="shortcut" onclick="browserNavigate('football')">⚽ Football</div>
+                            <div class="shortcut" onclick="browserNavigate('history')">📜 History</div>
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.funfacts.com')">🌟 FunFacts.com</div>
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.simplegames.com')">🎮 SimpleGames.com</div>
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.dailynews.com')">📰 DailyNews.com</div>
                         </div>
                     </div>
                 </div>
@@ -1918,13 +1926,158 @@ function browserNavigate(query) {
     
     addressInput.value = query;
     
-    // Mock search results
-    const mockResults = getMockSearchResults(query.toLowerCase());
-    
+    const results = {
+        'space': `<div class="result-item"><h3>🚀 Space & The Universe</h3><p>Space is an almost perfect vacuum containing a thin scattering of particles — mostly hydrogen and helium plasma — and electromagnetic radiation, magnetic fields, neutrinos, dust, and cosmic rays.</p><p><strong>Fun Facts:</strong></p><ul><li>The Sun makes up 99.86% of the mass of our Solar System</li><li>A day on Venus is longer than a year on Venus</li><li>There are more stars in the universe than grains of sand on Earth</li><li>The footprints on the Moon will last 100 million years</li></ul></div>`,
+        'dinosaurs': `<div class="result-item"><h3>🦕 Dinosaurs</h3><p>Dinosaurs were a group of reptiles that dominated Earth for over 165 million years. They first appeared during the Triassic period.</p><p><strong>Cool Dinos:</strong></p><ul><li>T-Rex - King of the dinosaurs, 40 feet long</li><li>Triceratops - Had 3 horns and a giant frill</li><li>Velociraptor - Fast and intelligent hunter</li><li>Brachiosaurus - Giraffe-like neck, 85 feet tall</li></ul></div>`,
+        'minecraft': `<div class="result-item"><h3>⛏️ Minecraft</h3><p>Minecraft is the best-selling video game of all time with over 238 million copies sold. It was created by Markus "Notch" Persson in 2009.</p><p><strong>Game Modes:</strong></p><ul><li>Survival - Gather resources, fight mobs, survive</li><li>Creative - Unlimited blocks, fly freely, build anything</li><li>Adventure - Play custom maps made by others</li><li>Hardcore - One life only, permadeath mode</li></ul></div>`,
+        'animals': `<div class="result-item"><h3>🐘 Amazing Animals</h3><p>Earth is home to over 8.7 million species of animals. From the tiniest insects to the largest whales, the animal kingdom is incredibly diverse.</p><p><strong>Record Holders:</strong></p><ul><li>Cheetah - Fastest land animal at 70 mph</li><li>Blue Whale - Largest animal ever, 100 feet long</li><li>Peregrine Falcon - Fastest bird at 240 mph diving</li><li>Elephant - Largest land animal, incredible memory</li></ul></div>`,
+        'ocean': `<div class="result-item"><h3>🌊 The Ocean</h3><p>Oceans cover over 70% of Earth's surface and contain about 97% of all water. The deepest point is the Mariana Trench at nearly 36,000 feet deep.</p><p><strong>Ocean Facts:</strong></p><ul><li>Over 80% of the ocean remains unexplored</li><li>The ocean is home to 94% of all life on Earth</li><li>Coral reefs support 25% of all marine species</li><li>A whale's heartbeat can be heard from 2 miles away</li></ul></div>`,
+        'science': `<div class="result-item"><h3>🔬 Science</h3><p>Science is the systematic study of the world around us through observation and experiment. It covers everything from atoms to galaxies.</p><p><strong>Fields of Science:</strong></p><ul><li>Biology - Study of living organisms</li><li>Chemistry - Study of matter and reactions</li><li>Physics - Study of energy and forces</li><li>Astronomy - Study of stars and planets</li></ul></div>`,
+        'robots': `<div class="result-item"><h3>🤖 Robots & AI</h3><p>Robots are machines capable of carrying out complex actions automatically. Artificial Intelligence allows computers to learn and make decisions.</p><p><strong>Cool Robot Facts:</strong></p><ul><li>The word "robot" comes from Czech meaning "forced labor"</li><li>There are over 3 million industrial robots in use today</li><li>NASA's Mars rovers are robots exploring another planet</li><li>AI can now beat humans at chess, Go, and video games</li></ul></div>`,
+        'football': `<div class="result-item"><h3>⚽ Football</h3><p>Football (soccer) is the most popular sport in the world with over 4 billion fans. It is played in over 200 countries worldwide.</p><p><strong>Key Facts:</strong></p><ul><li>FIFA World Cup is watched by over 3.5 billion people</li><li>The sport dates back over 2,000 years to ancient China</li><li>Lionel Messi and Cristiano Ronaldo are the greatest of all time</li><li>A standard match is 90 minutes with two 45-minute halves</li></ul></div>`,
+        'history': `<div class="result-item"><h3>📜 World History</h3><p>Human history spans over 300,000 years. Major civilizations like Egypt, Rome, Greece, and China shaped the modern world we live in today.</p><p><strong>Key Events:</strong></p><ul><li>Ancient Egypt built the pyramids ~2560 BC</li><li>The Roman Empire lasted over 1,000 years</li><li>The Moon landing happened on July 20, 1969</li><li>The Internet was invented in the 1980s</li></ul></div>`,
+    };
+
+    const key = Object.keys(results).find(k => query.toLowerCase().includes(k) || k.includes(query.toLowerCase()));
+
+    // Check for website URLs
+    const websites = {
+        'www.funfacts.com': getFunFactsWebsite,
+        'funfacts.com': getFunFactsWebsite,
+        'www.simplegames.com': getSimpleGamesWebsite,
+        'simplegames.com': getSimpleGamesWebsite,
+        'www.dailynews.com': getDailyNewsWebsite,
+        'dailynews.com': getDailyNewsWebsite,
+    };
+    const siteKey = Object.keys(websites).find(k => query.toLowerCase().includes(k));
+
+    let content;
+    if (siteKey) {
+        content = websites[siteKey]();
+    } else if (key) {
+        content = results[key];
+    } else {
+        content = `<div class="result-item"><h3>🔍 No results found for "${query}"</h3><p>Try searching: space, dinosaurs, minecraft, animals, ocean, science, robots, football, or history.</p><p>Or visit a website: <a onclick="browserNavigate('www.funfacts.com')" style="cursor:pointer;color:#4285f4">www.funfacts.com</a> · <a onclick="browserNavigate('www.simplegames.com')" style="cursor:pointer;color:#4285f4">www.simplegames.com</a> · <a onclick="browserNavigate('www.dailynews.com')" style="cursor:pointer;color:#4285f4">www.dailynews.com</a></p></div>`;
+    }
+
     resultsDiv.innerHTML = `
         <div class="search-results">
             <h2>Search Results for "${query}"</h2>
-            ${mockResults}
+            ${content}
+        </div>
+    `;
+}
+
+function getFunFactsWebsite() {
+    return `
+        <div class="fake-website">
+            <div class="fake-site-header" style="background:linear-gradient(135deg,#ff6b6b,#feca57);padding:20px;border-radius:8px 8px 0 0;color:white;">
+                <h1 style="margin:0;font-size:28px;">🌟 FunFacts.com</h1>
+                <p style="margin:4px 0 0;opacity:0.9;">Learn something amazing every day!</p>
+            </div>
+            <div class="fake-site-body" style="background:white;padding:20px;border-radius:0 0 8px 8px;border:1px solid #eee;">
+                <h2 style="color:#ff6b6b;">Today's Top Facts</h2>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:12px;">
+                    <div style="background:#fff5f5;padding:16px;border-radius:8px;border-left:4px solid #ff6b6b;">
+                        <h3>🐙 Octopus Facts</h3>
+                        <p>Octopuses have 3 hearts, 9 brains, and blue blood! Each arm has its own mini-brain.</p>
+                    </div>
+                    <div style="background:#fff9e6;padding:16px;border-radius:8px;border-left:4px solid #feca57;">
+                        <h3>🍯 Honey Facts</h3>
+                        <p>Honey never expires! Archaeologists found 3,000-year-old honey in Egyptian tombs that was still edible.</p>
+                    </div>
+                    <div style="background:#e8f8e8;padding:16px;border-radius:8px;border-left:4px solid #55efc4;">
+                        <h3>⚡ Lightning Facts</h3>
+                        <p>Lightning strikes Earth about 100 times per second — that's 8 million times a day!</p>
+                    </div>
+                    <div style="background:#e8f0ff;padding:16px;border-radius:8px;border-left:4px solid #74b9ff;">
+                        <h3>🧠 Brain Facts</h3>
+                        <p>Your brain generates about 23 watts of electricity — enough to power a small light bulb!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function getSimpleGamesWebsite() {
+    return `
+        <div class="fake-website">
+            <div class="fake-site-header" style="background:linear-gradient(135deg,#6c5ce7,#a29bfe);padding:20px;border-radius:8px 8px 0 0;color:white;">
+                <h1 style="margin:0;font-size:28px;">🎮 SimpleGames.com</h1>
+                <p style="margin:4px 0 0;opacity:0.9;">Free fun games for everyone!</p>
+            </div>
+            <div class="fake-site-body" style="background:white;padding:20px;border-radius:0 0 8px 8px;border:1px solid #eee;">
+                <h2 style="color:#6c5ce7;">Featured Games</h2>
+                <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-top:12px;">
+                    <div style="background:#f8f5ff;padding:16px;border-radius:8px;text-align:center;cursor:pointer;border:2px solid #a29bfe;" onclick="openApp('dino')">
+                        <div style="font-size:36px;">🦕</div>
+                        <h3 style="margin:8px 0 4px;">Jumper Game</h3>
+                        <p style="font-size:12px;color:#888;">Jump over obstacles!</p>
+                        <button style="margin-top:8px;background:#6c5ce7;color:white;border:none;padding:6px 16px;border-radius:20px;cursor:pointer;">Play</button>
+                    </div>
+                    <div style="background:#f8f5ff;padding:16px;border-radius:8px;text-align:center;cursor:pointer;border:2px solid #a29bfe;" onclick="openApp('game2048')">
+                        <div style="font-size:36px;">🎯</div>
+                        <h3 style="margin:8px 0 4px;">2048</h3>
+                        <p style="font-size:12px;color:#888;">Merge the tiles!</p>
+                        <button style="margin-top:8px;background:#6c5ce7;color:white;border:none;padding:6px 16px;border-radius:20px;cursor:pointer;">Play</button>
+                    </div>
+                    <div style="background:#f8f5ff;padding:16px;border-radius:8px;text-align:center;cursor:pointer;border:2px solid #a29bfe;" onclick="openApp('memory')">
+                        <div style="font-size:36px;">🧠</div>
+                        <h3 style="margin:8px 0 4px;">Memory</h3>
+                        <p style="font-size:12px;color:#888;">Match the cards!</p>
+                        <button style="margin-top:8px;background:#6c5ce7;color:white;border:none;padding:6px 16px;border-radius:20px;cursor:pointer;">Play</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function getDailyNewsWebsite() {
+    return `
+        <div class="fake-website">
+            <div class="fake-site-header" style="background:linear-gradient(135deg,#2d3436,#636e72);padding:20px;border-radius:8px 8px 0 0;color:white;">
+                <h1 style="margin:0;font-size:28px;">📰 DailyNews.com</h1>
+                <p style="margin:4px 0 0;opacity:0.9;">Your trusted source for daily news</p>
+            </div>
+            <div class="fake-site-body" style="background:white;padding:20px;border-radius:0 0 8px 8px;border:1px solid #eee;">
+                <h2 style="color:#2d3436;">Top Stories</h2>
+                <div style="display:flex;flex-direction:column;gap:12px;margin-top:12px;">
+                    <div style="padding:16px;border-bottom:1px solid #eee;display:flex;gap:16px;align-items:flex-start;">
+                        <span style="font-size:32px;">🚀</span>
+                        <div>
+                            <h3 style="margin:0 0 6px;">Scientists Discover New Earth-Like Planet</h3>
+                            <p style="margin:0;color:#636e72;font-size:14px;">Astronomers at the Space Research Institute have confirmed a new planet in the habitable zone just 40 light years away.</p>
+                            <span style="font-size:12px;color:#b2bec3;">2 hours ago · Science</span>
+                        </div>
+                    </div>
+                    <div style="padding:16px;border-bottom:1px solid #eee;display:flex;gap:16px;align-items:flex-start;">
+                        <span style="font-size:32px;">⚽</span>
+                        <div>
+                            <h3 style="margin:0 0 6px;">World Cup Qualifying Begins This Weekend</h3>
+                            <p style="margin:0;color:#636e72;font-size:14px;">Over 200 nations kick off their World Cup qualifying campaigns in matches across all continents.</p>
+                            <span style="font-size:12px;color:#b2bec3;">4 hours ago · Sports</span>
+                        </div>
+                    </div>
+                    <div style="padding:16px;display:flex;gap:16px;align-items:flex-start;">
+                        <span style="font-size:32px;">🤖</span>
+                        <div>
+                            <h3 style="margin:0 0 6px;">New AI Robot Can Cook Full Meals in Minutes</h3>
+                            <p style="margin:0;color:#636e72;font-size:14px;">A new household robot prototype demonstrated the ability to cook a three-course meal entirely on its own using AI vision.</p>
+                            <span style="font-size:12px;color:#b2bec3;">6 hours ago · Technology</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+    resultsDiv.innerHTML = `
+        <div class="search-results">
+            <h2>Search Results for "${query}"</h2>
+            ${content}
         </div>
     `;
 }
@@ -1939,11 +2092,19 @@ function browserGoBack() {
         <div class="browser-homepage">
             <h1>Welcome to Web Browser</h1>
             <p>Search for anything or enter a website address.</p>
-            <div class="browser-shortcuts">
-                <div class="shortcut" onclick="browserNavigate('cats')">🐱 Cats</div>
-                <div class="shortcut" onclick="browserNavigate('dogs')">🐶 Dogs</div>
-                <div class="shortcut" onclick="browserNavigate('food')">🍕 Food</div>
-                <div class="shortcut" onclick="browserNavigate('games')">🎮 Games</div>
+                <div class="browser-shortcuts">
+                <div class="shortcut" onclick="browserNavigate('space')">🚀 Space</div>
+                <div class="shortcut" onclick="browserNavigate('dinosaurs')">🦕 Dinosaurs</div>
+                <div class="shortcut" onclick="browserNavigate('minecraft')">⛏️ Minecraft</div>
+                <div class="shortcut" onclick="browserNavigate('animals')">🐘 Animals</div>
+                <div class="shortcut" onclick="browserNavigate('ocean')">🌊 Ocean</div>
+                <div class="shortcut" onclick="browserNavigate('science')">🔬 Science</div>
+                <div class="shortcut" onclick="browserNavigate('robots')">🤖 Robots</div>
+                <div class="shortcut" onclick="browserNavigate('football')">⚽ Football</div>
+                <div class="shortcut" onclick="browserNavigate('history')">📜 History</div>
+                <div class="shortcut website-shortcut" onclick="browserNavigate('www.funfacts.com')">🌟 FunFacts.com</div>
+                <div class="shortcut website-shortcut" onclick="browserNavigate('www.simplegames.com')">🎮 SimpleGames.com</div>
+                <div class="shortcut website-shortcut" onclick="browserNavigate('www.dailynews.com')">📜 DailyNews.com</div>
             </div>
         </div>
     `;
@@ -1964,133 +2125,7 @@ function browserRefresh() {
     }
 }
 
-function getMockSearchResults(query) {
-    const results = {
-        'cats': `
-            <div class="result-item">
-                <h3>🐱 All About Cats</h3>
-                <p>Cats are fascinating creatures with over 500 million domestic cats worldwide. They have been domesticated for over 9,000 years.</p>
-                <p><strong>Fun Facts:</strong></p>
-                <ul>
-                    <li>Cats sleep for 12-16 hours a day</li>
-                    <li>They have 230 bones in their body</li>
-                    <li>Cats can jump up to 6 times their length</li>
-                </ul>
-            </div>
-        `,
-        'dogs': `
-            <div class="result-item">
-                <h3>🐶 All About Dogs</h3>
-                <p>Dogs are loyal companions that have been with humans for thousands of years. There are over 340 dog breeds worldwide.</p>
-                <p><strong>Fun Facts:</strong></p>
-                <ul>
-                    <li>Dogs have 42 teeth</li>
-                    <li>They can smell 1,000 to 10,000 times better than humans</li>
-                    <li>The oldest known dog was 14 years old</li>
-                </ul>
-            </div>
-        `,
-        'food': `
-            <div class="result-item">
-                <h3>🍕 Delicious Food Around the World</h3>
-                <p>Food is essential for life and comes in countless varieties. Here are some popular foods:</p>
-                <p><strong>Popular Foods:</strong></p>
-                <ul>
-                    <li>Pizza - Italy's gift to the world</li>
-                    <li>Sushi - Traditional Japanese cuisine</li>
-                    <li>Tacos - Mexican street food favorite</li>
-                    <li>Pasta - Italian comfort food</li>
-                </ul>
-            </div>
-        `,
-        'games': `
-            <div class="result-item">
-                <h3>🎮 Video Games</h3>
-                <p>Video games are interactive entertainment enjoyed by millions worldwide. The industry generates billions in revenue annually.</p>
-                <p><strong>Popular Genres:</strong></p>
-                <ul>
-                    <li>Action-Adventure</li>
-                    <li>RPG (Role-Playing Games)</li>
-                    <li>Strategy Games</li>
-                    <li>Sports Games</li>
-                </ul>
-            </div>
-        `,
-        'weather': `
-            <div class="result-item">
-                <h3>🌤️ Weather Information</h3>
-                <p>Today's weather: Sunny with a high of 75°F (24°C) and a low of 55°F (13°C). No precipitation expected.</p>
-                <p><strong>Forecast:</strong></p>
-                <ul>
-                    <li>Tomorrow: Partly cloudy, 72°F</li>
-                    <li>Day after: Rainy, 68°F</li>
-                    <li>Next week: Mostly sunny</li>
-                </ul>
-            </div>
-        `,
-        'news': `
-            <div class="result-item">
-                <h3>📰 Latest News</h3>
-                <p>Stay informed with the latest headlines:</p>
-                <ul>
-                    <li>Technology: New AI developments announced</li>
-                    <li>Science: Mars rover discovers ancient water</li>
-                    <li>Sports: Local team wins championship</li>
-                    <li>Entertainment: New movie releases this week</li>
-                </ul>
-            </div>
-        `,
-        'music': `
-            <div class="result-item">
-                <h3>🎵 Music Information</h3>
-                <p>Music is a universal language that brings people together. Here are some popular genres:</p>
-                <ul>
-                    <li>Pop - Catchy and mainstream</li>
-                    <li>Rock - Energetic and guitar-driven</li>
-                    <li>Hip-Hop - Rhythmic and expressive</li>
-                    <li>Classical - Timeless compositions</li>
-                </ul>
-            </div>
-        `,
-        'sports': `
-            <div class="result-item">
-                <h3>⚽ Sports News</h3>
-                <p>Latest sports updates:</p>
-                <ul>
-                    <li>Soccer: Championship finals this weekend</li>
-                    <li>Basketball: Record-breaking season continues</li>
-                    <li>Tennis: Grand slam tournament underway</li>
-                    <li>Football: Playoffs starting soon</li>
-                </ul>
-            </div>
-        `
-    };
-    
-    // Check for exact matches first
-    if (results[query]) {
-        return results[query];
-    }
-    
-    // Check for partial matches
-    for (const [key, content] of Object.entries(results)) {
-        if (query.includes(key) || key.includes(query)) {
-            return content;
-        }
-    }
-    
-    // Default result for unknown queries
-    return `
-        <div class="result-item">
-            <h3>🔍 Search Results</h3>
-            <p>We found information related to "${query}". Here are some general facts:</p>
-            <ul>
-                <li>This appears to be a search for: ${query}</li>
-                <li>Try searching for cats, dogs, food, games, weather, news, music, or sports</li>
-                <li>More results would be available in a real web browser</li>
-            </ul>
-        </div>
-    `;
-}
+
 
 // ===== BOOKS APP =====
 const BOOKS = [
