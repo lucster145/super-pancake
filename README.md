@@ -1,6 +1,6 @@
 # Simple PC
 
-A fun web-based simulation of a Simple PC desktop environment with a built-in Play Store featuring 7 interactive apps, including a Chrome Dino game and Books Library!
+A fun web-based simulation of a Simple PC desktop environment with a built-in Play Store featuring 7 interactive apps, including a Jumper Game and Books Library!
 
 ## Features
 
@@ -11,12 +11,12 @@ A fun web-based simulation of a Simple PC desktop environment with a built-in Pl
   - 🎵 Music Player - Audio player with playlist
   - 🧮 Calculator - Basic calculator
   - 🧠 Memory Game - Card matching game
-  - **🦕 Chrome Dino Game** - Jump over cacti and beat your high score!
+  - **🦕 Jumper Game** - Jump over cacti and beat your high score!
   - **📚 Books Library** - Read original adventure stories for kids (Crystal Kingdom, Space Explorer's Quest, Mystery of Whispering Woods, The Rainbow Dragon's Secret, Code Breaker Academy, Underwater Secrets)
 - **Window Management**: Drag, resize, minimize, maximize, and close windows
 - **Desktop Icons**: Clickable app shortcuts
 - **Right-click Context Menu**: Quick actions
-- **High Score Tracking**: Chrome Dino game saves your best score using localStorage
+- **High Score Tracking**: Jumper Game saves your best score using localStorage
 
 ## How to Play
 
@@ -25,7 +25,7 @@ A fun web-based simulation of a Simple PC desktop environment with a built-in Pl
 3. Use the Start menu to access all apps quickly
 4. Right-click on desktop for additional options
 
-### Chrome Dino Game
+### Jumper Game
 - **Controls**: Press SPACEBAR, Arrow Up, or click/tap to jump
 - **Objective**: Avoid the cacti and get the highest score possible
 - **High Score**: Your best score is automatically saved!

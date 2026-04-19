@@ -43,7 +43,7 @@ const APPS = {
         minHeight: 450
     },
     dino: {
-        name: 'Chrome Dino',
+        name: 'Jumper Game',
         icon: '🦕',
         color: '#8B4513',
         minWidth: 600,
@@ -503,7 +503,7 @@ class WindowManager {
         const highScore = localStorage.getItem('dinoHighScore') || '0';
         return `
             <div class="game-content">
-                <div class="game-title">Chrome Dino</div>
+                <div class="game-title">Jumper Game</div>
                 <div style="text-align: center; margin-bottom: 20px; color: #666; font-size: 14px;">
                     Press SPACEBAR or TAP to jump! Avoid the cacti!
                 </div>
