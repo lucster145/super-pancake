@@ -42,13 +42,6 @@ const APPS = {
         minWidth: 500,
         minHeight: 450
     },
-    dino: {
-        name: 'Jumper Game',
-        icon: '🦕',
-        color: '#8B4513',
-        minWidth: 600,
-        minHeight: 300
-    },
     books: {
         name: 'Books Library',
         icon: '📚',
@@ -87,7 +80,7 @@ const APPS = {
 };
 
 // Store app installation state
-const installedApps = new Set(['playstore', 'notes', 'game2048', 'musicplayer', 'calculator', 'memory', 'dino', 'books', 'football', 'calendar', 'net2', 'browser']);
+const installedApps = new Set(['playstore', 'notes', 'game2048', 'musicplayer', 'calculator', 'memory', 'books', 'football', 'calendar', 'net2', 'browser']);
 
 // Global error handler for better debugging
 window.addEventListener('error', (e) => {
@@ -324,12 +317,6 @@ class WindowManager {
 
     cleanupApp(appId) {
         switch(appId) {
-            case 'dino':
-                if (dinoRaf) { cancelAnimationFrame(dinoRaf); dinoRaf = null; }
-                if (dinoKeyHandler) document.removeEventListener('keydown', dinoKeyHandler);
-                const dinoCanvas = document.getElementById('dino-canvas');
-                if (dinoCanvas && dinoClickHandler) dinoCanvas.removeEventListener('click', dinoClickHandler);
-                break;
             case 'football':
                 // Clean up football game
                 clearInterval(footballGameState.interval);
@@ -355,8 +342,6 @@ class WindowManager {
                 return this.getCalculatorContent();
             case 'memory':
                 return this.getMemoryGameContent();
-            case 'dino':
-                return this.getDinoGameContent();
             case 'books':
                 return this.getBooksContent();
             case 'football':
@@ -496,16 +481,6 @@ class WindowManager {
                 <div style="margin-top: 20px; font-size: 18px; font-weight: 600;">
                     Matches: <span id="memory-score">0</span> / 8
                 </div>
-            </div>
-        `;
-    }
-
-    getDinoGameContent() {
-        return `
-            <div class="game-content dino-wrap">
-                <div class="game-title">Jumper Game</div>
-                <canvas id="dino-canvas" class="dino-canvas"></canvas>
-                <div style="text-align:center;margin-top:8px;font-size:13px;color:#888;">Space / ↑ / Tap to jump &nbsp;·&nbsp; Double-jump allowed &nbsp;·&nbsp; R to restart</div>
             </div>
         `;
     }
@@ -733,6 +708,7 @@ class WindowManager {
                         <h1>Welcome to Web Browser</h1>
                         <p>Search for anything or enter a website address.</p>
                         <div class="browser-shortcuts">
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.crazygames.fun')">🎮 CrazyGames.fun</div>
                             <div class="shortcut" onclick="browserNavigate('space')">🚀 Space</div>
                             <div class="shortcut" onclick="browserNavigate('dinosaurs')">🦕 Dinosaurs</div>
                             <div class="shortcut website-shortcut" onclick="browserNavigate('www.novaspark.tech')">⚡ NovaSpark.tech</div>
@@ -825,9 +801,6 @@ class WindowManager {
                 break;
             case 'memory':
                 initMemoryGame();
-                break;
-            case 'dino':
-                initDinoGame();
                 break;
             case 'books':
                 initBooksApp(contentEl);
@@ -1226,348 +1199,6 @@ window.createNewWindow = function(appId) {
 window.refreshDesktop = function() {
     location.reload();
 };
-
-// ===== DINO GAME =====
-// ===== JUMPER (DINO) GAME — canvas rewrite =====
-let dinoRaf = null;
-let dinoKeyHandler = null;
-let dinoClickHandler = null;
-
-function dinoJumpHandler() {} // stub kept for cleanup reference
-
-function initDinoGame() {
-    const canvas = document.getElementById('dino-canvas');
-    if (!canvas) return;
-
-    // Cancel any previous loop
-    if (dinoRaf) { cancelAnimationFrame(dinoRaf); dinoRaf = null; }
-    if (dinoKeyHandler) document.removeEventListener('keydown', dinoKeyHandler);
-    if (dinoClickHandler) canvas.removeEventListener('click', dinoClickHandler);
-
-    const W = canvas.offsetWidth || 560;
-    const H = 220;
-    canvas.width  = W;
-    canvas.height = H;
-    const ctx = canvas.getContext('2d');
-
-    // ---- constants ----
-    const GROUND_Y    = H - 30;
-    const PLAYER_X    = 70;
-    const GRAVITY     = 0.6;
-    const JUMP_VEL    = -13;
-    const BASE_SPEED  = 4;
-    const SPEED_INC   = 0.0015; // per frame
-    const MAX_SPEED   = 12;
-
-    // ---- state ----
-    let playerY   = GROUND_Y;
-    let velY      = 0;
-    let jumpsLeft = 2; // double-jump
-    let speed     = BASE_SPEED;
-    let score     = 0;
-    let highScore = parseInt(localStorage.getItem('dinoHighScore') || '0');
-    let obstacles = [];   // {x, w, h}
-    let clouds    = [];   // {x, y, w}
-    let groundX   = 0;
-    let frame     = 0;
-    let phase     = 'start'; // 'start' | 'running' | 'dead'
-    let newHS     = false;
-    let nextObstacleIn = 90; // frames until next obstacle
-    let legFrame  = 0;
-
-    // seed some clouds
-    for (let i = 0; i < 4; i++) {
-        clouds.push({ x: Math.random() * W, y: 20 + Math.random() * 50, w: 40 + Math.random() * 40 });
-    }
-
-    // ---- input ----
-    function doJump() {
-        if (phase === 'start') { phase = 'running'; return; }
-        if (phase === 'dead')  { initDinoGame(); return; }
-        if (jumpsLeft > 0) {
-            velY = JUMP_VEL;
-            jumpsLeft--;
-        }
-    }
-
-    dinoKeyHandler = (e) => {
-        if (e.code === 'Space' || e.code === 'ArrowUp') { e.preventDefault(); doJump(); }
-        if (e.code === 'KeyR' && phase === 'dead') { initDinoGame(); }
-    };
-    dinoClickHandler = () => doJump();
-
-    document.addEventListener('keydown', dinoKeyHandler);
-    canvas.addEventListener('click', dinoClickHandler);
-
-    // ---- helpers ----
-    function drawRoundRect(x, y, w, h, r, fill) {
-        ctx.fillStyle = fill;
-        ctx.beginPath();
-        ctx.roundRect(x, y, w, h, r);
-        ctx.fill();
-    }
-
-    function drawPlayer() {
-        const px = PLAYER_X;
-        const py = playerY; // py = bottom of dino feet
-        const dead = phase === 'dead';
-
-        // Animate legs
-        if (phase === 'running') legFrame++;
-        const onGround = playerY >= GROUND_Y - 1;
-        const legPhase = Math.floor(legFrame / 6) % 2; // alternates 0/1
-
-        ctx.fillStyle = dead ? '#888' : '#555';
-
-        // --- Body (main rectangle) ---
-        //  body: 28w × 20h
-        const bx = px - 14, by = py - 44;
-        ctx.fillRect(bx, by, 28, 20);
-
-        // --- Neck bump ---
-        ctx.fillRect(bx + 16, by - 6, 14, 10);
-
-        // --- Head ---
-        ctx.fillRect(bx + 16, by - 18, 22, 16);
-
-        // --- Snout ---
-        ctx.fillRect(bx + 34, by - 14, 8, 8);
-
-        // --- Eye ---
-        ctx.fillStyle = dead ? '#ccc' : 'white';
-        ctx.fillRect(bx + 30, by - 16, 6, 6);
-        ctx.fillStyle = dead ? '#888' : '#222';
-        ctx.fillRect(bx + 32, by - 15, 3, 3);
-
-        // --- Dead X eyes ---
-        if (dead) {
-            ctx.fillStyle = '#888';
-            ctx.fillRect(bx + 29, by - 17, 2, 2);
-            ctx.fillRect(bx + 33, by - 17, 2, 2);
-            ctx.fillRect(bx + 31, by - 15, 2, 2);
-            ctx.fillRect(bx + 29, by - 13, 2, 2);
-            ctx.fillRect(bx + 33, by - 13, 2, 2);
-        }
-
-        // --- Arm ---
-        ctx.fillStyle = dead ? '#888' : '#555';
-        ctx.fillRect(bx + 18, by + 10, 10, 6);
-
-        // --- Tail ---
-        ctx.fillRect(bx - 10, by + 6, 12, 8);
-        ctx.fillRect(bx - 14, by + 10, 6, 6);
-
-        // --- Legs ---
-        ctx.fillStyle = dead ? '#888' : '#555';
-        if (!onGround) {
-            // Both legs tucked when airborne
-            ctx.fillRect(bx + 2,  by + 20, 8, 16);
-            ctx.fillRect(bx + 14, by + 20, 8, 16);
-        } else if (legPhase === 0) {
-            // Stride A
-            ctx.fillRect(bx + 2,  by + 20, 8, 20);   // back leg forward
-            ctx.fillRect(bx + 14, by + 20, 8, 12);   // front leg back
-            ctx.fillRect(bx + 14, by + 30, 12, 8);   // front foot
-        } else {
-            // Stride B
-            ctx.fillRect(bx + 2,  by + 20, 8, 12);   // back leg back
-            ctx.fillRect(bx - 4,  by + 28, 12, 8);   // back foot
-            ctx.fillRect(bx + 14, by + 20, 8, 20);   // front leg forward
-        }
-    }
-
-    function drawObstacle(obs) {
-        ctx.fillStyle = '#4a7c3f';
-        const x = obs.x, w = obs.w, h = obs.h;
-        const trunkW = Math.max(6, Math.floor(w * 0.28));
-        const tx = x + Math.floor((w - trunkW) / 2);
-
-        // Main trunk
-        ctx.fillRect(tx, GROUND_Y - h, trunkW, h);
-
-        // Left arm
-        const laW = Math.floor(w * 0.32), laH = Math.floor(h * 0.32);
-        ctx.fillRect(x, GROUND_Y - h * 0.62, laW, trunkW);          // horizontal
-        ctx.fillRect(x, GROUND_Y - h * 0.62 - laH, trunkW, laH);    // vertical up
-
-        // Right arm
-        const raX = tx + trunkW;
-        const raW = Math.floor(w * 0.32), raH = Math.floor(h * 0.28);
-        ctx.fillRect(raX, GROUND_Y - h * 0.52, raW, trunkW);         // horizontal
-        ctx.fillRect(raX + raW - trunkW, GROUND_Y - h * 0.52 - raH, trunkW, raH); // vertical up
-
-        // Darker outline shade
-        ctx.fillStyle = '#2e5429';
-        ctx.fillRect(tx, GROUND_Y - h, 2, h);                         // left edge trunk
-        ctx.fillRect(x, GROUND_Y - h * 0.62, 2, trunkW);              // left arm left edge
-        ctx.fillRect(raX, GROUND_Y - h * 0.52, 2, trunkW);            // right arm left edge
-    }
-
-    function drawCloud(c) {
-        // Simple outlined cloud (Chrome dino style)
-        ctx.strokeStyle = '#ccc';
-        ctx.lineWidth = 1.5;
-        ctx.beginPath();
-        ctx.ellipse(c.x, c.y, c.w * 0.5, c.w * 0.18, 0, 0, Math.PI * 2);
-        ctx.ellipse(c.x - c.w * 0.2, c.y + c.w * 0.05, c.w * 0.24, c.w * 0.14, 0, 0, Math.PI * 2);
-        ctx.ellipse(c.x + c.w * 0.2, c.y + c.w * 0.05, c.w * 0.24, c.w * 0.14, 0, 0, Math.PI * 2);
-        ctx.stroke();
-    }
-
-    function drawGround() {
-        // Ground line (like Chrome dino)
-        ctx.fillStyle = '#555';
-        ctx.fillRect(0, GROUND_Y, W, 2);
-
-        // Scrolling dashes below the line
-        ctx.fillStyle = '#999';
-        for (let i = 0; i < 20; i++) {
-            const gx = ((W - (groundX * 1.0 + i * 60) % W) + W) % W;
-            ctx.fillRect(gx, GROUND_Y + 5, 30, 2);
-        }
-        // Second row of shorter dashes
-        ctx.fillStyle = '#bbb';
-        for (let i = 0; i < 15; i++) {
-            const gx = ((W - (groundX * 0.6 + i * 80 + 20) % W) + W) % W;
-            ctx.fillRect(gx, GROUND_Y + 10, 14, 2);
-        }
-    }
-
-    function playerHitbox() {
-        // Reduced hitbox (forgiving — 70% of visual size)
-        const s = 28;
-        return { x: PLAYER_X - s * 0.28, y: playerY - s * 0.9, w: s * 0.56, h: s * 0.88 };
-    }
-
-    function obsHitbox(obs) {
-        // Inset by 4px on each side
-        return { x: obs.x + 4, y: GROUND_Y - obs.h + 4, w: obs.w - 8, h: obs.h - 4 };
-    }
-
-    function rectsOverlap(a, b) {
-        return a.x < b.x + b.w && a.x + a.w > b.x &&
-               a.y < b.y + b.h && a.y + a.h > b.y;
-    }
-
-    // ---- main loop ----
-    function loop() {
-        frame++;
-        ctx.clearRect(0, 0, W, H);
-
-        // White background (Chrome dino style)
-        ctx.fillStyle = '#f7f7f7';
-        ctx.fillRect(0, 0, W, H);
-
-        if (phase === 'start') {
-            drawGround();
-            clouds.forEach(drawCloud);
-            playerY = GROUND_Y;
-            drawPlayer();
-
-            // Prompt text (Chrome dino style — dark on white)
-            ctx.fillStyle = '#535353';
-            ctx.font = 'bold 16px "Courier New", monospace';
-            ctx.textAlign = 'center';
-            ctx.fillText('JUMPER GAME', W / 2, H / 2 - 14);
-            ctx.font = '12px "Courier New", monospace';
-            ctx.fillStyle = '#888';
-            ctx.fillText('Press Space / Tap to start', W / 2, H / 2 + 8);
-            if (highScore > 0) {
-                ctx.fillStyle = '#535353';
-                ctx.fillText(`HI ${highScore}`, W / 2, H / 2 + 26);
-            }
-            ctx.textAlign = 'left';
-
-            dinoRaf = requestAnimationFrame(loop);
-            return;
-        }
-
-        if (phase === 'running') {
-            speed = Math.min(BASE_SPEED + frame * SPEED_INC, MAX_SPEED);
-            groundX += speed;
-
-            // Move / scroll clouds slowly
-            clouds.forEach(c => {
-                c.x -= speed * 0.18;
-                if (c.x + c.w < 0) { c.x = W + c.w; c.y = 20 + Math.random() * 50; c.w = 40 + Math.random() * 40; }
-            });
-
-            // Player physics
-            if (playerY >= GROUND_Y) {
-                playerY = GROUND_Y;
-                velY = 0;
-                jumpsLeft = 2;
-            } else {
-                velY += GRAVITY;
-                playerY += velY;
-            }
-
-            // Spawn obstacles
-            nextObstacleIn--;
-            if (nextObstacleIn <= 0) {
-                const h = 28 + Math.random() * 22;
-                obstacles.push({ x: W + 10, w: 22 + Math.random() * 12, h });
-                // Gap decreases with speed but never below 55 frames
-                nextObstacleIn = Math.max(55, Math.floor(130 - speed * 6) + Math.floor(Math.random() * 40));
-            }
-
-            // Move obstacles
-            obstacles.forEach(o => { o.x -= speed; });
-            obstacles = obstacles.filter(o => o.x + o.w > -10);
-
-            // Collision check
-            const ph = playerHitbox();
-            for (const obs of obstacles) {
-                if (rectsOverlap(ph, obsHitbox(obs))) {
-                    phase = 'dead';
-                    score = Math.floor(frame / 6);
-                    newHS = score > highScore;
-                    if (newHS) { highScore = score; localStorage.setItem('dinoHighScore', score); }
-                    break;
-                }
-            }
-
-            score = Math.floor(frame / 6);
-        }
-
-        // Draw
-        drawGround();
-        clouds.forEach(drawCloud);
-        obstacles.forEach(drawObstacle);
-        drawPlayer();
-
-        // HUD — Chrome dino style monospace score
-        ctx.font = 'bold 14px "Courier New", monospace';
-        ctx.fillStyle = '#535353';
-        ctx.textAlign = 'right';
-        ctx.fillText(`HI ${String(highScore).padStart(5,'0')}  ${String(score).padStart(5,'0')}`, W - 10, 22);
-        ctx.textAlign = 'left';
-
-        if (phase === 'dead') {
-            ctx.textAlign = 'center';
-            ctx.fillStyle = '#535353';
-            ctx.font = 'bold 14px "Courier New", monospace';
-            ctx.fillText('G A M E  O V E R', W / 2, H / 2 - 22);
-            if (newHS) {
-                ctx.font = '11px "Courier New", monospace';
-                ctx.fillStyle = '#888';
-                ctx.fillText('NEW HIGH SCORE!', W / 2, H / 2 - 4);
-            }
-            ctx.font = '11px "Courier New", monospace';
-            ctx.fillStyle = '#888';
-            ctx.fillText('Space / R / Tap to restart', W / 2, H / 2 + 14);
-            ctx.textAlign = 'left';
-        }
-
-        if (phase !== 'dead') {
-            dinoRaf = requestAnimationFrame(loop);
-        }
-    }
-
-    dinoRaf = requestAnimationFrame(loop);
-}
-
-function restartDinoGame() { initDinoGame(); }
 
 // ===== FOOTBALL GAME =====
 let footballGameState = {
@@ -2282,6 +1913,8 @@ function browserNavigate(query) {
 
     // Check for website URLs
     const websites = {
+        'www.crazygames.fun': getCrazyGamesWebsite,
+        'crazygames.fun': getCrazyGamesWebsite,
         'www.zappycook.net': getZappyCookWebsite,
         'zappycook.net': getZappyCookWebsite,
         'www.pixelvault.io': getPixelVaultWebsite,
@@ -2308,6 +1941,216 @@ function browserNavigate(query) {
             ${content}
         </div>
     `;
+}
+
+function getCrazyGamesWebsite() {
+    return `
+        <div class="fake-website">
+            <div class="fake-site-header" style="background:linear-gradient(135deg,#6c3483,#1a5276);padding:20px;border-radius:8px 8px 0 0;color:white;">
+                <h1 style="margin:0;font-size:28px;">🎮 CrazyGames.fun</h1>
+                <p style="margin:4px 0 0;opacity:0.9;">Free online games — play instantly, no download needed!</p>
+            </div>
+            <div class="fake-site-body" style="background:#1a1a2e;padding:20px;border-radius:0 0 8px 8px;">
+                <h2 style="color:#a29bfe;margin:0 0 14px;">🕹️ Featured Games</h2>
+                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px;">
+                    <div onclick="crazyGame('snake')" style="background:#2d2d5e;border-radius:10px;padding:14px;text-align:center;cursor:pointer;border:2px solid transparent;transition:border 0.2s;" onmouseover="this.style.borderColor='#a29bfe'" onmouseout="this.style.borderColor='transparent'">
+                        <div style="font-size:40px;">🐍</div>
+                        <p style="color:white;margin:8px 0 2px;font-weight:600;">Snake</p>
+                        <p style="color:#aaa;font-size:11px;">Eat dots, grow longer!</p>
+                        <span style="background:#27ae60;color:white;font-size:10px;padding:2px 8px;border-radius:20px;">PLAY NOW</span>
+                    </div>
+                    <div onclick="crazyGame('tictactoe')" style="background:#2d2d5e;border-radius:10px;padding:14px;text-align:center;cursor:pointer;border:2px solid transparent;" onmouseover="this.style.borderColor='#a29bfe'" onmouseout="this.style.borderColor='transparent'">
+                        <div style="font-size:40px;">❌⭕</div>
+                        <p style="color:white;margin:8px 0 2px;font-weight:600;">Tic Tac Toe</p>
+                        <p style="color:#aaa;font-size:11px;">Play vs the computer!</p>
+                        <span style="background:#27ae60;color:white;font-size:10px;padding:2px 8px;border-radius:20px;">PLAY NOW</span>
+                    </div>
+                    <div onclick="crazyGame('reaction')" style="background:#2d2d5e;border-radius:10px;padding:14px;text-align:center;cursor:pointer;border:2px solid transparent;" onmouseover="this.style.borderColor='#a29bfe'" onmouseout="this.style.borderColor='transparent'">
+                        <div style="font-size:40px;">⚡</div>
+                        <p style="color:white;margin:8px 0 2px;font-weight:600;">Reaction Time</p>
+                        <p style="color:#aaa;font-size:11px;">How fast are you?</p>
+                        <span style="background:#27ae60;color:white;font-size:10px;padding:2px 8px;border-radius:20px;">PLAY NOW</span>
+                    </div>
+                </div>
+                <div id="crazy-game-area"></div>
+            </div>
+        </div>
+    `;
+}
+
+function crazyGame(name) {
+    const area = document.getElementById('crazy-game-area');
+    if (!area) return;
+    if (name === 'snake') {
+        area.innerHTML = `
+            <div style="background:#111827;border-radius:10px;padding:16px;text-align:center;">
+                <h3 style="color:#a29bfe;margin:0 0 8px;">🐍 Snake</h3>
+                <p style="color:#aaa;font-size:12px;margin:0 0 10px;">Arrow keys or WASD to move · Eat the red dot · Don't hit the wall!</p>
+                <canvas id="snake-canvas" width="320" height="320" style="background:#0f172a;border-radius:8px;display:block;margin:0 auto;cursor:none;"></canvas>
+                <p id="snake-score" style="color:#a29bfe;margin:8px 0 0;font-weight:bold;">Score: 0</p>
+            </div>
+        `;
+        initSnakeGame();
+    } else if (name === 'tictactoe') {
+        area.innerHTML = `
+            <div style="background:#111827;border-radius:10px;padding:16px;text-align:center;">
+                <h3 style="color:#a29bfe;margin:0 0 8px;">❌⭕ Tic Tac Toe</h3>
+                <p id="ttt-status" style="color:#aaa;font-size:13px;margin:0 0 10px;">You are X — Your turn!</p>
+                <div id="ttt-board" style="display:inline-grid;grid-template-columns:repeat(3,80px);gap:6px;"></div>
+                <br><button onclick="initTTT()" style="margin-top:12px;background:#6c3483;color:white;border:none;padding:6px 18px;border-radius:20px;cursor:pointer;font-size:13px;">New Game</button>
+            </div>
+        `;
+        initTTT();
+    } else if (name === 'reaction') {
+        area.innerHTML = `
+            <div style="background:#111827;border-radius:10px;padding:16px;text-align:center;">
+                <h3 style="color:#a29bfe;margin:0 0 8px;">⚡ Reaction Time</h3>
+                <p style="color:#aaa;font-size:12px;margin:0 0 10px;">Click the green box as fast as you can!</p>
+                <div id="reaction-box" onclick="reactionClick()" style="width:200px;height:200px;background:#333;border-radius:12px;margin:0 auto;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;color:white;font-weight:bold;transition:background 0.2s;">Click to Start</div>
+                <p id="reaction-result" style="color:#a29bfe;margin:10px 0 0;font-weight:bold;"></p>
+            </div>
+        `;
+        initReaction();
+    }
+    area.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function initSnakeGame() {
+    const canvas = document.getElementById('snake-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const CELL = 20, COLS = 16, ROWS = 16;
+    let snake = [{x:8,y:8}], dir = {x:1,y:0}, nextDir = {x:1,y:0};
+    let food = spawnFood(), score = 0, running = true, raf;
+
+    function spawnFood() {
+        let f;
+        do { f = {x: Math.floor(Math.random()*COLS), y: Math.floor(Math.random()*ROWS)}; }
+        while (snake.some(s => s.x===f.x && s.y===f.y));
+        return f;
+    }
+
+    function keyH(e) {
+        const k = e.key;
+        if ((k==='ArrowUp'||k==='w')&&dir.y!==1)   nextDir={x:0,y:-1};
+        if ((k==='ArrowDown'||k==='s')&&dir.y!==-1) nextDir={x:0,y:1};
+        if ((k==='ArrowLeft'||k==='a')&&dir.x!==1)  nextDir={x:-1,y:0};
+        if ((k==='ArrowRight'||k==='d')&&dir.x!==-1)nextDir={x:1,y:0};
+        e.preventDefault();
+    }
+    document.addEventListener('keydown', keyH);
+
+    let last = 0;
+    function loop(ts) {
+        if (!running || !document.getElementById('snake-canvas')) { cancelAnimationFrame(raf); document.removeEventListener('keydown', keyH); return; }
+        if (ts - last > 140) {
+            last = ts;
+            dir = nextDir;
+            const head = {x: snake[0].x + dir.x, y: snake[0].y + dir.y};
+            if (head.x<0||head.x>=COLS||head.y<0||head.y>=ROWS||snake.some(s=>s.x===head.x&&s.y===head.y)) {
+                running = false;
+                ctx.fillStyle = 'rgba(0,0,0,0.6)';
+                ctx.fillRect(0,0,canvas.width,canvas.height);
+                ctx.fillStyle = '#ff6b6b'; ctx.font = 'bold 24px sans-serif'; ctx.textAlign = 'center';
+                ctx.fillText('GAME OVER', canvas.width/2, canvas.height/2 - 10);
+                ctx.fillStyle = '#aaa'; ctx.font = '14px sans-serif';
+                ctx.fillText('Score: '+score, canvas.width/2, canvas.height/2+18);
+                document.removeEventListener('keydown', keyH);
+                return;
+            }
+            snake.unshift(head);
+            if (head.x===food.x && head.y===food.y) { food=spawnFood(); score++; const el=document.getElementById('snake-score'); if(el) el.textContent='Score: '+score; }
+            else snake.pop();
+
+            ctx.fillStyle = '#0f172a'; ctx.fillRect(0,0,canvas.width,canvas.height);
+            // food
+            ctx.fillStyle = '#ef4444'; ctx.beginPath(); ctx.arc((food.x+0.5)*CELL,(food.y+0.5)*CELL,CELL*0.4,0,Math.PI*2); ctx.fill();
+            // snake
+            snake.forEach((s,i)=>{ ctx.fillStyle=i===0?'#22c55e':'#16a34a'; ctx.fillRect(s.x*CELL+1,s.y*CELL+1,CELL-2,CELL-2); });
+        }
+        raf = requestAnimationFrame(loop);
+    }
+    raf = requestAnimationFrame(loop);
+}
+
+let tttBoard = [], tttTurn = 'X';
+function initTTT() {
+    tttBoard = Array(9).fill('');
+    tttTurn = 'X';
+    const status = document.getElementById('ttt-status');
+    if (status) status.textContent = 'You are X — Your turn!';
+    const board = document.getElementById('ttt-board');
+    if (!board) return;
+    board.innerHTML = '';
+    for (let i=0; i<9; i++) {
+        const cell = document.createElement('div');
+        cell.style.cssText = 'width:80px;height:80px;background:#1e293b;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:36px;cursor:pointer;color:white;';
+        cell.onclick = () => tttMove(i);
+        board.appendChild(cell);
+    }
+}
+function tttMove(i) {
+    if (tttBoard[i] || tttTurn !== 'X') return;
+    tttBoard[i] = 'X';
+    tttRender();
+    if (tttCheck('X')) { document.getElementById('ttt-status').textContent = '🎉 You win!'; return; }
+    if (tttBoard.every(c=>c)) { document.getElementById('ttt-status').textContent = "It's a draw!"; return; }
+    tttTurn = 'O';
+    document.getElementById('ttt-status').textContent = 'Computer is thinking...';
+    setTimeout(() => {
+        const empty = tttBoard.map((v,i)=>v?null:i).filter(v=>v!==null);
+        // Try to win or block
+        let move = null;
+        for (const m of empty) { tttBoard[m]='O'; if(tttCheck('O')){move=m;} tttBoard[m]=''; if(move!==null)break; }
+        if (move===null) for (const m of empty) { tttBoard[m]='X'; if(tttCheck('X')){move=m;} tttBoard[m]=''; if(move!==null)break; }
+        if (move===null) move = 4 in empty ? 4 : empty[Math.floor(Math.random()*empty.length)];
+        tttBoard[move] = 'O';
+        tttRender();
+        if (tttCheck('O')) { document.getElementById('ttt-status').textContent = '🤖 Computer wins!'; return; }
+        if (tttBoard.every(c=>c)) { document.getElementById('ttt-status').textContent = "It's a draw!"; return; }
+        tttTurn = 'X';
+        document.getElementById('ttt-status').textContent = 'Your turn!';
+    }, 400);
+}
+function tttRender() {
+    const cells = document.getElementById('ttt-board').children;
+    tttBoard.forEach((v,i) => { cells[i].textContent = v; cells[i].style.color = v==='X'?'#60a5fa':'#f87171'; });
+}
+function tttCheck(p) {
+    const wins=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+    return wins.some(w=>w.every(i=>tttBoard[i]===p));
+}
+
+let reactionState = 'idle', reactionStart = 0, reactionTimeout = null;
+function initReaction() { reactionState = 'idle'; }
+function reactionClick() {
+    const box = document.getElementById('reaction-box');
+    const result = document.getElementById('reaction-result');
+    if (!box) return;
+    if (reactionState === 'idle') {
+        reactionState = 'waiting';
+        box.style.background = '#b91c1c';
+        box.textContent = 'Wait for green...';
+        const delay = 1500 + Math.random() * 3000;
+        reactionTimeout = setTimeout(() => {
+            box.style.background = '#16a34a';
+            box.textContent = 'CLICK NOW!';
+            reactionStart = Date.now();
+            reactionState = 'go';
+        }, delay);
+    } else if (reactionState === 'waiting') {
+        clearTimeout(reactionTimeout);
+        box.style.background = '#333';
+        box.textContent = 'Too early! Click to try again.';
+        result.textContent = '';
+        reactionState = 'idle';
+    } else if (reactionState === 'go') {
+        const ms = Date.now() - reactionStart;
+        box.style.background = '#1e293b';
+        box.textContent = 'Click to try again';
+        result.textContent = `⚡ ${ms}ms — ${ms<200?'Incredible!':ms<300?'Great!':ms<500?'Good!':'Keep practising!'}`;
+        reactionState = 'idle';
+    }
 }
 
 function getZappyCookWebsite() {
@@ -2493,6 +2336,7 @@ function browserGoBack() {
             <h1>Welcome to Web Browser</h1>
             <p>Search for anything or enter a website address.</p>
                 <div class="browser-shortcuts">
+                <div class="shortcut website-shortcut" onclick="browserNavigate('www.crazygames.fun')">🎮 CrazyGames.fun</div>
                 <div class="shortcut" onclick="browserNavigate('space')">🚀 Space</div>
                 <div class="shortcut" onclick="browserNavigate('dinosaurs')">🦕 Dinosaurs</div>
                 <div class="shortcut website-shortcut" onclick="browserNavigate('www.novaspark.tech')">⚡ NovaSpark.tech</div>
