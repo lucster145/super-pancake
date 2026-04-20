@@ -739,6 +739,7 @@ class WindowManager {
                             <div class="shortcut website-shortcut" onclick="browserNavigate('www.codecubs.io')">💻 CodeCubs.io</div>
                             <div class="shortcut website-shortcut" onclick="browserNavigate('www.sketchwild.org')">🎨 SketchWild.org</div>
                             <div class="shortcut website-shortcut" onclick="browserNavigate('www.factblast.fun')">💥 FactBlast.fun</div>
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.quickpick.app')">📸 QuickPick.app</div>
                         </div>
                     </div>
                 </div>
@@ -2135,6 +2136,8 @@ function browserNavigate(query) {
         'sketchwild.org': getSketchWildWebsite,
         'www.factblast.fun': getFactBlastWebsite,
         'factblast.fun': getFactBlastWebsite,
+        'www.quickpick.app': getQuickPickWebsite,
+        'quickpick.app': getQuickPickWebsite,
     };
     const siteKey = Object.keys(websites).find(k => query.toLowerCase().includes(k));
 
@@ -2153,6 +2156,7 @@ function browserNavigate(query) {
             ${content}
         </div>
     `;
+    if (siteKey && (siteKey.includes('quickpick'))) { initQuickPick(); }
 }
 
 function getHazyGamesWebsite() {
@@ -2877,6 +2881,331 @@ function getFactBlastWebsite() {
     `;
 }
 
+function getQuickPickWebsite() {
+    return `
+        <div class="fake-website qp-app">
+            <!-- Top Nav -->
+            <div class="qp-nav">
+                <div class="qp-logo">QuickPick</div>
+                <div class="qp-nav-icons">
+                    <span class="qp-icon" onclick="qpShowTab('home',this)" title="Home">🏠</span>
+                    <span class="qp-icon" onclick="qpShowTab('explore',this)" title="Explore">🔍</span>
+                    <span class="qp-icon" onclick="qpShowTab('reels',this)" title="Reels">▶️</span>
+                    <span class="qp-icon qp-notif" onclick="qpShowTab('notifs',this)" title="Notifications">🔔<span class="qp-badge">3</span></span>
+                    <span class="qp-icon" onclick="qpShowTab('profile',this)" title="Profile">👤</span>
+                </div>
+            </div>
+
+            <!-- Stories Bar -->
+            <div class="qp-stories" id="qp-stories">
+                <div class="qp-story qp-story-add" onclick="qpToast('Story uploaded!')">
+                    <div class="qp-story-ring qp-story-ring-add">
+                        <div class="qp-story-avatar">➕</div>
+                    </div>
+                    <p>Your Story</p>
+                </div>
+                <div class="qp-story" onclick="qpViewStory('nova_skies')">
+                    <div class="qp-story-ring"><div class="qp-story-avatar" style="background:linear-gradient(135deg,#f8b500,#e84393)">🌅</div></div>
+                    <p>nova_skies</p>
+                </div>
+                <div class="qp-story" onclick="qpViewStory('codewizard')">
+                    <div class="qp-story-ring"><div class="qp-story-avatar" style="background:linear-gradient(135deg,#00c6ff,#0072ff)">💻</div></div>
+                    <p>codewizard</p>
+                </div>
+                <div class="qp-story" onclick="qpViewStory('paw_life')">
+                    <div class="qp-story-ring"><div class="qp-story-avatar" style="background:linear-gradient(135deg,#fcb045,#fd1d1d)">🐾</div></div>
+                    <p>paw_life</p>
+                </div>
+                <div class="qp-story" onclick="qpViewStory('techbyte')">
+                    <div class="qp-story-ring"><div class="qp-story-avatar" style="background:linear-gradient(135deg,#a18cd1,#fbc2eb)">⚡</div></div>
+                    <p>techbyte</p>
+                </div>
+                <div class="qp-story" onclick="qpViewStory('oceanview')">
+                    <div class="qp-story-ring"><div class="qp-story-avatar" style="background:linear-gradient(135deg,#43e97b,#38f9d7)">🌊</div></div>
+                    <p>oceanview</p>
+                </div>
+            </div>
+
+            <!-- Main feed area -->
+            <div id="qp-main"></div>
+
+            <!-- Story viewer overlay -->
+            <div id="qp-story-viewer" class="qp-story-viewer hidden">
+                <div class="qp-story-progress"><div class="qp-story-progress-fill" id="qp-story-bar"></div></div>
+                <button class="qp-story-close" onclick="qpCloseStory()">✕</button>
+                <div class="qp-story-screen" id="qp-story-screen"></div>
+            </div>
+
+            <!-- Toast notification -->
+            <div id="qp-toast" class="qp-toast hidden"></div>
+        </div>
+    `;
+}
+
+const QP_POSTS = [
+    { id:1, user:'nova_skies', avatar:'🌅', avatarBg:'linear-gradient(135deg,#f8b500,#e84393)', emoji:'🌄', bg:'linear-gradient(135deg,#f8b500 0%,#fc5c7d 100%)', caption:'Golden hour hits different 🌅✨ #sunset #nature #vibes', likes:2841, comments:['Amazing shot! 🔥','Stunning colours wow','I wish I was there 😍'], time:'2h' },
+    { id:2, user:'codewizard', avatar:'💻', avatarBg:'linear-gradient(135deg,#00c6ff,#0072ff)', emoji:'💻', bg:'linear-gradient(135deg,#1a1a2e 0%,#16213e 100%)', caption:'Late night coding session 🔥 New project dropping soon 👀 #dev #code #tech', likes:1204, comments:['What are you building??','Need more sleep bestie 😂','Followed for more!'], time:'4h' },
+    { id:3, user:'paw_life', avatar:'🐾', avatarBg:'linear-gradient(135deg,#fcb045,#fd1d1d)', emoji:'🐶', bg:'linear-gradient(135deg,#fcb045 0%,#fd1d1d 100%)', caption:'Monday mornings made better 🐶❤️ #dogs #weekday #cute #petlover', likes:5673, comments:['Omg the cutest!!','I want to adopt 🥲','Made my day 🐾'], time:'6h' },
+    { id:4, user:'techbyte', avatar:'⚡', avatarBg:'linear-gradient(135deg,#a18cd1,#fbc2eb)', emoji:'🚀', bg:'linear-gradient(135deg,#667eea 0%,#764ba2 100%)', caption:'Just launched 🚀 QuickPick version 3.0 is live — go check it out! #tech #launch #startup', likes:3320, comments:['Congrats!! 🎉','This is epic ngl','Using this every day'], time:'8h' },
+    { id:5, user:'oceanview', avatar:'🌊', avatarBg:'linear-gradient(135deg,#43e97b,#38f9d7)', emoji:'🌊', bg:'linear-gradient(135deg,#43e97b 0%,#38f9d7 100%)', caption:'The sea is calling 🌊🐚 Weekend escape ✌️ #ocean #beach #summer #travel', likes:7810, comments:['SO BEAUTIFUL 😭','I need a holiday NOW','The colour of that water 💙'], time:'12h' },
+];
+
+const qpLiked = new Set();
+const qpSaved = new Set();
+let qpStoryTimer = null;
+
+function qpRenderFeed() {
+    const main = document.getElementById('qp-main');
+    if (!main) return;
+    main.innerHTML = QP_POSTS.map(p => `
+        <div class="qp-post" id="qp-post-${p.id}">
+            <div class="qp-post-header">
+                <div class="qp-post-avatar" style="background:${p.avatarBg}">${p.avatar}</div>
+                <div class="qp-post-user">
+                    <strong>${p.user}</strong>
+                    <span class="qp-post-time">${p.time} ago</span>
+                </div>
+                <span class="qp-post-more" onclick="qpToast('Options coming soon!')">•••</span>
+            </div>
+            <div class="qp-post-image" style="background:${p.bg}" ondblclick="qpDoubleTapLike(${p.id})">
+                <span class="qp-post-emoji">${p.emoji}</span>
+                <div class="qp-heart-pop hidden" id="qp-heart-${p.id}">❤️</div>
+            </div>
+            <div class="qp-post-actions">
+                <div class="qp-action-left">
+                    <button class="qp-btn" id="qp-like-${p.id}" onclick="qpToggleLike(${p.id},${p.likes})">${qpLiked.has(p.id)?'❤️':'🤍'}</button>
+                    <button class="qp-btn" onclick="qpOpenComments(${p.id})">💬</button>
+                    <button class="qp-btn" onclick="qpToast('Link copied!')">📤</button>
+                </div>
+                <button class="qp-btn" id="qp-save-${p.id}" onclick="qpToggleSave(${p.id})">${qpSaved.has(p.id)?'🔖':'🏷️'}</button>
+            </div>
+            <div class="qp-likes" id="qp-likes-${p.id}"><strong>${(qpLiked.has(p.id)?p.likes+1:p.likes).toLocaleString()} likes</strong></div>
+            <div class="qp-caption"><strong>${p.user}</strong> ${p.caption}</div>
+            <div class="qp-comments-preview" onclick="qpOpenComments(${p.id})" style="cursor:pointer">
+                <span style="color:#8e8e8e;font-size:12px;">View all ${p.comments.length} comments</span>
+                <div style="color:#262626;font-size:13px;margin-top:3px"><strong>${p.user}</strong> ${p.comments[0]}</div>
+            </div>
+            <div id="qp-comment-box-${p.id}" class="qp-comment-box hidden">
+                ${p.comments.map(c=>`<div class="qp-comment-item">💬 ${c}</div>`).join('')}
+                <div class="qp-add-comment">
+                    <input class="qp-comment-input" placeholder="Add a comment…" id="qp-cin-${p.id}" onkeydown="if(event.key==='Enter')qpPostComment(${p.id})">
+                    <button class="qp-post-btn" onclick="qpPostComment(${p.id})">Post</button>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function qpRenderExplore() {
+    const main = document.getElementById('qp-main');
+    if (!main) return;
+    const tiles = [
+        {e:'🏔️',bg:'linear-gradient(135deg,#74b9ff,#0984e3)',u:'hikerpro'},
+        {e:'🎨',bg:'linear-gradient(135deg,#fd79a8,#e84393)',u:'artsy_val'},
+        {e:'🍕',bg:'linear-gradient(135deg,#fdcb6e,#e17055)',u:'foodfanatic'},
+        {e:'🌺',bg:'linear-gradient(135deg,#55efc4,#00b894)',u:'bloom_co'},
+        {e:'🎸',bg:'linear-gradient(135deg,#a29bfe,#6c5ce7)',u:'rockstrings'},
+        {e:'🏄',bg:'linear-gradient(135deg,#00cec9,#0984e3)',u:'wavechaser'},
+        {e:'📸',bg:'linear-gradient(135deg,#fab1a0,#e17055)',u:'shutter_k'},
+        {e:'🌙',bg:'linear-gradient(135deg,#2d3436,#636e72)',u:'night_owl'},
+        {e:'🦋',bg:'linear-gradient(135deg,#fd79a8,#fdcb6e)',u:'butterfly_g'},
+    ];
+    main.innerHTML = `
+        <div class="qp-explore-header">
+            <input class="qp-explore-search" placeholder="🔍  Search QuickPick…" oninput="qpToast('Search coming soon!')">
+        </div>
+        <div class="qp-explore-grid">
+            ${tiles.map((t,i) => `
+                <div class="qp-explore-tile ${i===0||i===3||i===6?'qp-tile-big':''}" style="background:${t.bg}" onclick="qpToast('@${t.u} — tap to view!')">
+                    <span class="qp-tile-emoji">${t.e}</span>
+                    <div class="qp-tile-user">@${t.u}</div>
+                </div>
+            `).join('')}
+        </div>
+    `;
+}
+
+function qpRenderReels() {
+    const main = document.getElementById('qp-main');
+    if (!main) return;
+    const reels = [
+        {e:'🎵',bg:'linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045)',u:'dance_moves',v:'2.1M views',s:'Trending 🔥'},
+        {e:'🤸',bg:'linear-gradient(135deg,#11998e,#38ef7d)',u:'flex_daily',v:'890K views',s:'Health & Fitness'},
+        {e:'🍳',bg:'linear-gradient(135deg,#f7971e,#ffd200)',u:'chef_marco',v:'1.4M views',s:'Food & Cooking'},
+        {e:'🐬',bg:'linear-gradient(135deg,#1a6cf6,#38f9d7)',u:'oceanview',v:'3.2M views',s:'Nature'},
+    ];
+    main.innerHTML = `
+        <div class="qp-reels-grid">
+            ${reels.map(r => `
+                <div class="qp-reel" style="background:${r.bg}" onclick="qpToast('▶ Playing reel by @${r.u}')">
+                    <span class="qp-reel-emoji">${r.e}</span>
+                    <div class="qp-reel-info">
+                        <div class="qp-reel-tag">${r.s}</div>
+                        <div style="font-size:12px;color:rgba(255,255,255,0.9)">@${r.u} · ${r.v}</div>
+                    </div>
+                    <div class="qp-reel-play">▶</div>
+                </div>
+            `).join('')}
+        </div>
+    `;
+}
+
+function qpRenderNotifs() {
+    const main = document.getElementById('qp-main');
+    if (!main) return;
+    main.innerHTML = `
+        <div class="qp-notifs-list">
+            <h3 style="padding:14px 16px;margin:0;font-size:15px;border-bottom:1px solid #efefef;">Notifications</h3>
+            ${[
+                {a:'🌅',bg:'linear-gradient(135deg,#f8b500,#e84393)',u:'nova_skies',msg:'liked your photo.',t:'2m'},
+                {a:'💻',bg:'linear-gradient(135deg,#00c6ff,#0072ff)',u:'codewizard',msg:'started following you.',t:'10m'},
+                {a:'🐾',bg:'linear-gradient(135deg,#fcb045,#fd1d1d)',u:'paw_life',msg:'commented: "So cool 🔥"',t:'1h'},
+                {a:'⚡',bg:'linear-gradient(135deg,#a18cd1,#fbc2eb)',u:'techbyte',msg:'liked your reel.',t:'3h'},
+                {a:'🌊',bg:'linear-gradient(135deg,#43e97b,#38f9d7)',u:'oceanview',msg:'saved your post.',t:'5h'},
+            ].map(n => `
+                <div class="qp-notif-item" onclick="qpToast('@${n.u} — tap to view profile')">
+                    <div class="qp-post-avatar" style="background:${n.bg};flex-shrink:0">${n.a}</div>
+                    <div style="flex:1;font-size:13px"><strong>@${n.u}</strong> ${n.msg} <span style="color:#8e8e8e">${n.t} ago</span></div>
+                    <div class="qp-notif-thumb" style="background:${n.bg}"></div>
+                </div>
+            `).join('')}
+        </div>
+    `;
+}
+
+function qpRenderProfile() {
+    const main = document.getElementById('qp-main');
+    if (!main) return;
+    main.innerHTML = `
+        <div class="qp-profile">
+            <div class="qp-profile-header">
+                <div class="qp-profile-pic">📸</div>
+                <div class="qp-profile-stats">
+                    <div class="qp-stat"><strong>12</strong><span>Posts</span></div>
+                    <div class="qp-stat"><strong>1.4K</strong><span>Followers</span></div>
+                    <div class="qp-stat"><strong>318</strong><span>Following</span></div>
+                </div>
+            </div>
+            <div class="qp-profile-bio">
+                <strong>you</strong><br>
+                📍 Somewhere online<br>
+                ✨ Living my best life · Photos & Vibes<br>
+                <span style="color:#003569">🔗 quickpick.app/you</span>
+            </div>
+            <div style="display:flex;gap:8px;padding:0 14px 14px;">
+                <button class="qp-profile-btn" onclick="qpToast('Profile edited!')">Edit Profile</button>
+                <button class="qp-profile-btn" onclick="qpToast('Shared!')">Share Profile</button>
+            </div>
+            <div class="qp-profile-grid">
+                ${['🌅','💻','🌊','🐶','🚀','⚡','🎵','🏔️','🎨','🍕','🌺','🎸'].map((e,i) => `
+                    <div class="qp-profile-tile" style="background:linear-gradient(135deg,hsl(${i*30},70%,40%),hsl(${i*30+60},80%,55%))" onclick="qpToast('Post #${i+1}')">
+                        <span>${e}</span>
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+    `;
+}
+
+function qpShowTab(tab, el) {
+    document.querySelectorAll('.qp-icon').forEach(i => i.classList.remove('qp-icon-active'));
+    if (el) el.classList.add('qp-icon-active');
+    const stories = document.getElementById('qp-stories');
+    if (stories) stories.style.display = tab === 'home' ? 'flex' : 'none';
+    if (tab === 'home')    qpRenderFeed();
+    if (tab === 'explore') qpRenderExplore();
+    if (tab === 'reels')   qpRenderReels();
+    if (tab === 'notifs')  qpRenderNotifs();
+    if (tab === 'profile') qpRenderProfile();
+}
+
+function qpToggleLike(id, baseLikes) {
+    const btn = document.getElementById('qp-like-'+id);
+    const counter = document.getElementById('qp-likes-'+id);
+    if (qpLiked.has(id)) {
+        qpLiked.delete(id);
+        btn.textContent = '🤍';
+        counter.innerHTML = '<strong>' + baseLikes.toLocaleString() + ' likes</strong>';
+    } else {
+        qpLiked.add(id);
+        btn.textContent = '❤️';
+        counter.innerHTML = '<strong>' + (baseLikes + 1).toLocaleString() + ' likes</strong>';
+    }
+}
+
+function qpDoubleTapLike(id) {
+    const pop = document.getElementById('qp-heart-'+id);
+    if (!pop) return;
+    pop.classList.remove('hidden');
+    pop.style.animation = 'none';
+    void pop.offsetWidth;
+    pop.style.animation = 'qpHeartPop 0.7s ease forwards';
+    if (!qpLiked.has(id)) {
+        const post = QP_POSTS.find(p => p.id === id);
+        if (post) qpToggleLike(id, post.likes);
+    }
+    setTimeout(() => pop.classList.add('hidden'), 750);
+}
+
+function qpToggleSave(id) {
+    const btn = document.getElementById('qp-save-'+id);
+    if (qpSaved.has(id)) { qpSaved.delete(id); btn.textContent = '🏷️'; qpToast('Removed from saved'); }
+    else { qpSaved.add(id); btn.textContent = '🔖'; qpToast('Saved to collection'); }
+}
+
+function qpOpenComments(id) {
+    const box = document.getElementById('qp-comment-box-'+id);
+    if (box) box.classList.toggle('hidden');
+}
+
+function qpPostComment(id) {
+    const inp = document.getElementById('qp-cin-'+id);
+    if (!inp || !inp.value.trim()) return;
+    const box = document.getElementById('qp-comment-box-'+id);
+    const item = document.createElement('div');
+    item.className = 'qp-comment-item';
+    item.textContent = '💬 ' + inp.value.trim();
+    box.insertBefore(item, box.querySelector('.qp-add-comment'));
+    inp.value = '';
+    qpToast('Comment posted!');
+}
+
+function qpViewStory(user) {
+    const stories = {
+        nova_skies: {bg:'linear-gradient(135deg,#f8b500,#fc5c7d)',emoji:'🌅',text:'Golden hour 🌄✨'},
+        codewizard: {bg:'linear-gradient(135deg,#1a1a2e,#0072ff)',emoji:'💻',text:'Still coding at midnight 😅'},
+        paw_life:   {bg:'linear-gradient(135deg,#fcb045,#fd1d1d)',emoji:'🐶',text:'Good doggo Friday 🐾'},
+        techbyte:   {bg:'linear-gradient(135deg,#a18cd1,#6c5ce7)',emoji:'⚡',text:'New project loading… 🚀'},
+        oceanview:  {bg:'linear-gradient(135deg,#43e97b,#38f9d7)',emoji:'🌊',text:'Weekend beach escape 🌴'},
+    };
+    const s = stories[user] || {bg:'#333',emoji:'📸',text:user};
+    const viewer = document.getElementById('qp-story-viewer');
+    const screen = document.getElementById('qp-story-screen');
+    const bar = document.getElementById('qp-story-bar');
+    viewer.classList.remove('hidden');
+    screen.innerHTML = `<div style="width:100%;height:100%;background:${s.bg};display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:12px;"><span style="font-size:64px">${s.emoji}</span><p style="color:white;font-weight:bold;font-size:16px;margin-top:12px">@${user}</p><p style="color:rgba(255,255,255,0.85);font-size:13px">${s.text}</p></div>`;
+    bar.style.transition = 'none'; bar.style.width = '0%';
+    setTimeout(() => { bar.style.transition = 'width 4s linear'; bar.style.width = '100%'; }, 30);
+    if (qpStoryTimer) clearTimeout(qpStoryTimer);
+    qpStoryTimer = setTimeout(qpCloseStory, 4100);
+}
+
+function qpCloseStory() {
+    const viewer = document.getElementById('qp-story-viewer');
+    if (viewer) viewer.classList.add('hidden');
+    if (qpStoryTimer) { clearTimeout(qpStoryTimer); qpStoryTimer = null; }
+}
+
+function qpToast(msg) {
+    const t = document.getElementById('qp-toast');
+    if (!t) return;
+    t.textContent = msg; t.classList.remove('hidden');
+    setTimeout(() => t.classList.add('hidden'), 2200);
+}
+
+// Init Quick Pick feed on first load
+function initQuickPick() { qpRenderFeed(); }
+
 function browserGoBack() {
     // Simple back - just go to homepage
     const resultsDiv = document.getElementById('browser-results');
@@ -2910,6 +3239,7 @@ function browserGoBack() {
                 <div class="shortcut website-shortcut" onclick="browserNavigate('www.codecubs.io')">💻 CodeCubs.io</div>
                 <div class="shortcut website-shortcut" onclick="browserNavigate('www.sketchwild.org')">🎨 SketchWild.org</div>
                 <div class="shortcut website-shortcut" onclick="browserNavigate('www.factblast.fun')">💥 FactBlast.fun</div>
+                <div class="shortcut website-shortcut" onclick="browserNavigate('www.quickpick.app')">📸 QuickPick.app</div>
             </div>
         </div>
     `;
