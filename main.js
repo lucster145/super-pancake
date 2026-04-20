@@ -42,13 +42,6 @@ const APPS = {
         minWidth: 500,
         minHeight: 450
     },
-    books: {
-        name: 'Books Library',
-        icon: '📚',
-        color: '#FF6B6B',
-        minWidth: 600,
-        minHeight: 500
-    },
     football: {
         name: 'Throwball',
         icon: '⚽',
@@ -83,11 +76,18 @@ const APPS = {
         color: '#6c3483',
         minWidth: 600,
         minHeight: 500
+    },
+    quickpick: {
+        name: 'QuickPick',
+        icon: '📸',
+        color: '#e84393',
+        minWidth: 420,
+        minHeight: 640
     }
 };
 
 // Store app installation state
-const installedApps = new Set(['playstore', 'notes', 'game2048', 'musicplayer', 'calculator', 'memory', 'books', 'football', 'calendar', 'net2', 'browser', 'simpleai']);
+const installedApps = new Set(['playstore', 'notes', 'game2048', 'musicplayer', 'calculator', 'memory', 'football', 'calendar', 'net2', 'browser', 'simpleai', 'quickpick']);
 
 // Global error handler for better debugging
 window.addEventListener('error', (e) => {
@@ -349,8 +349,6 @@ class WindowManager {
                 return this.getCalculatorContent();
             case 'memory':
                 return this.getMemoryGameContent();
-            case 'books':
-                return this.getBooksContent();
             case 'football':
                 return this.getFootballGameContent();
             case 'calendar':
@@ -361,6 +359,8 @@ class WindowManager {
                 return this.getBrowserContent();
             case 'simpleai':
                 return this.getSimpleAIContent();
+            case 'quickpick':
+                return getQuickPickWebsite();
             default:
                 return '<p>App not implemented</p>';
         }
@@ -739,7 +739,6 @@ class WindowManager {
                             <div class="shortcut website-shortcut" onclick="browserNavigate('www.codecubs.io')">💻 CodeCubs.io</div>
                             <div class="shortcut website-shortcut" onclick="browserNavigate('www.sketchwild.org')">🎨 SketchWild.org</div>
                             <div class="shortcut website-shortcut" onclick="browserNavigate('www.factblast.fun')">💥 FactBlast.fun</div>
-                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.quickpick.app')">📸 QuickPick.app</div>
                         </div>
                     </div>
                 </div>
@@ -763,53 +762,6 @@ class WindowManager {
                 <div style="padding:10px 14px;background:#1a1a2e;display:flex;gap:8px;">
                     <input id="ai-input" type="text" placeholder="Ask me anything..." style="flex:1;background:#2d2d5e;border:1px solid #4a4a8a;border-radius:20px;padding:8px 14px;color:white;font-size:13px;outline:none;" onkeydown="if(event.key==='Enter')simpleAISend()">
                     <button onclick="simpleAISend()" style="background:#6c3483;color:white;border:none;border-radius:20px;padding:8px 16px;cursor:pointer;font-size:13px;font-weight:bold;">Send</button>
-                </div>
-            </div>
-        `;
-    }
-
-    getBooksContent() {
-        return `
-            <div class="books-content">
-                <div class="books-header">
-                    <h2>📚 Books Library</h2>
-                    <p style="font-size: 12px; color: #666; margin-top: 5px;">Popular books for 10 year olds</p>
-                </div>
-                <div class="books-list">
-                    <div class="book-item" onclick="openBook(0)">
-                        <div class="book-cover">📖</div>
-                        <div class="book-title">The Hobbit</div>
-                        <div class="book-author">by J.R.R. Tolkien</div>
-                    </div>
-                    <div class="book-item" onclick="openBook(1)">
-                        <div class="book-cover">⚡</div>
-                        <div class="book-title">Percy Jackson</div>
-                        <div class="book-author">by Rick Riordan</div>
-                    </div>
-                    <div class="book-item" onclick="openBook(2)">
-                        <div class="book-cover">🧙</div>
-                        <div class="book-title">Harry Potter</div>
-                        <div class="book-author">by J.K. Rowling</div>
-                    </div>
-                    <div class="book-item" onclick="openBook(3)">
-                        <div class="book-cover">🦁</div>
-                        <div class="book-title">The Lion The Witch & Wardrobe</div>
-                        <div class="book-author">by C.S. Lewis</div>
-                    </div>
-                    <div class="book-item" onclick="openBook(4)">
-                        <div class="book-cover">🏝️</div>
-                        <div class="book-title">Treasure Island</div>
-                        <div class="book-author">by Robert Stevenson</div>
-                    </div>
-                    <div class="book-item" onclick="openBook(5)">
-                        <div class="book-cover">🌳</div>
-                        <div class="book-title">Where The Wild Things Are</div>
-                        <div class="book-author">by Maurice Sendak</div>
-                    </div>
-                </div>
-                <div id="book-reader" class="book-reader hidden">
-                    <button onclick="closeBook()" style="margin-bottom: 15px;">← Back to Library</button>
-                    <div id="book-content" style="background: white; padding: 15px; border-radius: 8px; line-height: 1.6; max-height: 300px; overflow-y: auto;"></div>
                 </div>
             </div>
         `;
@@ -842,9 +794,6 @@ class WindowManager {
             case 'memory':
                 initMemoryGame();
                 break;
-            case 'books':
-                initBooksApp(contentEl);
-                break;
             case 'football':
                 initFootballGame();
                 break;
@@ -856,6 +805,9 @@ class WindowManager {
                 break;
             case 'simpleai':
                 initSimpleAI();
+                break;
+            case 'quickpick':
+                initQuickPick();
                 break;
         }
     }
@@ -2136,8 +2088,6 @@ function browserNavigate(query) {
         'sketchwild.org': getSketchWildWebsite,
         'www.factblast.fun': getFactBlastWebsite,
         'factblast.fun': getFactBlastWebsite,
-        'www.quickpick.app': getQuickPickWebsite,
-        'quickpick.app': getQuickPickWebsite,
     };
     const siteKey = Object.keys(websites).find(k => query.toLowerCase().includes(k));
 
@@ -2160,7 +2110,6 @@ function browserNavigate(query) {
             </div>
         `;
     }
-    if (siteKey && (siteKey.includes('quickpick'))) { initQuickPick(); }
 }
 
 function getHazyGamesWebsite() {
@@ -3243,7 +3192,6 @@ function browserGoBack() {
                 <div class="shortcut website-shortcut" onclick="browserNavigate('www.codecubs.io')">💻 CodeCubs.io</div>
                 <div class="shortcut website-shortcut" onclick="browserNavigate('www.sketchwild.org')">🎨 SketchWild.org</div>
                 <div class="shortcut website-shortcut" onclick="browserNavigate('www.factblast.fun')">💥 FactBlast.fun</div>
-                <div class="shortcut website-shortcut" onclick="browserNavigate('www.quickpick.app')">📸 QuickPick.app</div>
             </div>
         </div>
     `;
