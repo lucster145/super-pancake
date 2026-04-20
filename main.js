@@ -76,11 +76,18 @@ const APPS = {
         color: '#4285F4',
         minWidth: 700,
         minHeight: 500
+    },
+    simpleai: {
+        name: 'Simple AI',
+        icon: '🤖',
+        color: '#6c3483',
+        minWidth: 600,
+        minHeight: 500
     }
 };
 
 // Store app installation state
-const installedApps = new Set(['playstore', 'notes', 'game2048', 'musicplayer', 'calculator', 'memory', 'books', 'football', 'calendar', 'net2', 'browser']);
+const installedApps = new Set(['playstore', 'notes', 'game2048', 'musicplayer', 'calculator', 'memory', 'books', 'football', 'calendar', 'net2', 'browser', 'simpleai']);
 
 // Global error handler for better debugging
 window.addEventListener('error', (e) => {
@@ -352,6 +359,8 @@ class WindowManager {
                 return this.getNet2Content();
             case 'browser':
                 return this.getBrowserContent();
+            case 'simpleai':
+                return this.getSimpleAIContent();
             default:
                 return '<p>App not implemented</p>';
         }
@@ -728,6 +737,27 @@ class WindowManager {
         `;
     }
 
+    getSimpleAIContent() {
+        return `
+            <div style="display:flex;flex-direction:column;height:100%;background:#0f0f1a;border-radius:8px;overflow:hidden;">
+                <div style="background:linear-gradient(135deg,#6c3483,#1a5276);padding:14px 18px;display:flex;align-items:center;gap:10px;">
+                    <span style="font-size:26px;">🤖</span>
+                    <div>
+                        <div style="color:white;font-weight:bold;font-size:16px;">Simple AI</div>
+                        <div style="color:rgba(255,255,255,0.7);font-size:11px;">Ask me anything about the web!</div>
+                    </div>
+                </div>
+                <div id="ai-messages" style="flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;min-height:0;">
+                    <div class="ai-msg ai-msg-bot">👋 Hi! I'm Simple AI. Ask me about <b>HazyGames</b>, <b>ZappyCook</b>, <b>PixelVault</b>, <b>CosmicBlog</b>, <b>NovaSpark</b>, or topics like space, animals, science and more!</div>
+                </div>
+                <div style="padding:10px 14px;background:#1a1a2e;display:flex;gap:8px;">
+                    <input id="ai-input" type="text" placeholder="Ask me anything..." style="flex:1;background:#2d2d5e;border:1px solid #4a4a8a;border-radius:20px;padding:8px 14px;color:white;font-size:13px;outline:none;" onkeydown="if(event.key==='Enter')simpleAISend()">
+                    <button onclick="simpleAISend()" style="background:#6c3483;color:white;border:none;border-radius:20px;padding:8px 16px;cursor:pointer;font-size:13px;font-weight:bold;">Send</button>
+                </div>
+            </div>
+        `;
+    }
+
     getBooksContent() {
         return `
             <div class="books-content">
@@ -813,6 +843,9 @@ class WindowManager {
                 break;
             case 'net2':
                 initNet2();
+                break;
+            case 'simpleai':
+                initSimpleAI();
                 break;
         }
     }
@@ -2423,6 +2456,84 @@ const BOOKS = [
         content: 'Finn inherits a magical amulet that allows him to breathe underwater and communicate with sea creatures. He discovers an underwater civilization facing extinction and must work with his new aquatic friends to save their home. An ocean adventure teaching about environmental awareness and the beauty of marine life.'
     }
 ];
+
+// ===== SIMPLE AI =====
+function initSimpleAI() {
+    const input = document.getElementById('ai-input');
+    if (input) input.focus();
+}
+
+const AI_KNOWLEDGE = [
+    // HazyGames
+    { keys: ['hazygames','hazy games','hazy game','games on hazygames'], answer: '🎮 <b>HazyGames.fun</b> is a free online games site! It has three games you can play right now:<br>• 🚢 <b>Battleship</b> — find and sink the hidden 1×2 ship on a 5×5 grid<br>• ❌⭕ <b>Tic Tac Toe</b> — play against the AI, it tries to block and win<br>• ⚡ <b>Reaction Time</b> — click the green box as fast as you can and see your milliseconds!' },
+    { keys: ['battleship','battle ship'], answer: '🚢 <b>Battleship</b> on HazyGames.fun: There\'s a hidden 1×2 ship somewhere on the 5×5 blue grid. Click cells to fire — 💥 means a hit, 🌊 means a miss. Sink both cells to win! Hit "New Game" to play again.' },
+    { keys: ['tic tac toe','tictactoe','noughts and crosses'], answer: '❌⭕ <b>Tic Tac Toe</b> on HazyGames.fun: You play as X against the computer (O). The AI tries to win and will block your winning moves. First to get three in a row wins! Hit "New Game" to reset.' },
+    { keys: ['reaction time','reaction'], answer: '⚡ <b>Reaction Time</b> on HazyGames.fun: Click "Start", wait for the box to turn <b>green</b>, then click as fast as you can. Under 200ms is incredible, under 300ms is great! Don\'t click too early or it resets.' },
+    // ZappyCook
+    { keys: ['zappycook','zappy cook','recipes','cooking','food','cook'], answer: '🍳 <b>ZappyCook.net</b> is a recipe website with quick and delicious meals! Featured recipes include:<br>• 🍕 Cheesy Pizza Pockets (20 mins)<br>• 🥞 Fluffy Banana Pancakes (15 mins)<br>• 🍜 Speedy Noodle Soup (10 mins)<br>• 🍫 Mug Chocolate Cake (5 mins in a microwave!)' },
+    // PixelVault
+    { keys: ['pixelvault','pixel vault','pixel art','digital art'], answer: '🖼️ <b>PixelVault.io</b> is a pixel art gallery where artists share their digital artwork. Featured pieces include Pixel Sunset by artlover99, Castle Night by pixelwiz, Ocean Depths by deepblue, and Space Launch by starmaker.' },
+    // CosmicBlog
+    { keys: ['cosmicblog','cosmic blog','blog'], answer: '🌌 <b>CosmicBlog.org</b> is a space and science blog with posts about the universe, galaxies, black holes, and more.' },
+    // NovaSpark
+    { keys: ['novaspark','nova spark'], answer: '⚡ <b>NovaSpark.tech</b> is a technology website covering the latest in innovation, gadgets, and science breakthroughs.' },
+    // Space
+    { keys: ['space','universe','stars','planets','solar system','nasa'], answer: '🚀 <b>Space</b> is an almost perfect vacuum! Fun facts:<br>• The Sun makes up 99.86% of our Solar System\'s mass<br>• A day on Venus is longer than a year on Venus<br>• There are more stars in the universe than grains of sand on Earth<br>• Footprints on the Moon will last 100 million years!' },
+    // Dinosaurs
+    { keys: ['dinosaur','dinosaurs','dino','t-rex','triceratops'], answer: '🦕 <b>Dinosaurs</b> ruled Earth for over 165 million years! Cool dinos:<br>• 🦖 T-Rex — 40 feet long, king of the dinosaurs<br>• Triceratops — 3 horns and a giant frill<br>• Velociraptor — fast and intelligent hunter<br>• Brachiosaurus — giraffe-like neck, 85 feet tall!' },
+    // Animals
+    { keys: ['animal','animals','cheetah','whale','elephant'], answer: '🐘 Earth has over 8.7 million animal species! Record holders:<br>• Cheetah — fastest land animal at 70 mph<br>• Blue Whale — largest animal ever at 100 feet long<br>• Peregrine Falcon — fastest bird at 240 mph diving<br>• Elephant — largest land animal with an incredible memory' },
+    // Ocean
+    { keys: ['ocean','sea','shark','coral reef','mariana'], answer: '🌊 Oceans cover 70% of Earth! Amazing facts:<br>• Over 80% of the ocean is still unexplored<br>• The ocean holds 94% of all life on Earth<br>• Coral reefs support 25% of all marine species<br>• The Mariana Trench is nearly 36,000 feet deep!' },
+    // Science
+    { keys: ['science','biology','chemistry','physics','astronomy'], answer: '🔬 <b>Science</b> covers everything from atoms to galaxies!<br>• Biology — study of living organisms<br>• Chemistry — study of matter and reactions<br>• Physics — study of energy and forces<br>• Astronomy — study of stars and planets' },
+    // Robots / AI
+    { keys: ['robot','robots','ai','artificial intelligence'], answer: '🤖 <b>Robots & AI</b> are amazing! Did you know:<br>• The word "robot" comes from Czech meaning "forced labour"<br>• There are over 3 million industrial robots in use today<br>• NASA\'s Mars rovers are robots exploring another planet<br>• AI can beat humans at chess, Go, and video games!' },
+    // Football
+    { keys: ['football','soccer','messi','ronaldo','fifa'], answer: '⚽ <b>Football</b> is the world\'s most popular sport with 4 billion fans!<br>• FIFA World Cup is watched by 3.5 billion people<br>• The sport dates back 2,000 years to ancient China<br>• Lionel Messi and Cristiano Ronaldo are the greatest of all time<br>• A match is 90 minutes — two 45-minute halves' },
+    // History
+    { keys: ['history','egypt','rome','pyramids','moon landing'], answer: '📜 <b>World History</b> spans 300,000 years!<br>• Ancient Egypt built the pyramids around 2560 BC<br>• The Roman Empire lasted over 1,000 years<br>• The Moon landing happened on July 20, 1969<br>• The Internet was invented in the 1980s' },
+    // Greetings
+    { keys: ['hello','hi','hey','hiya'], answer: '👋 Hello! I\'m Simple AI. You can ask me about HazyGames, ZappyCook, PixelVault, CosmicBlog, NovaSpark, or topics like space, animals, science, robots, football, and history!' },
+    { keys: ['who are you','what are you','what can you do'], answer: '🤖 I\'m <b>Simple AI</b>, your built-in assistant on Simple PC! I know about all the websites on the Web Browser — HazyGames.fun, ZappyCook.net, PixelVault.io, CosmicBlog.org and NovaSpark.tech — plus topics like space, animals, science, robots, football, history and more. Just ask!' },
+    { keys: ['thanks','thank you','cheers'], answer: '😊 You\'re welcome! Ask me anything else anytime.' },
+];
+
+function simpleAISend() {
+    const input = document.getElementById('ai-input');
+    const messages = document.getElementById('ai-messages');
+    if (!input || !messages) return;
+
+    const text = input.value.trim();
+    if (!text) return;
+    input.value = '';
+
+    // User bubble
+    const userBubble = document.createElement('div');
+    userBubble.className = 'ai-msg ai-msg-user';
+    userBubble.textContent = text;
+    messages.appendChild(userBubble);
+
+    // Typing indicator
+    const typing = document.createElement('div');
+    typing.className = 'ai-msg ai-msg-bot';
+    typing.innerHTML = '<i style="color:#888">Simple AI is thinking...</i>';
+    messages.appendChild(typing);
+    messages.scrollTop = messages.scrollHeight;
+
+    setTimeout(() => {
+        const lower = text.toLowerCase();
+        let answer = null;
+        for (const entry of AI_KNOWLEDGE) {
+            if (entry.keys.some(k => lower.includes(k))) { answer = entry.answer; break; }
+        }
+        if (!answer) {
+            answer = `🤔 I'm not sure about "<b>${text}</b>" yet. Try asking me about HazyGames, ZappyCook, space, animals, science, robots, football, or history!`;
+        }
+        typing.innerHTML = answer;
+        messages.scrollTop = messages.scrollHeight;
+    }, 600);
+}
 
 function initBooksApp(contentEl) {
     const bookList = contentEl.querySelector('.books-list');

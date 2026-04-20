@@ -202,6 +202,28 @@ body, html {
     }
 }
 
+/* ===== SIMPLE AI STYLES ===== */
+.ai-msg {
+    max-width: 80%;
+    padding: 9px 13px;
+    border-radius: 14px;
+    font-size: 13px;
+    line-height: 1.5;
+    word-break: break-word;
+}
+.ai-msg-user {
+    align-self: flex-end;
+    background: #6c3483;
+    color: white;
+    border-bottom-right-radius: 4px;
+}
+.ai-msg-bot {
+    align-self: flex-start;
+    background: #1e293b;
+    color: #e2e8f0;
+    border-bottom-left-radius: 4px;
+}
+
 /* ===== FOOTBALL GAME STYLES ===== */
 .football-game {
     position: relative;
