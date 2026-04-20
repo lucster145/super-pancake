@@ -78,9 +78,9 @@ const APPS = {
         minHeight: 500
     },
     quickpick: {
-        name: 'QuickPick',
-        icon: '📸',
-        color: '#e84393',
+        name: 'Instagram',
+        icon: '📷',
+        color: '#c13584',
         minWidth: 420,
         minHeight: 640
     }
@@ -2839,7 +2839,7 @@ function getQuickPickWebsite() {
         <div class="fake-website qp-app">
             <!-- Top Nav -->
             <div class="qp-nav">
-                <div class="qp-logo">QuickPick</div>
+                <div class="qp-logo">Instagram</div>
                 <div class="qp-nav-icons">
                     <span class="qp-icon" onclick="qpShowTab('home',this)" title="Home">🏠</span>
                     <span class="qp-icon" onclick="qpShowTab('explore',this)" title="Explore">🔍</span>
@@ -2899,7 +2899,7 @@ const QP_POSTS = [
     { id:1, user:'nova_skies', avatar:'🌅', avatarBg:'linear-gradient(135deg,#f8b500,#e84393)', emoji:'🌄', bg:'linear-gradient(135deg,#f8b500 0%,#fc5c7d 100%)', caption:'Golden hour hits different 🌅✨ #sunset #nature #vibes', likes:2841, comments:['Amazing shot! 🔥','Stunning colours wow','I wish I was there 😍'], time:'2h' },
     { id:2, user:'codewizard', avatar:'💻', avatarBg:'linear-gradient(135deg,#00c6ff,#0072ff)', emoji:'💻', bg:'linear-gradient(135deg,#1a1a2e 0%,#16213e 100%)', caption:'Late night coding session 🔥 New project dropping soon 👀 #dev #code #tech', likes:1204, comments:['What are you building??','Need more sleep bestie 😂','Followed for more!'], time:'4h' },
     { id:3, user:'paw_life', avatar:'🐾', avatarBg:'linear-gradient(135deg,#fcb045,#fd1d1d)', emoji:'🐶', bg:'linear-gradient(135deg,#fcb045 0%,#fd1d1d 100%)', caption:'Monday mornings made better 🐶❤️ #dogs #weekday #cute #petlover', likes:5673, comments:['Omg the cutest!!','I want to adopt 🥲','Made my day 🐾'], time:'6h' },
-    { id:4, user:'techbyte', avatar:'⚡', avatarBg:'linear-gradient(135deg,#a18cd1,#fbc2eb)', emoji:'🚀', bg:'linear-gradient(135deg,#667eea 0%,#764ba2 100%)', caption:'Just launched 🚀 QuickPick version 3.0 is live — go check it out! #tech #launch #startup', likes:3320, comments:['Congrats!! 🎉','This is epic ngl','Using this every day'], time:'8h' },
+    { id:4, user:'techbyte', avatar:'⚡', avatarBg:'linear-gradient(135deg,#a18cd1,#fbc2eb)', emoji:'🚀', bg:'linear-gradient(135deg,#667eea 0%,#764ba2 100%)', caption:'Just launched 🚀 New app is live — go check it out! #tech #launch #startup', likes:3320, comments:['Congrats!! 🎉','This is epic ngl','Using this every day'], time:'8h' },
     { id:5, user:'oceanview', avatar:'🌊', avatarBg:'linear-gradient(135deg,#43e97b,#38f9d7)', emoji:'🌊', bg:'linear-gradient(135deg,#43e97b 0%,#38f9d7 100%)', caption:'The sea is calling 🌊🐚 Weekend escape ✌️ #ocean #beach #summer #travel', likes:7810, comments:['SO BEAUTIFUL 😭','I need a holiday NOW','The colour of that water 💙'], time:'12h' },
 ];
 
@@ -2965,7 +2965,7 @@ function qpRenderExplore() {
     ];
     main.innerHTML = `
         <div class="qp-explore-header">
-            <input class="qp-explore-search" placeholder="🔍  Search QuickPick…" oninput="qpToast('Search coming soon!')">
+            <input class="qp-explore-search" placeholder="🔍  Search Instagram…" oninput="qpToast('Search coming soon!')">
         </div>
         <div class="qp-explore-grid">
             ${tiles.map((t,i) => `
@@ -3043,7 +3043,7 @@ function qpRenderProfile() {
                 <strong>you</strong><br>
                 📍 Somewhere online<br>
                 ✨ Living my best life · Photos & Vibes<br>
-                <span style="color:#003569">🔗 quickpick.app/you</span>
+                <span style="color:#003569">🔗 instagram.com/you</span>
             </div>
             <div style="display:flex;gap:8px;padding:0 14px 14px;">
                 <button class="qp-profile-btn" onclick="qpToast('Profile edited!')">Edit Profile</button>
