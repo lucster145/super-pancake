@@ -618,19 +618,19 @@ class WindowManager {
                     <div class="net2-row">
                         <h2>Trending Now</h2>
                         <div class="net2-row-content">
-                            <div class="net2-item" onclick="playNet2Content('Vortex Rising')">
+                            <div class="net2-item" data-title="Vortex Rising" onclick="playNet2Content('Vortex Rising')">
                                 <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'%3E%3Crect fill='%23162447' width='200' height='300'/%3E%3Ctext x='100' y='130' font-size='50' fill='white' text-anchor='middle'%3E🌀%3C/text%3E%3Ctext x='100' y='170' font-size='16' fill='white' text-anchor='middle'%3EVortex Rising%3C/text%3E%3C/svg%3E" alt="Vortex Rising">
                             </div>
-                            <div class="net2-item" onclick="playNet2Content('Neon Hollow')">
+                            <div class="net2-item" data-title="Neon Hollow" onclick="playNet2Content('Neon Hollow')">
                                 <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'%3E%3Crect fill='%231b1423' width='200' height='300'/%3E%3Ctext x='100' y='130' font-size='50' fill='white' text-anchor='middle'%3E💜%3C/text%3E%3Ctext x='100' y='170' font-size='16' fill='white' text-anchor='middle'%3ENeon Hollow%3C/text%3E%3C/svg%3E" alt="Neon Hollow">
                             </div>
-                            <div class="net2-item" onclick="playNet2Content('The Frozen Keep')">
+                            <div class="net2-item" data-title="The Frozen Keep" onclick="playNet2Content('The Frozen Keep')">
                                 <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'%3E%3Crect fill='%230a3d62' width='200' height='300'/%3E%3Ctext x='100' y='130' font-size='50' fill='white' text-anchor='middle'%3E❄️%3C/text%3E%3Ctext x='100' y='170' font-size='14' fill='white' text-anchor='middle'%3EThe Frozen Keep%3C/text%3E%3C/svg%3E" alt="The Frozen Keep">
                             </div>
-                            <div class="net2-item" onclick="playNet2Content('Dust & Thunder')">
+                            <div class="net2-item" data-title="Dust &amp; Thunder" onclick="playNet2Content('Dust \x26 Thunder')">
                                 <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'%3E%3Crect fill='%23522e20' width='200' height='300'/%3E%3Ctext x='100' y='130' font-size='50' fill='white' text-anchor='middle'%3E⚡%3C/text%3E%3Ctext x='100' y='170' font-size='16' fill='white' text-anchor='middle'%3EDust & Thunder%3C/text%3E%3C/svg%3E" alt="Dust and Thunder">
                             </div>
-                            <div class="net2-item" onclick="playNet2Content('Shadow Protocol')">
+                            <div class="net2-item" data-title="Shadow Protocol" onclick="playNet2Content('Shadow Protocol')">
                                 <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'%3E%3Crect fill='%23111' width='200' height='300'/%3E%3Ctext x='100' y='130' font-size='50' fill='white' text-anchor='middle'%3E🤖%3C/text%3E%3Ctext x='100' y='170' font-size='14' fill='white' text-anchor='middle'%3EShadow Protocol%3C/text%3E%3C/svg%3E" alt="Shadow Protocol">
                             </div>
                         </div>
@@ -639,19 +639,19 @@ class WindowManager {
                     <div class="net2-row">
                         <h2>Popular on Net2</h2>
                         <div class="net2-row-content">
-                            <div class="net2-item" onclick="playNet2Content('Galactic Drifters')">
+                            <div class="net2-item" data-title="Galactic Drifters" onclick="playNet2Content('Galactic Drifters')">
                                 <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'%3E%3Crect fill='%231a1a2e' width='200' height='300'/%3E%3Ctext x='100' y='130' font-size='50' fill='white' text-anchor='middle'%3E🚀%3C/text%3E%3Ctext x='100' y='170' font-size='14' fill='white' text-anchor='middle'%3EGalactic Drifters%3C/text%3E%3C/svg%3E" alt="Galactic Drifters">
                             </div>
-                            <div class="net2-item" onclick="playNet2Content('Crimson Pact')">
+                            <div class="net2-item" data-title="Crimson Pact" onclick="playNet2Content('Crimson Pact')">
                                 <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'%3E%3Crect fill='%234a0000' width='200' height='300'/%3E%3Ctext x='100' y='130' font-size='50' fill='white' text-anchor='middle'%3E🗡️%3C/text%3E%3Ctext x='100' y='170' font-size='16' fill='white' text-anchor='middle'%3ECrimson Pact%3C/text%3E%3C/svg%3E" alt="Crimson Pact">
                             </div>
-                            <div class="net2-item" onclick="playNet2Content('Echo Valley')">
+                            <div class="net2-item" data-title="Echo Valley" onclick="playNet2Content('Echo Valley')">
                                 <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'%3E%3Crect fill='%23134d0f' width='200' height='300'/%3E%3Ctext x='100' y='130' font-size='50' fill='white' text-anchor='middle'%3E🌿%3C/text%3E%3Ctext x='100' y='170' font-size='16' fill='white' text-anchor='middle'%3EEcho Valley%3C/text%3E%3C/svg%3E" alt="Echo Valley">
                             </div>
-                            <div class="net2-item" onclick="playNet2Content('Iron Circuit')">
+                            <div class="net2-item" data-title="Iron Circuit" onclick="playNet2Content('Iron Circuit')">
                                 <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'%3E%3Crect fill='%23212121' width='200' height='300'/%3E%3Ctext x='100' y='130' font-size='50' fill='white' text-anchor='middle'%3E⚙️%3C/text%3E%3Ctext x='100' y='170' font-size='16' fill='white' text-anchor='middle'%3EIron Circuit%3C/text%3E%3C/svg%3E" alt="Iron Circuit">
                             </div>
-                            <div class="net2-item" onclick="playNet2Content('Lost Meridian')">
+                            <div class="net2-item" data-title="Lost Meridian" onclick="playNet2Content('Lost Meridian')">
                                 <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'%3E%3Crect fill='%23003049' width='200' height='300'/%3E%3Ctext x='100' y='130' font-size='50' fill='white' text-anchor='middle'%3E🧭%3C/text%3E%3Ctext x='100' y='170' font-size='16' fill='white' text-anchor='middle'%3ELost Meridian%3C/text%3E%3C/svg%3E" alt="Lost Meridian">
                             </div>
                         </div>
@@ -1688,11 +1688,11 @@ function showNet2Info(title) {
         `<div class="net2-episode-item" onclick="playNet2Content('${title}')">${ep}</div>`
     ).join('');
     document.getElementById('net2-info-playbtn').onclick = () => { closeNet2Info(); playNet2Content(title); };
-    panel.classList.remove('hidden');
+    panel.classList.add('active');
 }
 
 function closeNet2Info() {
-    document.getElementById('net2-info-panel').classList.add('hidden');
+    document.getElementById('net2-info-panel').classList.remove('active');
 }
 
 function playNet2Content(title) {
@@ -1704,6 +1704,11 @@ function playNet2Content(title) {
     if (titleEl) titleEl.textContent = `▶ Now Playing: ${title}`;
     if (descEl) descEl.textContent = show.desc;
     net2CurrentPalette = SHOW_PALETTE[title] || 'default';
+    net2Anim.genre = SHOW_GENRE_ANIM[title] || 'scifi';
+    net2InitParticles(net2Anim.genre, 480, 180);
+    net2Anim.sceneIdx = -1;
+    net2Anim.caption = '';
+    net2Anim.captionAge = 0;
     startNet2Video(show.scenes, show.frames, show.emoji);
 }
 
@@ -1729,11 +1734,22 @@ let net2LastFrameTime = 0;
 let net2ArtFrameIndex = 0;
 let net2ActiveFrames = [];
 let net2ShowEmoji = '🎬';
+let net2ActiveScenes = [];
 
 // 30 frames per minute = 1 new art frame every 2000ms
 const NET2_FRAME_INTERVAL = 2000;
 // Canvas tick every ~33ms (≈30fps render loop) for smooth progress bar
 const NET2_TICK_MS = 33;
+
+// Animation state for real canvas engine
+const net2Anim = {
+    genre: 'scifi',
+    particles: [],
+    sceneIdx: -1,
+    caption: '',
+    captionAge: 0,
+    lastT: 0,
+};
 
 function startNet2Video(customScenes, frames, emoji) {
     net2IsPlaying = true;
@@ -1741,7 +1757,9 @@ function startNet2Video(customScenes, frames, emoji) {
     net2ArtFrameIndex = 0;
     net2LastFrameTime = performance.now();
     net2ActiveFrames = frames && frames.length ? frames : [['🎬','PLAYING','...']];
+    net2ActiveScenes = customScenes && customScenes.length ? customScenes : [];
     net2ShowEmoji = emoji || '🎬';
+    net2Anim.lastT = performance.now() / 1000;
     updateNet2Progress();
 
     if (net2VideoInterval) { clearInterval(net2VideoInterval); net2VideoInterval = null; }
@@ -1755,17 +1773,12 @@ function startNet2Video(customScenes, frames, emoji) {
         // Advance wall-clock seconds
         const delta = now - lastTick;
         lastTick = now;
-        net2CurrentTime += delta / 1000;
+        const dt = delta / 1000;
+        net2CurrentTime += dt;
         if (net2CurrentTime > net2Duration) net2CurrentTime = net2Duration;
         updateNet2Progress();
 
-        // Advance art frame every 2 seconds (30 frames/min)
-        if (now - net2LastFrameTime >= NET2_FRAME_INTERVAL) {
-            net2LastFrameTime = now;
-            net2ArtFrameIndex = (net2ArtFrameIndex + 1) % net2ActiveFrames.length;
-        }
-
-        drawNet2Canvas(net2ActiveFrames[net2ArtFrameIndex], net2CurrentTime, net2Duration);
+        net2DrawAnimFrame(dt, net2CurrentTime, net2Duration, net2ActiveScenes);
 
         if (net2CurrentTime >= net2Duration) {
             net2IsPlaying = false;
@@ -1776,7 +1789,7 @@ function startNet2Video(customScenes, frames, emoji) {
         net2Raf = requestAnimationFrame(renderFrame);
     }
 
-    drawNet2Canvas(net2ActiveFrames[0], 0, net2Duration);
+    net2DrawAnimFrame(0, 0, net2Duration, net2ActiveScenes);
     net2Raf = requestAnimationFrame(renderFrame);
 }
 
@@ -1804,71 +1817,213 @@ const SHOW_PALETTE = {
 };
 let net2CurrentPalette = 'default';
 
-function drawNet2Canvas(lines, currentTime, duration) {
+const SHOW_GENRE_ANIM = {
+    'Shadow Protocol':  'scifi',
+    'Galactic Drifters':'scifi',
+    'Vortex Rising':    'storm',
+    'Neon Hollow':      'neon',
+    'The Frozen Keep':  'ice',
+    'Dust & Thunder':   'western',
+    'Crimson Pact':     'fantasy',
+    'Echo Valley':      'nature',
+    'Iron Circuit':     'sparks',
+    'Lost Meridian':    'ocean',
+};
+
+function net2InitParticles(genre, W, H) {
+    const p = [];
+    if (genre === 'scifi') {
+        for (let i = 0; i < 90; i++) p.push({ x: Math.random()*W, y: Math.random()*H, vx: (Math.random()-0.5)*0.4, vy: (Math.random()-0.5)*0.4, size: Math.random()*1.8+0.3, alpha: Math.random()*0.8+0.2 });
+    } else if (genre === 'storm') {
+        for (let i = 0; i < 60; i++) { const a = Math.random()*Math.PI*2, sp = 30+Math.random()*70; p.push({ x: W/2, y: H/2, vx: Math.cos(a)*sp, vy: Math.sin(a)*sp, life: Math.random(), maxLife: 0.8+Math.random()*0.6, size: 1+Math.random()*2 }); }
+    } else if (genre === 'neon') {
+        for (let i = 0; i < 25; i++) p.push({ x: Math.random()*W, y: Math.random()*H, vy: 0.4+Math.random()*0.5, size: 2+Math.random()*4, alpha: 0.5+Math.random()*0.5, hue: 270+Math.random()*60 });
+    } else if (genre === 'ice') {
+        for (let i = 0; i < 55; i++) p.push({ x: Math.random()*W, y: Math.random()*H-H, vy: 20+Math.random()*40, vx: (Math.random()-0.5)*8, size: 1.5+Math.random()*3, wobble: Math.random()*Math.PI*2, wobbleSpeed: 0.8+Math.random()*1.5 });
+    } else if (genre === 'western') {
+        for (let i = 0; i < 70; i++) p.push({ x: Math.random()*W, y: H*0.5+Math.random()*H*0.5, vx: (Math.random()-0.3)*18, vy: -(10+Math.random()*30), life: Math.random(), maxLife: 1, size: 1+Math.random()*3 });
+    } else if (genre === 'fantasy') {
+        for (let i = 0; i < 45; i++) p.push({ x: Math.random()*W, y: Math.random()*H, vx: (Math.random()-0.5)*12, vy: -(5+Math.random()*18), life: Math.random(), maxLife: 1+Math.random(), size: 1.5+Math.random()*2.5, hue: 340+Math.random()*40 });
+    } else if (genre === 'nature') {
+        for (let i = 0; i < 60; i++) p.push({ x: Math.random()*W, y: Math.random()*H-H, vy: 40+Math.random()*60, vx: (Math.random()-0.5)*5, size: 0.8+Math.random()*1.5, alpha: 0.3+Math.random()*0.5 });
+    } else if (genre === 'sparks') {
+        for (let i = 0; i < 55; i++) { const a = Math.random()*Math.PI*2, sp = 20+Math.random()*90; p.push({ x: W*0.5+(Math.random()-0.5)*30, y: H*0.52+(Math.random()-0.5)*15, vx: Math.cos(a)*sp, vy: Math.sin(a)*sp-25, life: Math.random(), maxLife: 0.4+Math.random()*0.5, size: 1+Math.random()*2 }); }
+    } else if (genre === 'ocean') {
+        for (let i = 0; i < 35; i++) p.push({ x: Math.random()*W, y: H*0.55+Math.random()*H*0.4, vx: 8+Math.random()*18, size: 1.5+Math.random()*2.5, alpha: 0.25+Math.random()*0.4, phase: Math.random()*Math.PI*2 });
+    }
+    net2Anim.particles = p;
+}
+
+function net2DrawAnimFrame(dt, currentTime, duration, scenes) {
     const canvas = document.getElementById('net2-canvas');
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     const W = canvas.width, H = canvas.height;
-    const pal = NET2_PALETTES[net2CurrentPalette] || NET2_PALETTES.default;
+    const t = performance.now() / 1000;
+    const genre = net2Anim.genre;
+    const p = net2Anim.particles;
 
-    // Background
-    ctx.fillStyle = pal.bg;
-    ctx.fillRect(0, 0, W, H);
+    // ── BACKGROUNDS & PARTICLES ──────────────────────────────
+    if (genre === 'scifi') {
+        const g = ctx.createRadialGradient(W/2, H/2, 0, W/2, H/2, W*0.7);
+        g.addColorStop(0, '#0f0d28'); g.addColorStop(1, '#040410');
+        ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+        // Warp grid
+        ctx.strokeStyle = 'rgba(0,255,130,0.07)'; ctx.lineWidth = 1;
+        const vp = H * 0.4;
+        for (let lx = 0; lx <= 10; lx++) { const nx = (lx/10)*(W*1.6)-W*0.3; ctx.beginPath(); ctx.moveTo(W/2, vp); ctx.lineTo(nx, H+10); ctx.stroke(); }
+        for (let ly = 0; ly <= 7; ly++) { const prog = ((t*0.6+ly/7)%1); const py = vp+(H-vp)*prog; const xs = (py-vp)/(H-vp); ctx.beginPath(); ctx.moveTo(W/2-xs*W*0.8, py); ctx.lineTo(W/2+xs*W*0.8, py); ctx.stroke(); }
+        // Stars
+        for (const s of p) { s.x += s.vx; s.y += s.vy; if (s.x<0||s.x>W) s.x=Math.random()*W; if (s.y<0||s.y>H) s.y=Math.random()*H; ctx.globalAlpha = s.alpha*(0.4+0.6*Math.sin(t*2+s.x*0.1)); ctx.fillStyle='#fff'; ctx.fillRect(s.x, s.y, s.size, s.size); } ctx.globalAlpha=1;
+        // Ship
+        const sx = W/2+Math.sin(t*0.5)*25, sy = H*0.38+Math.sin(t*0.7)*8;
+        ctx.fillStyle='rgba(0,255,130,0.75)'; ctx.globalAlpha=0.8; net2DrawSpaceship(ctx,sx,sy,14); ctx.globalAlpha=1;
+        // Engine glow trail
+        const tg = ctx.createRadialGradient(sx,sy+16,0,sx,sy+16,18); tg.addColorStop(0,'rgba(0,255,130,0.5)'); tg.addColorStop(1,'rgba(0,255,130,0)'); ctx.fillStyle=tg; ctx.beginPath(); ctx.arc(sx,sy+16,18,0,Math.PI*2); ctx.fill();
 
-    // Scanline effect
-    for (let y = 0; y < H; y += 4) {
-        ctx.fillStyle = 'rgba(0,0,0,0.18)';
-        ctx.fillRect(0, y, W, 2);
+    } else if (genre === 'storm') {
+        const g2 = ctx.createLinearGradient(0,0,0,H); g2.addColorStop(0,'#080808'); g2.addColorStop(0.5,'#1a1008'); g2.addColorStop(1,'#2a1800'); ctx.fillStyle=g2; ctx.fillRect(0,0,W,H);
+        // Tornado
+        ctx.strokeStyle='rgba(180,100,20,0.25)'; ctx.lineWidth=1;
+        for (let i=0;i<10;i++) { const a=t*2.5+i*(Math.PI*2/10); const r=15+i*7; const cx=W/2+Math.sin(t*0.9)*12; ctx.beginPath(); ctx.ellipse(cx,H/2,r,r*0.28,a,0,Math.PI*2); ctx.stroke(); }
+        // Swirl particles
+        for (const s of p) { s.life-=dt; if(s.life<=0){s.life=s.maxLife;const a=Math.random()*Math.PI*2,sp=30+Math.random()*70;s.x=W/2+(Math.random()-0.5)*20;s.y=H/2+(Math.random()-0.5)*15;s.vx=Math.cos(a)*sp;s.vy=Math.sin(a)*sp;} s.x+=s.vx*dt; s.y+=s.vy*dt; const dx=s.x-W/2,dy=s.y-H/2,dist=Math.sqrt(dx*dx+dy*dy); if(dist>4){const sw=90/dist;s.vx+=-dy/dist*sw*dt;s.vy+=dx/dist*sw*dt;} ctx.globalAlpha=Math.min(1,s.life/s.maxLife)*0.85; ctx.fillStyle='#ff8822'; ctx.fillRect(s.x-s.size/2,s.y-s.size/2,s.size,s.size); } ctx.globalAlpha=1;
+        // Lightning flash
+        if(Math.sin(t*0.9)*Math.cos(t*1.7)>0.92){ctx.fillStyle='rgba(255,230,120,0.12)';ctx.fillRect(0,0,W,H);ctx.strokeStyle='rgba(255,230,50,0.9)';ctx.lineWidth=1.5;let lx=W*0.25+Math.random()*W*0.5;ctx.beginPath();ctx.moveTo(lx,0);for(let i=0;i<5;i++){lx+=(Math.random()-0.5)*35;ctx.lineTo(lx,H/5*(i+1));}ctx.stroke();}
+
+    } else if (genre === 'neon') {
+        ctx.fillStyle='#05001a'; ctx.fillRect(0,0,W,H);
+        // Cityscape
+        ctx.fillStyle='#0d0020';
+        for (let b=0;b<14;b++){const bx=b*(W/14);const bh=18+Math.abs(Math.sin(b*1.7))*55;ctx.fillRect(bx,H-bh,W/16,bh);}
+        // Grid
+        ctx.strokeStyle='rgba(160,40,255,0.12)'; ctx.lineWidth=1;
+        for(let gx=0;gx<=W;gx+=28){ctx.beginPath();ctx.moveTo(gx,0);ctx.lineTo(gx,H);ctx.stroke();}
+        for(let gy=0;gy<=H;gy+=18){ctx.beginPath();ctx.moveTo(0,gy);ctx.lineTo(W,gy);ctx.stroke();}
+        // Neon orbs
+        for (const s of p) { s.y-=s.vy*dt*60; if(s.y<-15)s.y=H+15; const hsl=`hsl(${s.hue},100%,70%)`; ctx.globalAlpha=s.alpha*(0.4+0.6*Math.sin(t*2.5+s.x*0.08)); ctx.shadowBlur=14; ctx.shadowColor=hsl; ctx.fillStyle=hsl; ctx.beginPath(); ctx.arc(s.x,s.y,s.size,0,Math.PI*2); ctx.fill(); } ctx.shadowBlur=0; ctx.globalAlpha=1;
+        // Scanlines
+        for(let sl=0;sl<H;sl+=3){ctx.fillStyle='rgba(0,0,0,0.14)';ctx.fillRect(0,sl,W,1);}
+
+    } else if (genre === 'ice') {
+        const g3=ctx.createLinearGradient(0,0,0,H);g3.addColorStop(0,'#000813');g3.addColorStop(1,'#001230');ctx.fillStyle=g3;ctx.fillRect(0,0,W,H);
+        // Castle
+        ctx.fillStyle='#00101f'; ctx.fillRect(W*0.3,H*0.28,W*0.4,H*0.72); ctx.fillRect(W*0.24,H*0.22,W*0.09,H*0.15); ctx.fillRect(W*0.67,H*0.22,W*0.09,H*0.15); ctx.fillRect(W*0.44,H*0.12,W*0.12,H*0.2);
+        // Snowflakes
+        for (const s of p) { s.y+=s.vy*dt; s.x+=Math.sin(t*s.wobbleSpeed+s.wobble)*0.5; if(s.y>H+10)s.y=-10; ctx.globalAlpha=0.75; ctx.strokeStyle='#99ccff'; ctx.lineWidth=0.7; ctx.fillStyle='#aadaff'; ctx.beginPath();ctx.arc(s.x,s.y,s.size*0.4,0,Math.PI*2);ctx.fill(); for(let arm=0;arm<6;arm++){const a=arm*(Math.PI/3)+t*0.25;ctx.beginPath();ctx.moveTo(s.x,s.y);ctx.lineTo(s.x+Math.cos(a)*s.size*1.8,s.y+Math.sin(a)*s.size*1.8);ctx.stroke();} } ctx.globalAlpha=1;
+        // Frost vignette
+        const iv=ctx.createLinearGradient(0,0,0,H);iv.addColorStop(0,'rgba(140,190,255,0.18)');iv.addColorStop(0.3,'transparent');iv.addColorStop(0.7,'transparent');iv.addColorStop(1,'rgba(140,190,255,0.18)');ctx.fillStyle=iv;ctx.fillRect(0,0,W,H);
+
+    } else if (genre === 'western') {
+        const g4=ctx.createLinearGradient(0,0,0,H);g4.addColorStop(0,'#18040000');g4.addColorStop(0,'#180400');g4.addColorStop(0.45,'#3d1000');g4.addColorStop(0.72,'#6e2a00');g4.addColorStop(1,'#8a4500');ctx.fillStyle=g4;ctx.fillRect(0,0,W,H);
+        // Sun glow
+        const sunX=W*0.72,sunY=H*0.32,sg=ctx.createRadialGradient(sunX,sunY,0,sunX,sunY,45);sg.addColorStop(0,'rgba(255,200,50,0.9)');sg.addColorStop(0.3,'rgba(255,90,0,0.35)');sg.addColorStop(1,'rgba(255,40,0,0)');ctx.fillStyle=sg;ctx.beginPath();ctx.arc(sunX,sunY,45,0,Math.PI*2);ctx.fill();
+        // Ground
+        ctx.fillStyle='#2a1200';ctx.fillRect(0,H*0.72,W,H*0.28);
+        // Cacti
+        ctx.fillStyle='#0a0400';net2DrawCactus(ctx,W*0.1,H*0.65,22);net2DrawCactus(ctx,W*0.86,H*0.6,18);
+        // Dust particles
+        for(const s of p){s.life-=dt;if(s.life<=0){s.life=s.maxLife;s.x=Math.random()*W;s.y=H*0.6+Math.random()*H*0.35;s.vy=-(10+Math.random()*28);s.vx=(Math.random()-0.3)*18;}s.x+=s.vx*dt;s.y+=s.vy*dt;ctx.globalAlpha=Math.max(0,s.life/s.maxLife)*0.35;ctx.fillStyle='#c06020';ctx.beginPath();ctx.arc(s.x,s.y,s.size,0,Math.PI*2);ctx.fill();}ctx.globalAlpha=1;
+
+    } else if (genre === 'fantasy') {
+        const g5=ctx.createLinearGradient(0,0,0,H);g5.addColorStop(0,'#0d0008');g5.addColorStop(1,'#1a0015');ctx.fillStyle=g5;ctx.fillRect(0,0,W,H);
+        // Mountains
+        ctx.fillStyle='#080005';ctx.beginPath();ctx.moveTo(0,H);for(let mx=0;mx<=W;mx+=2)ctx.lineTo(mx,H*0.52-Math.abs(Math.sin(mx*0.04))*55-Math.abs(Math.sin(mx*0.025))*28);ctx.lineTo(W,H);ctx.closePath();ctx.fill();
+        // Magic particles
+        for(const s of p){s.life-=dt;if(s.life<=0){s.life=s.maxLife;s.x=Math.random()*W;s.y=H*0.65+Math.random()*H*0.35;s.vy=-(5+Math.random()*18);s.vx=(Math.random()-0.5)*12;}s.x+=s.vx*dt;s.y+=s.vy*dt;ctx.globalAlpha=Math.max(0,s.life/s.maxLife)*0.8;ctx.shadowBlur=7;ctx.shadowColor=`hsl(${s.hue},100%,70%)`;ctx.fillStyle=`hsl(${s.hue},100%,70%)`;ctx.beginPath();ctx.arc(s.x,s.y,s.size,0,Math.PI*2);ctx.fill();}ctx.shadowBlur=0;ctx.globalAlpha=1;
+        // Sword
+        const swx=W*0.5+Math.sin(t*0.5)*10,swy=H*0.43;ctx.strokeStyle='rgba(255,80,80,0.65)';ctx.lineWidth=2;ctx.save();ctx.translate(swx,swy);ctx.rotate(Math.sin(t*0.3)*0.2-0.4);ctx.beginPath();ctx.moveTo(0,-30);ctx.lineTo(0,30);ctx.moveTo(-9,-8);ctx.lineTo(9,-8);ctx.stroke();ctx.restore();
+
+    } else if (genre === 'nature') {
+        const g6=ctx.createLinearGradient(0,0,0,H);g6.addColorStop(0,'#010d01');g6.addColorStop(1,'#041404');ctx.fillStyle=g6;ctx.fillRect(0,0,W,H);
+        // Rolling hills
+        ctx.fillStyle='#020a02';ctx.beginPath();ctx.moveTo(0,H);for(let hx=0;hx<=W;hx+=2)ctx.lineTo(hx,H*0.54+Math.sin((hx/W)*Math.PI*3+t*0.18)*22+Math.sin((hx/W)*Math.PI*7)*10);ctx.lineTo(W,H);ctx.closePath();ctx.fill();
+        // House
+        ctx.fillStyle='#010801';ctx.fillRect(W*0.43,H*0.4,W*0.14,H*0.14);ctx.beginPath();ctx.moveTo(W*0.41,H*0.4);ctx.lineTo(W*0.5,H*0.31);ctx.lineTo(W*0.59,H*0.4);ctx.closePath();ctx.fill();
+        // Rain
+        for(const s of p){s.y+=s.vy*dt;s.x+=s.vx*dt;if(s.y>H){s.y=-5;s.x=Math.random()*W;}ctx.globalAlpha=s.alpha;ctx.strokeStyle='#88ccaa';ctx.lineWidth=0.6;ctx.beginPath();ctx.moveTo(s.x,s.y);ctx.lineTo(s.x+s.vx*0.15,s.y+7);ctx.stroke();}ctx.globalAlpha=1;
+
+    } else if (genre === 'sparks') {
+        const g7=ctx.createLinearGradient(0,0,0,H);g7.addColorStop(0,'#090400');g7.addColorStop(1,'#120900');ctx.fillStyle=g7;ctx.fillRect(0,0,W,H);
+        // Arena floor line
+        ctx.fillStyle='#1a0e00';ctx.fillRect(0,H*0.62,W,H*0.38);
+        // Robots
+        ctx.fillStyle='#0d0800';net2DrawRobot(ctx,W*0.22,H*0.56,20);net2DrawRobot(ctx,W*0.78,H*0.56,20);
+        // Sparks
+        for(const s of p){s.life-=dt;if(s.life<=0){s.life=s.maxLife;const a=Math.random()*Math.PI*2,sp=20+Math.random()*90;s.x=W*0.5+(Math.random()-0.5)*35;s.y=H*0.52+(Math.random()-0.5)*15;s.vx=Math.cos(a)*sp;s.vy=Math.sin(a)*sp-25;}s.x+=s.vx*dt;s.y+=s.vy*dt;s.vy+=65*dt;ctx.globalAlpha=Math.max(0,s.life/s.maxLife);ctx.fillStyle=`hsl(${20+Math.random()*40},100%,70%)`;ctx.fillRect(s.x-s.size/2,s.y-s.size/2,s.size,s.size);}ctx.globalAlpha=1;
+
+    } else if (genre === 'ocean') {
+        const g8=ctx.createLinearGradient(0,0,0,H);g8.addColorStop(0,'#000a18');g8.addColorStop(0.5,'#001a38');g8.addColorStop(1,'#002450');ctx.fillStyle=g8;ctx.fillRect(0,0,W,H);
+        // Moon
+        ctx.fillStyle='rgba(210,225,255,0.9)';ctx.beginPath();ctx.arc(W*0.14,H*0.2,14,0,Math.PI*2);ctx.fill();
+        // Waves
+        for(let w=4;w>=0;w--){ctx.strokeStyle=`rgba(90,170,255,${0.1+w*0.06})`;ctx.lineWidth=2;ctx.beginPath();for(let wx=0;wx<=W;wx+=2){const wy=H*0.5+w*11+Math.sin((wx/W)*Math.PI*5+t*(0.7+w*0.2))*13;wx===0?ctx.moveTo(wx,wy):ctx.lineTo(wx,wy);}ctx.stroke();}
+        // Sailing ship
+        const shX=((t*12)%(W+70))-70;ctx.fillStyle='#001e40';ctx.save();ctx.translate(shX,H*0.44);ctx.beginPath();ctx.moveTo(-24,4);ctx.lineTo(24,4);ctx.lineTo(19,14);ctx.lineTo(-19,14);ctx.closePath();ctx.fill();ctx.fillRect(-2,-22,3,26);ctx.fillStyle='#001530';ctx.beginPath();ctx.moveTo(0,-20);ctx.lineTo(16,-6);ctx.lineTo(0,-6);ctx.closePath();ctx.fill();ctx.restore();
+        // Compass
+        const cx3=W*0.86,cy3=H*0.25,cr=16;ctx.strokeStyle='rgba(100,175,255,0.6)';ctx.lineWidth=1;ctx.beginPath();ctx.arc(cx3,cy3,cr,0,Math.PI*2);ctx.stroke();const na=t*0.6;ctx.save();ctx.translate(cx3,cy3);ctx.rotate(na);ctx.strokeStyle='#ff4444';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(0,cr-3);ctx.lineTo(0,-(cr-3));ctx.stroke();ctx.restore();
     }
 
-    // Border glow
-    ctx.strokeStyle = pal.border;
-    ctx.lineWidth = 2;
-    ctx.strokeRect(4, 4, W - 8, H - 8);
-
-    // Corner brackets
-    const b = 16;
-    ctx.strokeStyle = pal.line;
-    ctx.lineWidth = 2;
-    [[4,4],[W-4,4],[4,H-4],[W-4,H-4]].forEach(([cx,cy]) => {
-        const sx = cx < W/2 ? 1 : -1, sy = cy < H/2 ? 1 : -1;
-        ctx.beginPath(); ctx.moveTo(cx, cy + sy*b); ctx.lineTo(cx, cy); ctx.lineTo(cx + sx*b, cy); ctx.stroke();
-    });
-
-    // Frame counter badge top-left
-    const frameNum = net2ArtFrameIndex + 1;
-    ctx.fillStyle = pal.line;
-    ctx.font = 'bold 10px monospace';
-    ctx.textAlign = 'left';
-    ctx.fillText(`FR:${String(frameNum).padStart(2,'0')}  30/min`, 20, 22);
-
-    // Time top-right
-    const elapsed = Math.floor(currentTime);
-    const tot = Math.floor(duration);
-    ctx.textAlign = 'right';
-    ctx.fillText(`${fmtTime(elapsed)} / ${fmtTime(tot)}`, W - 20, 22);
-    ctx.textAlign = 'left';
-
-    // ASCII art lines (centred)
-    const lineH = 17;
-    const totalH = (lines.length) * lineH;
-    const startY = (H - totalH) / 2 + 8;
-
-    ctx.font = 'bold 13px "Courier New", monospace';
-    ctx.textAlign = 'center';
-    lines.forEach((line, i) => {
-        // Alternate brightness for depth
-        const brightness = i % 2 === 0 ? pal.line : pal.dim;
-        ctx.fillStyle = i === Math.floor(lines.length / 2) ? '#ffffff' : brightness;
-        ctx.fillText(line, W / 2, startY + i * lineH);
-    });
-    ctx.textAlign = 'left';
-
-    // Blinking cursor bottom
-    if (Math.floor(performance.now() / 500) % 2 === 0) {
-        ctx.fillStyle = pal.line;
-        ctx.fillText('█', W / 2 - 4, startY + lines.length * lineH + 4);
+    // ── CAPTION SYSTEM ───────────────────────────────────────
+    if (scenes && scenes.length > 0) {
+        const si = Math.min(Math.floor((currentTime/duration)*scenes.length), scenes.length-1);
+        if (net2Anim.sceneIdx !== si) { net2Anim.sceneIdx=si; net2Anim.caption=scenes[si]; net2Anim.captionAge=0; }
+        net2Anim.captionAge += dt;
     }
+    if (net2Anim.caption) {
+        const fadeIn=Math.min(1,net2Anim.captionAge*2.5);
+        const fadeOut=net2Anim.captionAge>2.5?Math.max(0,1-(net2Anim.captionAge-2.5)*2.5):1;
+        const alpha=fadeIn*fadeOut;
+        if(alpha>0.01){
+            ctx.globalAlpha=alpha;
+            ctx.font='bold 11px sans-serif';
+            const tw=ctx.measureText(net2Anim.caption).width;
+            const px=(W-tw-22)/2,py=H-30;
+            ctx.fillStyle='rgba(0,0,0,0.75)';
+            net2RoundRect(ctx,px,py,tw+22,22,5);
+            ctx.fillStyle='#ffffff';
+            ctx.textAlign='center';
+            ctx.fillText(net2Anim.caption,W/2,py+15);
+            ctx.textAlign='left';
+            ctx.globalAlpha=1;
+        }
+    }
+
+    // ── HUD OVERLAY ──────────────────────────────────────────
+    ctx.fillStyle='rgba(0,0,0,0.45)';
+    ctx.fillRect(0,0,W,26);
+    const elapsed=Math.floor(currentTime),tot=Math.floor(duration);
+    ctx.fillStyle='rgba(255,255,255,0.8)';
+    ctx.font='bold 10px monospace';
+    ctx.textAlign='right';
+    ctx.fillText(`${fmtTime(elapsed)} / ${fmtTime(tot)}`,W-10,17);
+    ctx.textAlign='left';
+    if(net2IsPlaying){
+        const pulse=Math.sin(t*4)>0;
+        ctx.fillStyle=pulse?'#e50914':'rgba(229,9,20,0.3)';
+        ctx.beginPath();ctx.arc(10,13,4,0,Math.PI*2);ctx.fill();
+        ctx.fillStyle='rgba(255,255,255,0.75)';
+        ctx.font='9px monospace';
+        ctx.fillText('PLAYING',18,17);
+    }
+}
+
+function net2DrawSpaceship(ctx,x,y,size){
+    ctx.beginPath();ctx.moveTo(x,y-size);ctx.lineTo(x+size*0.55,y+size*0.45);ctx.lineTo(x+size*0.18,y+size*0.18);ctx.lineTo(x-size*0.18,y+size*0.18);ctx.lineTo(x-size*0.55,y+size*0.45);ctx.closePath();ctx.fill();
+}
+function net2DrawCactus(ctx,x,y,size){
+    ctx.fillRect(x-size*0.15,y-size,size*0.3,size);ctx.fillRect(x-size*0.55,y-size*0.6,size*0.4,size*0.15);ctx.fillRect(x+size*0.15,y-size*0.7,size*0.4,size*0.15);ctx.fillRect(x-size*0.55,y-size*0.6,size*0.15,size*0.32);ctx.fillRect(x+size*0.4,y-size*0.7,size*0.15,size*0.32);
+}
+function net2DrawRobot(ctx,x,y,size){
+    ctx.fillRect(x-size*0.3,y-size*0.82,size*0.6,size*0.38);ctx.fillRect(x-size*0.42,y-size*0.44,size*0.84,size*0.5);ctx.fillRect(x-size*0.75,y-size*0.42,size*0.22,size*0.38);ctx.fillRect(x+size*0.52,y-size*0.42,size*0.22,size*0.38);ctx.fillRect(x-size*0.32,y+size*0.06,size*0.22,size*0.4);ctx.fillRect(x+size*0.1,y+size*0.06,size*0.22,size*0.4);
+}
+function net2RoundRect(ctx,x,y,w,h,r){
+    ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.arcTo(x+w,y,x+w,y+r,r);ctx.lineTo(x+w,y+h-r);ctx.arcTo(x+w,y+h,x+w-r,y+h,r);ctx.lineTo(x+r,y+h);ctx.arcTo(x,y+h,x,y+h-r,r);ctx.lineTo(x,y+r);ctx.arcTo(x,y,x+r,y,r);ctx.closePath();ctx.fill();
+}
+
+// Legacy drawNet2Canvas kept for compatibility (now unused in live player)
+function drawNet2Canvas(lines, currentTime, duration) {
+    net2DrawAnimFrame(0, currentTime, duration, []);
 }
 
 function drawNet2CanvasEnd(emoji) {

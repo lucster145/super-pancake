@@ -407,6 +407,34 @@ body, html {
 }
 
 /* ===== NET2 STYLES ===== */
+
+/* --- Keyframe animations --- */
+@keyframes net2LogoPulse {
+    0%,100% { text-shadow: 0 0 8px rgba(229,9,20,0.5); }
+    50%      { text-shadow: 0 0 22px rgba(229,9,20,1), 0 0 45px rgba(229,9,20,0.4); }
+}
+@keyframes net2HeroShift {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+@keyframes net2CardEnter {
+    from { opacity: 0; transform: scale(0.88) translateY(18px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+@keyframes net2InfoSlide {
+    from { opacity: 0; transform: translateY(28px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes net2ProgressGlow {
+    0%,100% { box-shadow: 0 0 4px #e50914; }
+    50%     { box-shadow: 0 0 14px #e50914, 0 0 28px rgba(229,9,20,0.45); }
+}
+@keyframes net2NavUnderline {
+    from { left: 50%; right: 50%; }
+    to   { left: 14%; right: 14%; }
+}
+
 .net2-content {
     display: flex;
     flex-direction: column;
@@ -420,16 +448,20 @@ body, html {
     justify-content: space-between;
     align-items: center;
     padding: 20px;
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(6px);
     position: sticky;
     top: 0;
     z-index: 10;
+    transition: background 0.3s;
 }
 
 .net2-logo {
     font-size: 24px;
     font-weight: bold;
     color: #E50914;
+    animation: net2LogoPulse 2.2s ease-in-out infinite;
+    letter-spacing: 1px;
 }
 
 .net2-nav {
@@ -444,12 +476,30 @@ body, html {
     padding: 10px 15px;
     cursor: pointer;
     border-radius: 5px;
-    transition: background 0.2s;
+    transition: background 0.2s, color 0.2s;
+    position: relative;
+}
+.net2-nav-btn::after {
+    content: '';
+    position: absolute;
+    bottom: 4px;
+    left: 50%;
+    right: 50%;
+    height: 2px;
+    background: #e50914;
+    border-radius: 2px;
+    transition: left 0.3s ease, right 0.3s ease;
+}
+.net2-nav-btn:hover::after,
+.net2-nav-btn.active::after {
+    left: 14%;
+    right: 14%;
 }
 
 .net2-nav-btn:hover,
 .net2-nav-btn.active {
     background: rgba(255, 255, 255, 0.1);
+    color: #fff;
 }
 
 .net2-search input {
@@ -473,10 +523,20 @@ body, html {
 .net2-hero {
     position: relative;
     height: 400px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #1a1a5e 0%, #5a0090 40%, #c0002a 80%, #1a0a00 100%);
+    background-size: 300% 300%;
+    animation: net2HeroShift 9s ease infinite;
     display: flex;
     align-items: center;
     padding: 0 50px;
+    overflow: hidden;
+}
+.net2-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 60% 80% at 30% 60%, rgba(229,9,20,0.18) 0%, transparent 70%);
+    pointer-events: none;
 }
 
 .hero-content h1 {
@@ -539,11 +599,37 @@ body, html {
     border-radius: 8px;
     overflow: hidden;
     cursor: pointer;
-    transition: transform 0.2s;
+    position: relative;
+    transition: transform 0.28s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.28s;
+    animation: net2CardEnter 0.4s ease both;
 }
+.net2-item:nth-child(1) { animation-delay: 0s; }
+.net2-item:nth-child(2) { animation-delay: 0.06s; }
+.net2-item:nth-child(3) { animation-delay: 0.12s; }
+.net2-item:nth-child(4) { animation-delay: 0.18s; }
+.net2-item:nth-child(5) { animation-delay: 0.24s; }
 
 .net2-item:hover {
-    transform: scale(1.05);
+    transform: scale(1.1) translateY(-8px);
+    box-shadow: 0 18px 40px rgba(0,0,0,0.65), 0 0 22px rgba(229,9,20,0.3);
+    z-index: 5;
+}
+.net2-item::after {
+    content: attr(data-title);
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    background: linear-gradient(transparent, rgba(0,0,0,0.92));
+    color: white;
+    padding: 30px 10px 10px;
+    font-size: 12px;
+    font-weight: bold;
+    transform: translateY(10px);
+    opacity: 0;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+.net2-item:hover::after {
+    transform: translateY(0);
+    opacity: 1;
 }
 
 .net2-item img {
@@ -644,7 +730,8 @@ body, html {
     height: 100%;
     background: #e50914;
     border-radius: 2px;
-    transition: width 0.3s ease;
+    transition: width 0.25s linear;
+    animation: net2ProgressGlow 1.8s ease-in-out infinite;
 }
 
 .net2-controls {
@@ -698,7 +785,7 @@ body, html {
     color: white;
 }
 
-.net2-info-panel.active { display: block; }
+.net2-info-panel.active { display: block; animation: net2InfoSlide 0.35s ease both; }
 
 .net2-info-header {
     display: flex;
