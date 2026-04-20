@@ -50,7 +50,7 @@ const APPS = {
         minHeight: 500
     },
     football: {
-        name: 'Throaball',
+        name: 'Throwball',
         icon: '⚽',
         color: '#228B22',
         minWidth: 600,
@@ -498,7 +498,7 @@ class WindowManager {
         const highScore = localStorage.getItem('footballHighScore') || '0';
         return `
             <div class="game-content">
-                <div class="game-title">Throaball</div>
+                <div class="game-title">Throwball</div>
                 <div style="text-align: center; margin-bottom: 20px; color: #666; font-size: 14px;">
                     Press SPACEBAR to charge and throw the ball! Hit the targets for points!
                 </div>
@@ -1372,16 +1372,13 @@ function checkFootballTargets(ballX, ballY) {
     const targets = document.querySelectorAll('.football-target');
     targets.forEach((target, index) => {
         if (!target.classList.contains('hit')) {
-            const targetRect = target.getBoundingClientRect();
-            const gameRect = document.getElementById('football-game').getBoundingClientRect();
+            const targetX = parseInt(target.style.left) || 0;
+            const targetY = 100; // Target is at 100px from bottom (from CSS)
 
-            const targetX = targetRect.left - gameRect.left;
-            const targetY = targetRect.bottom - gameRect.top;
+            // Check if ball is near target (hit radius of ~40px)
+            const distance = Math.sqrt(Math.pow(ballX - targetX, 2) + Math.pow(ballY - targetY, 2));
 
-            // Check if ball is near target
-            const distance = Math.sqrt(Math.pow(ballX - targetX, 2) + Math.pow(ballY - (250 - targetY), 2));
-
-            if (distance < 30) {
+            if (distance < 40) {
                 target.classList.add('hit');
                 target.textContent = '💥';
                 footballGameState.score += 10;
