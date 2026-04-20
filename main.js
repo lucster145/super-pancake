@@ -730,6 +730,15 @@ class WindowManager {
                             <div class="shortcut website-shortcut" onclick="browserNavigate('www.zappycook.net')">🍳 ZappyCook.net</div>
                             <div class="shortcut website-shortcut" onclick="browserNavigate('www.pixelvault.io')">🖼️ PixelVault.io</div>
                             <div class="shortcut website-shortcut" onclick="browserNavigate('www.cosmicblog.org')">🌌 CosmicBlog.org</div>
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.dailypets.fun')">🐾 DailyPets.fun</div>
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.quizmaster.io')">🧩 QuizMaster.io</div>
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.tinytales.org')">📖 TinyTales.org</div>
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.buildcraft.tech')">🔧 BuildCraft.tech</div>
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.stargazer.space')">🔭 Stargazer.space</div>
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.munchbox.net')">🍱 MunchBox.net</div>
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.codecubs.io')">💻 CodeCubs.io</div>
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.sketchwild.org')">🎨 SketchWild.org</div>
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.factblast.fun')">💥 FactBlast.fun</div>
                         </div>
                     </div>
                 </div>
@@ -1953,6 +1962,24 @@ function browserNavigate(query) {
         'cosmicblog.org': getCosmicBlogWebsite,
         'www.novaspark.tech': getNovaSparkWebsite,
         'novaspark.tech': getNovaSparkWebsite,
+        'www.dailypets.fun': getDailyPetsWebsite,
+        'dailypets.fun': getDailyPetsWebsite,
+        'www.quizmaster.io': getQuizMasterWebsite,
+        'quizmaster.io': getQuizMasterWebsite,
+        'www.tinytales.org': getTinyTalesWebsite,
+        'tinytales.org': getTinyTalesWebsite,
+        'www.buildcraft.tech': getBuildCraftWebsite,
+        'buildcraft.tech': getBuildCraftWebsite,
+        'www.stargazer.space': getStargazerWebsite,
+        'stargazer.space': getStargazerWebsite,
+        'www.munchbox.net': getMunchBoxWebsite,
+        'munchbox.net': getMunchBoxWebsite,
+        'www.codecubs.io': getCodeCubsWebsite,
+        'codecubs.io': getCodeCubsWebsite,
+        'www.sketchwild.org': getSketchWildWebsite,
+        'sketchwild.org': getSketchWildWebsite,
+        'www.factblast.fun': getFactBlastWebsite,
+        'factblast.fun': getFactBlastWebsite,
     };
     const siteKey = Object.keys(websites).find(k => query.toLowerCase().includes(k));
 
@@ -1962,7 +1989,7 @@ function browserNavigate(query) {
     } else if (key) {
         content = results[key];
     } else {
-        content = `<div class="result-item"><h3>🔍 No results found for "${query}"</h3><p>Try searching: space, dinosaurs, animals, ocean, science, robots, football, or history.</p><p>Or visit a website: <a onclick="browserNavigate('www.zappycook.net')" style="cursor:pointer;color:#4285f4">www.zappycook.net</a> · <a onclick="browserNavigate('www.pixelvault.io')" style="cursor:pointer;color:#4285f4">www.pixelvault.io</a> · <a onclick="browserNavigate('www.cosmicblog.org')" style="cursor:pointer;color:#4285f4">www.cosmicblog.org</a> · <a onclick="browserNavigate('www.novaspark.tech')" style="cursor:pointer;color:#4285f4">www.novaspark.tech</a></p></div>`;
+        content = `<div class="result-item"><h3>🔍 No results found for "${query}"</h3><p>Try searching: space, dinosaurs, animals, ocean, science, robots, football, or history.</p><p>Or visit a website: <a onclick="browserNavigate('www.zappycook.net')" style="cursor:pointer;color:#4285f4">www.zappycook.net</a> · <a onclick="browserNavigate('www.pixelvault.io')" style="cursor:pointer;color:#4285f4">www.pixelvault.io</a> · <a onclick="browserNavigate('www.cosmicblog.org')" style="cursor:pointer;color:#4285f4">www.cosmicblog.org</a> · <a onclick="browserNavigate('www.novaspark.tech')" style="cursor:pointer;color:#4285f4">www.novaspark.tech</a> · <a onclick="browserNavigate('www.dailypets.fun')" style="cursor:pointer;color:#4285f4">www.dailypets.fun</a> · <a onclick="browserNavigate('www.quizmaster.io')" style="cursor:pointer;color:#4285f4">www.quizmaster.io</a> · <a onclick="browserNavigate('www.tinytales.org')" style="cursor:pointer;color:#4285f4">www.tinytales.org</a> · <a onclick="browserNavigate('www.buildcraft.tech')" style="cursor:pointer;color:#4285f4">www.buildcraft.tech</a> · <a onclick="browserNavigate('www.stargazer.space')" style="cursor:pointer;color:#4285f4">www.stargazer.space</a> · <a onclick="browserNavigate('www.munchbox.net')" style="cursor:pointer;color:#4285f4">www.munchbox.net</a> · <a onclick="browserNavigate('www.codecubs.io')" style="cursor:pointer;color:#4285f4">www.codecubs.io</a> · <a onclick="browserNavigate('www.sketchwild.org')" style="cursor:pointer;color:#4285f4">www.sketchwild.org</a> · <a onclick="browserNavigate('www.factblast.fun')" style="cursor:pointer;color:#4285f4">www.factblast.fun</a></p></div>`;
     }
 
     resultsDiv.innerHTML = `
@@ -2362,6 +2389,339 @@ function getNovaSparkWebsite() {
     `;
 }
 
+function getDailyPetsWebsite() {
+    return `
+        <div class="fake-website">
+            <div class="fake-site-header" style="background:linear-gradient(135deg,#f9a825,#ef6c00);padding:20px;border-radius:8px 8px 0 0;color:white;">
+                <h1 style="margin:0;font-size:28px;">🐾 DailyPets.fun</h1>
+                <p style="margin:4px 0 0;opacity:0.9;">Cute animals, pet tips & fun facts every day!</p>
+            </div>
+            <div class="fake-site-body" style="background:#fffdf4;padding:20px;border-radius:0 0 8px 8px;border:1px solid #eee;">
+                <h2 style="color:#ef6c00;">Today's Featured Pets 🌟</h2>
+                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:12px;">
+                    <div style="background:white;border-radius:10px;padding:14px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,0.07);">
+                        <div style="font-size:48px;">🐶</div>
+                        <p style="font-weight:bold;margin:8px 0 2px;">Golden Retriever</p>
+                        <p style="font-size:12px;color:#888;">Friendly, loyal, and always happy to see you!</p>
+                    </div>
+                    <div style="background:white;border-radius:10px;padding:14px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,0.07);">
+                        <div style="font-size:48px;">🐱</div>
+                        <p style="font-weight:bold;margin:8px 0 2px;">Persian Cat</p>
+                        <p style="font-size:12px;color:#888;">Calm, fluffy, and loves a cosy nap in the sun.</p>
+                    </div>
+                    <div style="background:white;border-radius:10px;padding:14px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,0.07);">
+                        <div style="font-size:48px;">🐰</div>
+                        <p style="font-weight:bold;margin:8px 0 2px;">Holland Lop Rabbit</p>
+                        <p style="font-size:12px;color:#888;">Floppy ears and a love of fresh vegetables.</p>
+                    </div>
+                    <div style="background:white;border-radius:10px;padding:14px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,0.07);">
+                        <div style="font-size:48px;">🦜</div>
+                        <p style="font-weight:bold;margin:8px 0 2px;">African Grey Parrot</p>
+                        <p style="font-size:12px;color:#888;">One of the smartest birds — can learn 1000+ words!</p>
+                    </div>
+                    <div style="background:white;border-radius:10px;padding:14px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,0.07);">
+                        <div style="font-size:48px;">🐹</div>
+                        <p style="font-weight:bold;margin:8px 0 2px;">Syrian Hamster</p>
+                        <p style="font-size:12px;color:#888;">Tiny and nocturnal — loves running on a wheel at night!</p>
+                    </div>
+                    <div style="background:white;border-radius:10px;padding:14px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,0.07);">
+                        <div style="font-size:48px;">🐠</div>
+                        <p style="font-weight:bold;margin:8px 0 2px;">Clownfish</p>
+                        <p style="font-size:12px;color:#888;">Colourful, low-maintenance, and great for beginners.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function getQuizMasterWebsite() {
+    return `
+        <div class="fake-website">
+            <div class="fake-site-header" style="background:linear-gradient(135deg,#00b894,#00cec9);padding:20px;border-radius:8px 8px 0 0;color:white;">
+                <h1 style="margin:0;font-size:28px;">🧩 QuizMaster.io</h1>
+                <p style="margin:4px 0 0;opacity:0.9;">Test your knowledge with fun quizzes!</p>
+            </div>
+            <div class="fake-site-body" style="background:#f0fdf9;padding:20px;border-radius:0 0 8px 8px;border:1px solid #cce;">
+                <h2 style="color:#00b894;">Today's Quick Quiz 🌍</h2>
+                <div id="qm-quiz" style="margin-top:12px;"></div>
+                <script>
+                (function(){
+                    var qs=[{q:'What is the capital of Australia?',a:['Sydney','Canberra','Melbourne','Brisbane'],c:1},{q:'How many sides does a hexagon have?',a:['5','6','7','8'],c:1},{q:'Which planet is the largest in our Solar System?',a:['Saturn','Neptune','Jupiter','Uranus'],c:2}];
+                    var qi=0,score=0;
+                    function show(){
+                        var el=document.getElementById('qm-quiz');if(!el)return;
+                        if(qi>=qs.length){el.innerHTML='<div style="text-align:center;padding:20px;"><div style="font-size:48px;">🏅</div><h3 style="color:#00b894;">You scored '+score+' / '+qs.length+'!</h3><button onclick="(function(){qi=0;score=0;show();})()" style="background:#00b894;color:white;border:none;padding:8px 24px;border-radius:20px;cursor:pointer;font-size:14px;">Play Again</button></div>';return;}
+                        var q=qs[qi];el.innerHTML='<div style="background:white;border-radius:10px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.07);"><p style="font-weight:bold;margin:0 0 12px;font-size:15px;">Q'+(qi+1)+': '+q.q+'</p>'+q.a.map(function(ans,i){return'<button onclick="(function(){if('+i+'==='+q.c+'){score++;}qi++;show();})()" style="display:block;width:100%;margin-bottom:8px;background:#e8fdf5;border:1px solid #00b894;border-radius:8px;padding:10px;cursor:pointer;text-align:left;font-size:14px;">'+ans+'</button>';}).join('')+'</div>';
+                    }
+                    show();
+                })()
+                <\/script>
+            </div>
+        </div>
+    `;
+}
+
+function getTinyTalesWebsite() {
+    return `
+        <div class="fake-website">
+            <div class="fake-site-header" style="background:linear-gradient(135deg,#f06292,#ba68c8);padding:20px;border-radius:8px 8px 0 0;color:white;">
+                <h1 style="margin:0;font-size:28px;">📖 TinyTales.org</h1>
+                <p style="margin:4px 0 0;opacity:0.9;">Short stories for curious young readers</p>
+            </div>
+            <div class="fake-site-body" style="background:#fff8fd;padding:20px;border-radius:0 0 8px 8px;border:1px solid #f3d5f5;">
+                <h2 style="color:#ba68c8;">Stories This Week</h2>
+                <div style="display:flex;flex-direction:column;gap:14px;margin-top:12px;">
+                    <div style="background:white;border-radius:10px;padding:16px;border-left:4px solid #f06292;box-shadow:0 1px 6px rgba(0,0,0,0.06);">
+                        <h3 style="margin:0 0 6px;color:#880e4f;">🌟 The Star That Lost Its Glow</h3>
+                        <p style="font-size:13px;color:#555;margin:0 0 6px;">Far above the clouds lived a little star named Pip. One night Pip's light went out — and she had to travel across the whole sky to find it again...</p>
+                        <span style="font-size:12px;color:#ba68c8;">📚 Ages 6–9 &nbsp;|&nbsp; ⏱ 3 min read</span>
+                    </div>
+                    <div style="background:white;border-radius:10px;padding:16px;border-left:4px solid #ba68c8;box-shadow:0 1px 6px rgba(0,0,0,0.06);">
+                        <h3 style="margin:0 0 6px;color:#4a148c;">🐢 The Tortoise Who Climbed a Cloud</h3>
+                        <p style="font-size:13px;color:#555;margin:0 0 6px;">Everyone said tortoises were too slow to reach the clouds. Herman the tortoise decided to prove them wrong, one tiny step at a time...</p>
+                        <span style="font-size:12px;color:#ba68c8;">📚 Ages 5–8 &nbsp;|&nbsp; ⏱ 4 min read</span>
+                    </div>
+                    <div style="background:white;border-radius:10px;padding:16px;border-left:4px solid #f06292;box-shadow:0 1px 6px rgba(0,0,0,0.06);">
+                        <h3 style="margin:0 0 6px;color:#880e4f;">🧁 The Baker Who Baked a Dragon</h3>
+                        <p style="font-size:13px;color:#555;margin:0 0 6px;">Marta's enchanted oven could bake anything to life. One Tuesday she accidentally made a very small, very hungry dragon out of gingerbread...</p>
+                        <span style="font-size:12px;color:#ba68c8;">📚 Ages 7–10 &nbsp;|&nbsp; ⏱ 5 min read</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function getBuildCraftWebsite() {
+    return `
+        <div class="fake-website">
+            <div class="fake-site-header" style="background:linear-gradient(135deg,#37474f,#546e7a);padding:20px;border-radius:8px 8px 0 0;color:white;">
+                <h1 style="margin:0;font-size:28px;">🔧 BuildCraft.tech</h1>
+                <p style="margin:4px 0 0;opacity:0.9;">DIY projects, how-to guides & maker tutorials</p>
+            </div>
+            <div class="fake-site-body" style="background:#fafafa;padding:20px;border-radius:0 0 8px 8px;border:1px solid #ddd;">
+                <h2 style="color:#37474f;">Popular Projects</h2>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:12px;">
+                    <div style="background:white;border-radius:10px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.07);">
+                        <div style="font-size:36px;text-align:center;">💡</div>
+                        <h3 style="margin:8px 0 4px;text-align:center;">LED Night Light</h3>
+                        <p style="font-size:13px;color:#888;">⭐ Beginner &nbsp;|&nbsp; ⏱ 45 mins</p>
+                        <p style="font-size:13px;">Wire up an LED with a resistor and battery pack to make a soft custom night light. No soldering needed!</p>
+                    </div>
+                    <div style="background:white;border-radius:10px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.07);">
+                        <div style="font-size:36px;text-align:center;">🪁</div>
+                        <h3 style="margin:8px 0 4px;text-align:center;">Cardboard Kite</h3>
+                        <p style="font-size:13px;color:#888;">⭐ Beginner &nbsp;|&nbsp; ⏱ 30 mins</p>
+                        <p style="font-size:13px;">Build and fly your own diamond kite using cardboard, string, and a strip of fabric. Perfect for a windy day!</p>
+                    </div>
+                    <div style="background:white;border-radius:10px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.07);">
+                        <div style="font-size:36px;text-align:center;">🤖</div>
+                        <h3 style="margin:8px 0 4px;text-align:center;">Mini Robot Arm</h3>
+                        <p style="font-size:13px;color:#888;">⭐⭐ Intermediate &nbsp;|&nbsp; ⏱ 2 hrs</p>
+                        <p style="font-size:13px;">Use popsicle sticks and a single servo motor to build a simple robotic arm controlled by a micro:bit.</p>
+                    </div>
+                    <div style="background:white;border-radius:10px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.07);">
+                        <div style="font-size:36px;text-align:center;">🌱</div>
+                        <h3 style="margin:8px 0 4px;text-align:center;">Auto Plant Waterer</h3>
+                        <p style="font-size:13px;color:#888;">⭐⭐ Intermediate &nbsp;|&nbsp; ⏱ 1.5 hrs</p>
+                        <p style="font-size:13px;">Hook up a soil moisture sensor to a small pump so your plant waters itself when the soil gets too dry!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function getStargazerWebsite() {
+    return `
+        <div class="fake-website">
+            <div class="fake-site-header" style="background:linear-gradient(135deg,#0d0d2b,#1a1a4e);padding:20px;border-radius:8px 8px 0 0;color:white;">
+                <h1 style="margin:0;font-size:28px;">🔭 Stargazer.space</h1>
+                <p style="margin:4px 0 0;opacity:0.9;">Your guide to the night sky & astronomy</p>
+            </div>
+            <div class="fake-site-body" style="background:#0a0a1a;padding:20px;border-radius:0 0 8px 8px;border:1px solid #222;">
+                <h2 style="color:#7ec8e3;">Tonight's Sky 🌙</h2>
+                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:12px;">
+                    <div style="background:#111133;border-radius:10px;padding:14px;text-align:center;border:1px solid #2a2a5a;">
+                        <div style="font-size:40px;">🪐</div>
+                        <p style="color:white;font-weight:bold;margin:8px 0 2px;">Saturn</p>
+                        <p style="color:#aaa;font-size:12px;">Visible at 9 PM in the south-east. Rings clearly visible with binoculars!</p>
+                    </div>
+                    <div style="background:#111133;border-radius:10px;padding:14px;text-align:center;border:1px solid #2a2a5a;">
+                        <div style="font-size:40px;">☄️</div>
+                        <p style="color:white;font-weight:bold;margin:8px 0 2px;">Meteor Shower</p>
+                        <p style="color:#aaa;font-size:12px;">Lyrid meteor shower peaks tonight — up to 20 shooting stars per hour!</p>
+                    </div>
+                    <div style="background:#111133;border-radius:10px;padding:14px;text-align:center;border:1px solid #2a2a5a;">
+                        <div style="font-size:40px;">🌕</div>
+                        <p style="color:white;font-weight:bold;margin:8px 0 2px;">Full Moon</p>
+                        <p style="color:#aaa;font-size:12px;">April's Pink Moon rises at 8:42 PM. Best viewed from dark locations.</p>
+                    </div>
+                </div>
+                <h2 style="color:#7ec8e3;margin-top:20px;">Fun Space Facts ✨</h2>
+                <ul style="color:#ccc;font-size:13px;line-height:1.8;padding-left:20px;">
+                    <li>Light from the Sun takes 8 minutes to reach Earth.</li>
+                    <li>There are more galaxies in the universe than grains of sand on Earth.</li>
+                    <li>Neutron stars can spin 700 times per second.</li>
+                    <li>The Great Red Spot on Jupiter is a storm that has raged for 350+ years.</li>
+                </ul>
+            </div>
+        </div>
+    `;
+}
+
+function getMunchBoxWebsite() {
+    return `
+        <div class="fake-website">
+            <div class="fake-site-header" style="background:linear-gradient(135deg,#e65100,#ff8f00);padding:20px;border-radius:8px 8px 0 0;color:white;">
+                <h1 style="margin:0;font-size:28px;">🍱 MunchBox.net</h1>
+                <p style="margin:4px 0 0;opacity:0.9;">Tasty snack ideas & lunchbox inspiration</p>
+            </div>
+            <div class="fake-site-body" style="background:#fffaf0;padding:20px;border-radius:0 0 8px 8px;border:1px solid #ffe0b2;">
+                <h2 style="color:#e65100;">Today's Lunchbox Ideas 🥗</h2>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:12px;">
+                    <div style="background:white;border-radius:10px;padding:14px;box-shadow:0 2px 8px rgba(0,0,0,0.07);">
+                        <div style="font-size:36px;text-align:center;">🌯</div>
+                        <h3 style="margin:8px 0 4px;text-align:center;">Rainbow Veggie Wrap</h3>
+                        <p style="font-size:13px;color:#888;">⏱ 10 mins | 🌱 Vegetarian</p>
+                        <p style="font-size:13px;">Spread hummus on a tortilla, add sliced peppers, cucumber, grated carrot and spinach. Roll it up tight and slice in half!</p>
+                    </div>
+                    <div style="background:white;border-radius:10px;padding:14px;box-shadow:0 2px 8px rgba(0,0,0,0.07);">
+                        <div style="font-size:36px;text-align:center;">🍱</div>
+                        <h3 style="margin:8px 0 4px;text-align:center;">Mini Bento Box</h3>
+                        <p style="font-size:13px;color:#888;">⏱ 8 mins | 🍽 Serves 1</p>
+                        <p style="font-size:13px;">Pack rice balls, cherry tomatoes, cheese cubes, grapes and a small chocolate square. Fun and balanced!</p>
+                    </div>
+                    <div style="background:white;border-radius:10px;padding:14px;box-shadow:0 2px 8px rgba(0,0,0,0.07);">
+                        <div style="font-size:36px;text-align:center;">🥪</div>
+                        <h3 style="margin:8px 0 4px;text-align:center;">Dinosaur Sandwich</h3>
+                        <p style="font-size:13px;color:#888;">⏱ 5 mins | 🍽 Serves 1</p>
+                        <p style="font-size:13px;">Cut a cheese and ham sandwich into dinosaur shapes with cookie cutters. Pack with apple slices and a juice box!</p>
+                    </div>
+                    <div style="background:white;border-radius:10px;padding:14px;box-shadow:0 2px 8px rgba(0,0,0,0.07);">
+                        <div style="font-size:36px;text-align:center;">🍓</div>
+                        <h3 style="margin:8px 0 4px;text-align:center;">Fruit Kebab Snack</h3>
+                        <p style="font-size:13px;color:#888;">⏱ 5 mins | 🌱 Vegan</p>
+                        <p style="font-size:13px;">Thread strawberries, blueberries, melon chunks and grapes onto skewers. Serve with a small pot of yoghurt for dipping!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function getCodeCubsWebsite() {
+    return `
+        <div class="fake-website">
+            <div class="fake-site-header" style="background:linear-gradient(135deg,#1b5e20,#2e7d32);padding:20px;border-radius:8px 8px 0 0;color:white;">
+                <h1 style="margin:0;font-size:28px;">💻 CodeCubs.io</h1>
+                <p style="margin:4px 0 0;opacity:0.9;">Learn to code — fun lessons for young coders!</p>
+            </div>
+            <div class="fake-site-body" style="background:#f1f8e9;padding:20px;border-radius:0 0 8px 8px;border:1px solid #c8e6c9;">
+                <h2 style="color:#1b5e20;">Beginner Lessons 🐻</h2>
+                <div style="display:flex;flex-direction:column;gap:12px;margin-top:12px;">
+                    <div style="background:white;border-radius:10px;padding:14px;display:flex;gap:14px;align-items:center;box-shadow:0 1px 6px rgba(0,0,0,0.07);">
+                        <div style="font-size:36px;">🐍</div>
+                        <div>
+                            <h3 style="margin:0 0 4px;color:#1b5e20;">Python for Beginners</h3>
+                            <p style="color:#555;font-size:13px;margin:0;">Learn variables, loops and functions through fun mini-projects like number guessing games and simple calculators.</p>
+                            <span style="font-size:12px;color:#43a047;">⭐ Beginner &nbsp;|&nbsp; 12 lessons</span>
+                        </div>
+                    </div>
+                    <div style="background:white;border-radius:10px;padding:14px;display:flex;gap:14px;align-items:center;box-shadow:0 1px 6px rgba(0,0,0,0.07);">
+                        <div style="font-size:36px;">🌐</div>
+                        <div>
+                            <h3 style="margin:0 0 4px;color:#1b5e20;">Build Your First Website</h3>
+                            <p style="color:#555;font-size:13px;margin:0;">Use HTML and CSS to create a personal homepage with your favourite colours, fonts and pictures.</p>
+                            <span style="font-size:12px;color:#43a047;">⭐ Beginner &nbsp;|&nbsp; 8 lessons</span>
+                        </div>
+                    </div>
+                    <div style="background:white;border-radius:10px;padding:14px;display:flex;gap:14px;align-items:center;box-shadow:0 1px 6px rgba(0,0,0,0.07);">
+                        <div style="font-size:36px;">🎮</div>
+                        <div>
+                            <h3 style="margin:0 0 4px;color:#1b5e20;">Make a Simple Game</h3>
+                            <p style="color:#555;font-size:13px;margin:0;">Code a catch-the-falling-stars game using JavaScript — covers events, animation and score tracking.</p>
+                            <span style="font-size:12px;color:#388e3c;">⭐⭐ Intermediate &nbsp;|&nbsp; 10 lessons</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function getSketchWildWebsite() {
+    return `
+        <div class="fake-website">
+            <div class="fake-site-header" style="background:linear-gradient(135deg,#ad1457,#e91e63);padding:20px;border-radius:8px 8px 0 0;color:white;">
+                <h1 style="margin:0;font-size:28px;">🎨 SketchWild.org</h1>
+                <p style="margin:4px 0 0;opacity:0.9;">Drawing tutorials, art challenges & inspiration</p>
+            </div>
+            <div class="fake-site-body" style="background:#fff9fb;padding:20px;border-radius:0 0 8px 8px;border:1px solid #f8bbd0;">
+                <h2 style="color:#ad1457;">This Week's Challenges 🖌️</h2>
+                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:12px;">
+                    <div style="background:white;border-radius:10px;padding:14px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,0.07);">
+                        <div style="font-size:44px;">🐉</div>
+                        <p style="font-weight:bold;margin:8px 0 4px;">Draw a Dragon</p>
+                        <p style="font-size:12px;color:#888;">Step-by-step guide from basic shapes to a full fire-breathing dragon!</p>
+                        <span style="background:#f06292;color:white;font-size:11px;padding:2px 10px;border-radius:20px;">START</span>
+                    </div>
+                    <div style="background:white;border-radius:10px;padding:14px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,0.07);">
+                        <div style="font-size:44px;">🌆</div>
+                        <p style="font-weight:bold;margin:8px 0 4px;">City at Sunset</p>
+                        <p style="font-size:12px;color:#888;">Learn perspective drawing to sketch a glowing city skyline.</p>
+                        <span style="background:#f06292;color:white;font-size:11px;padding:2px 10px;border-radius:20px;">START</span>
+                    </div>
+                    <div style="background:white;border-radius:10px;padding:14px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,0.07);">
+                        <div style="font-size:44px;">🌊</div>
+                        <p style="font-weight:bold;margin:8px 0 4px;">Ocean Waves</p>
+                        <p style="font-size:12px;color:#888;">Master flowing lines and shading to draw crashing waves.</p>
+                        <span style="background:#f06292;color:white;font-size:11px;padding:2px 10px;border-radius:20px;">START</span>
+                    </div>
+                </div>
+                <h2 style="color:#ad1457;margin-top:18px;">🏆 Community Picks</h2>
+                <div style="display:flex;gap:12px;margin-top:10px;">
+                    <div style="background:white;border-radius:10px;padding:12px;flex:1;text-align:center;box-shadow:0 1px 6px rgba(0,0,0,0.06);"><div style="font-size:36px;">🦋</div><p style="font-size:12px;margin:4px 0;">by maya_draws</p><p style="font-size:11px;color:#e91e63;">❤️ 312</p></div>
+                    <div style="background:white;border-radius:10px;padding:12px;flex:1;text-align:center;box-shadow:0 1px 6px rgba(0,0,0,0.06);"><div style="font-size:36px;">🌋</div><p style="font-size:12px;margin:4px 0;">by artkid99</p><p style="font-size:11px;color:#e91e63;">❤️ 278</p></div>
+                    <div style="background:white;border-radius:10px;padding:12px;flex:1;text-align:center;box-shadow:0 1px 6px rgba(0,0,0,0.06);"><div style="font-size:36px;">🐺</div><p style="font-size:12px;margin:4px 0;">by wildpen</p><p style="font-size:11px;color:#e91e63;">❤️ 441</p></div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function getFactBlastWebsite() {
+    return `
+        <div class="fake-website">
+            <div class="fake-site-header" style="background:linear-gradient(135deg,#f57f17,#f9a825);padding:20px;border-radius:8px 8px 0 0;color:white;">
+                <h1 style="margin:0;font-size:28px;">💥 FactBlast.fun</h1>
+                <p style="margin:4px 0 0;opacity:0.9;">Mind-blowing facts delivered daily!</p>
+            </div>
+            <div class="fake-site-body" style="background:#fffde7;padding:20px;border-radius:0 0 8px 8px;border:1px solid #fff9c4;">
+                <h2 style="color:#f57f17;">Today's Fact Blasts 🤯</h2>
+                <div style="display:flex;flex-direction:column;gap:12px;margin-top:12px;">
+                    <div style="background:white;border-radius:10px;padding:14px;border-left:4px solid #f9a825;box-shadow:0 1px 6px rgba(0,0,0,0.06);">
+                        <p style="margin:0;font-size:14px;">🐙 <strong>Octopuses have three hearts</strong> — two pump blood to the gills, and one pumps it to the rest of the body. When they swim, the main heart stops, which is why they prefer to crawl!</p>
+                    </div>
+                    <div style="background:white;border-radius:10px;padding:14px;border-left:4px solid #f9a825;box-shadow:0 1px 6px rgba(0,0,0,0.06);">
+                        <p style="margin:0;font-size:14px;">🍯 <strong>Honey never expires.</strong> Archaeologists have found 3,000-year-old honey in Egyptian tombs — and it was still perfectly edible!</p>
+                    </div>
+                    <div style="background:white;border-radius:10px;padding:14px;border-left:4px solid #f9a825;box-shadow:0 1px 6px rgba(0,0,0,0.06);">
+                        <p style="margin:0;font-size:14px;">🌪️ <strong>A day on Venus lasts longer than a year on Venus.</strong> It takes 243 Earth days to rotate once, but only 225 Earth days to orbit the Sun!</p>
+                    </div>
+                    <div style="background:white;border-radius:10px;padding:14px;border-left:4px solid #f9a825;box-shadow:0 1px 6px rgba(0,0,0,0.06);">
+                        <p style="margin:0;font-size:14px;">🧠 <strong>Your brain uses about 20% of your body's energy</strong> — despite being only 2% of your body weight. Thinking is hard work!</p>
+                    </div>
+                    <div style="background:white;border-radius:10px;padding:14px;border-left:4px solid #f9a825;box-shadow:0 1px 6px rgba(0,0,0,0.06);">
+                        <p style="margin:0;font-size:14px;">🦈 <strong>Sharks are older than trees.</strong> Sharks have existed for around 450 million years, while trees only appeared about 350 million years ago!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
 function browserGoBack() {
     // Simple back - just go to homepage
     const resultsDiv = document.getElementById('browser-results');
@@ -2386,6 +2746,15 @@ function browserGoBack() {
                 <div class="shortcut website-shortcut" onclick="browserNavigate('www.zappycook.net')">🍳 ZappyCook.net</div>
                 <div class="shortcut website-shortcut" onclick="browserNavigate('www.pixelvault.io')">🖼️ PixelVault.io</div>
                 <div class="shortcut website-shortcut" onclick="browserNavigate('www.cosmicblog.org')">🌌 CosmicBlog.org</div>
+                <div class="shortcut website-shortcut" onclick="browserNavigate('www.dailypets.fun')">🐾 DailyPets.fun</div>
+                <div class="shortcut website-shortcut" onclick="browserNavigate('www.quizmaster.io')">🧩 QuizMaster.io</div>
+                <div class="shortcut website-shortcut" onclick="browserNavigate('www.tinytales.org')">📖 TinyTales.org</div>
+                <div class="shortcut website-shortcut" onclick="browserNavigate('www.buildcraft.tech')">🔧 BuildCraft.tech</div>
+                <div class="shortcut website-shortcut" onclick="browserNavigate('www.stargazer.space')">🔭 Stargazer.space</div>
+                <div class="shortcut website-shortcut" onclick="browserNavigate('www.munchbox.net')">🍱 MunchBox.net</div>
+                <div class="shortcut website-shortcut" onclick="browserNavigate('www.codecubs.io')">💻 CodeCubs.io</div>
+                <div class="shortcut website-shortcut" onclick="browserNavigate('www.sketchwild.org')">🎨 SketchWild.org</div>
+                <div class="shortcut website-shortcut" onclick="browserNavigate('www.factblast.fun')">💥 FactBlast.fun</div>
             </div>
         </div>
     `;
