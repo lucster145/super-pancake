@@ -1953,10 +1953,10 @@ function getHazyGamesWebsite() {
             <div class="fake-site-body" style="background:#1a1a2e;padding:20px;border-radius:0 0 8px 8px;">
                 <h2 style="color:#a29bfe;margin:0 0 14px;">🕹️ Featured Games</h2>
                 <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px;">
-                    <div onclick="hazyGame('snake')" style="background:#2d2d5e;border-radius:10px;padding:14px;text-align:center;cursor:pointer;border:2px solid transparent;transition:border 0.2s;" onmouseover="this.style.borderColor='#a29bfe'" onmouseout="this.style.borderColor='transparent'">
-                        <div style="font-size:40px;">🐍</div>
-                        <p style="color:white;margin:8px 0 2px;font-weight:600;">Snake</p>
-                        <p style="color:#aaa;font-size:11px;">Eat dots, grow longer!</p>
+                    <div onclick="hazyGame('battleship')" style="background:#2d2d5e;border-radius:10px;padding:14px;text-align:center;cursor:pointer;border:2px solid transparent;transition:border 0.2s;" onmouseover="this.style.borderColor='#a29bfe'" onmouseout="this.style.borderColor='transparent'">
+                        <div style="font-size:40px;">🚢</div>
+                        <p style="color:white;margin:8px 0 2px;font-weight:600;">Battleship</p>
+                        <p style="color:#aaa;font-size:11px;">Sink the hidden ship!</p>
                         <span style="background:#27ae60;color:white;font-size:10px;padding:2px 8px;border-radius:20px;">PLAY NOW</span>
                     </div>
                     <div onclick="hazyGame('tictactoe')" style="background:#2d2d5e;border-radius:10px;padding:14px;text-align:center;cursor:pointer;border:2px solid transparent;" onmouseover="this.style.borderColor='#a29bfe'" onmouseout="this.style.borderColor='transparent'">
@@ -1981,16 +1981,18 @@ function getHazyGamesWebsite() {
 function hazyGame(name) {
     const area = document.getElementById('hazy-game-area');
     if (!area) return;
-    if (name === 'snake') {
+    if (name === 'battleship') {
         area.innerHTML = `
             <div style="background:#111827;border-radius:10px;padding:16px;text-align:center;">
-                <h3 style="color:#a29bfe;margin:0 0 8px;">🐍 Snake</h3>
-                <p style="color:#aaa;font-size:12px;margin:0 0 10px;">Arrow keys or WASD to move · Eat the red dot · Don't hit the wall!</p>
-                <canvas id="snake-canvas" width="320" height="320" style="background:#0f172a;border-radius:8px;display:block;margin:0 auto;cursor:none;"></canvas>
-                <p id="snake-score" style="color:#a29bfe;margin:8px 0 0;font-weight:bold;">Score: 0</p>
+                <h3 style="color:#a29bfe;margin:0 0 6px;">🚢 Battleship</h3>
+                <p style="color:#aaa;font-size:12px;margin:0 0 4px;">Find and sink the hidden 1×2 ship on the 5×5 grid!</p>
+                <p id="bs-status" style="color:#60a5fa;font-size:13px;font-weight:bold;margin:0 0 10px;">Click a cell to fire!</p>
+                <div id="bs-board" style="display:inline-grid;grid-template-columns:repeat(5,52px);gap:4px;"></div>
+                <p id="bs-shots" style="color:#aaa;font-size:12px;margin:8px 0 0;">Shots: 0</p>
+                <br><button onclick="initBattleship()" style="margin-top:10px;background:#1a5276;color:white;border:none;padding:6px 18px;border-radius:20px;cursor:pointer;font-size:13px;">New Game</button>
             </div>
         `;
-        initSnakeGame();
+        initBattleship();
     } else if (name === 'tictactoe') {
         area.innerHTML = `
             <div style="background:#111827;border-radius:10px;padding:16px;text-align:center;">
@@ -2015,62 +2017,67 @@ function hazyGame(name) {
     area.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
-function initSnakeGame() {
-    const canvas = document.getElementById('snake-canvas');
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    const CELL = 20, COLS = 16, ROWS = 16;
-    let snake = [{x:8,y:8}], dir = {x:1,y:0}, nextDir = {x:1,y:0};
-    let food = spawnFood(), score = 0, running = true, raf;
+function initBattleship() {
+    const board = document.getElementById('bs-board');
+    const statusEl = document.getElementById('bs-status');
+    const shotsEl = document.getElementById('bs-shots');
+    if (!board) return;
 
-    function spawnFood() {
-        let f;
-        do { f = {x: Math.floor(Math.random()*COLS), y: Math.floor(Math.random()*ROWS)}; }
-        while (snake.some(s => s.x===f.x && s.y===f.y));
-        return f;
-    }
+    // Place 1x2 ship randomly on a 5x5 grid
+    const horiz = Math.random() < 0.5;
+    const shipR = horiz ? Math.floor(Math.random()*5) : Math.floor(Math.random()*4);
+    const shipC = horiz ? Math.floor(Math.random()*4) : Math.floor(Math.random()*5);
+    const shipCells = horiz
+        ? [{r:shipR,c:shipC},{r:shipR,c:shipC+1}]
+        : [{r:shipR,c:shipC},{r:shipR+1,c:shipC}];
 
-    function keyH(e) {
-        const k = e.key;
-        if ((k==='ArrowUp'||k==='w')&&dir.y!==1)   nextDir={x:0,y:-1};
-        if ((k==='ArrowDown'||k==='s')&&dir.y!==-1) nextDir={x:0,y:1};
-        if ((k==='ArrowLeft'||k==='a')&&dir.x!==1)  nextDir={x:-1,y:0};
-        if ((k==='ArrowRight'||k==='d')&&dir.x!==-1)nextDir={x:1,y:0};
-        e.preventDefault();
-    }
-    document.addEventListener('keydown', keyH);
+    let shots = 0, hits = 0, gameOver = false;
+    const grid = Array.from({length:5},()=>Array(5).fill(''));
 
-    let last = 0;
-    function loop(ts) {
-        if (!running || !document.getElementById('snake-canvas')) { cancelAnimationFrame(raf); document.removeEventListener('keydown', keyH); return; }
-        if (ts - last > 140) {
-            last = ts;
-            dir = nextDir;
-            const head = {x: snake[0].x + dir.x, y: snake[0].y + dir.y};
-            if (head.x<0||head.x>=COLS||head.y<0||head.y>=ROWS||snake.some(s=>s.x===head.x&&s.y===head.y)) {
-                running = false;
-                ctx.fillStyle = 'rgba(0,0,0,0.6)';
-                ctx.fillRect(0,0,canvas.width,canvas.height);
-                ctx.fillStyle = '#ff6b6b'; ctx.font = 'bold 24px sans-serif'; ctx.textAlign = 'center';
-                ctx.fillText('GAME OVER', canvas.width/2, canvas.height/2 - 10);
-                ctx.fillStyle = '#aaa'; ctx.font = '14px sans-serif';
-                ctx.fillText('Score: '+score, canvas.width/2, canvas.height/2+18);
-                document.removeEventListener('keydown', keyH);
-                return;
-            }
-            snake.unshift(head);
-            if (head.x===food.x && head.y===food.y) { food=spawnFood(); score++; const el=document.getElementById('snake-score'); if(el) el.textContent='Score: '+score; }
-            else snake.pop();
-
-            ctx.fillStyle = '#0f172a'; ctx.fillRect(0,0,canvas.width,canvas.height);
-            // food
-            ctx.fillStyle = '#ef4444'; ctx.beginPath(); ctx.arc((food.x+0.5)*CELL,(food.y+0.5)*CELL,CELL*0.4,0,Math.PI*2); ctx.fill();
-            // snake
-            snake.forEach((s,i)=>{ ctx.fillStyle=i===0?'#22c55e':'#16a34a'; ctx.fillRect(s.x*CELL+1,s.y*CELL+1,CELL-2,CELL-2); });
+    board.innerHTML = '';
+    for (let r=0; r<5; r++) {
+        for (let c=0; c<5; c++) {
+            const cell = document.createElement('div');
+            cell.style.cssText = 'width:52px;height:52px;background:#1e3a5f;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:22px;cursor:pointer;border:2px solid #2d5986;transition:background 0.15s;';
+            cell.dataset.r = r; cell.dataset.c = c;
+            cell.onmouseover = () => { if (!cell.dataset.fired) cell.style.background='#2563ab'; };
+            cell.onmouseout  = () => { if (!cell.dataset.fired) cell.style.background='#1e3a5f'; };
+            cell.onclick = () => {
+                if (gameOver || cell.dataset.fired) return;
+                cell.dataset.fired = '1';
+                shots++;
+                if (shotsEl) shotsEl.textContent = 'Shots: ' + shots;
+                const isHit = shipCells.some(s=>s.r===r && s.c===c);
+                if (isHit) {
+                    hits++;
+                    cell.textContent = '💥';
+                    cell.style.background = '#7f1d1d';
+                    cell.style.cursor = 'default';
+                    if (hits === 2) {
+                        gameOver = true;
+                        if (statusEl) statusEl.textContent = `🎉 You sunk it in ${shots} shot${shots===1?'':'s'}!`;
+                        // Reveal ship
+                        document.querySelectorAll('#bs-board div').forEach(d=>{
+                            const dr=parseInt(d.dataset.r), dc=parseInt(d.dataset.c);
+                            if (shipCells.some(s=>s.r===dr&&s.c===dc) && !d.dataset.fired) {
+                                d.textContent='🚢'; d.style.background='#166534';
+                            }
+                        });
+                    } else {
+                        if (statusEl) statusEl.textContent = '💥 Hit! Keep going!';
+                    }
+                } else {
+                    cell.textContent = '🌊';
+                    cell.style.background = '#0c4a6e';
+                    cell.style.cursor = 'default';
+                    if (statusEl) statusEl.textContent = '🌊 Miss! Try again.';
+                }
+            };
+            board.appendChild(cell);
         }
-        raf = requestAnimationFrame(loop);
     }
-    raf = requestAnimationFrame(loop);
+    if (statusEl) statusEl.textContent = 'Click a cell to fire!';
+    if (shotsEl) shotsEl.textContent = 'Shots: 0';
 }
 
 let tttBoard = [], tttTurn = 'X';
