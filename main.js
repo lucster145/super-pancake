@@ -2150,12 +2150,16 @@ function browserNavigate(query) {
         content = `<div class="result-item"><h3>🔍 No results found for "${query}"</h3><p>Try searching: space, dinosaurs, animals, ocean, science, robots, football, or history.</p><p>Or visit a website: <a onclick="browserNavigate('www.zappycook.net')" style="cursor:pointer;color:#4285f4">www.zappycook.net</a> · <a onclick="browserNavigate('www.pixelvault.io')" style="cursor:pointer;color:#4285f4">www.pixelvault.io</a> · <a onclick="browserNavigate('www.cosmicblog.org')" style="cursor:pointer;color:#4285f4">www.cosmicblog.org</a> · <a onclick="browserNavigate('www.novaspark.tech')" style="cursor:pointer;color:#4285f4">www.novaspark.tech</a> · <a onclick="browserNavigate('www.dailypets.fun')" style="cursor:pointer;color:#4285f4">www.dailypets.fun</a> · <a onclick="browserNavigate('www.quizmaster.io')" style="cursor:pointer;color:#4285f4">www.quizmaster.io</a> · <a onclick="browserNavigate('www.tinytales.org')" style="cursor:pointer;color:#4285f4">www.tinytales.org</a> · <a onclick="browserNavigate('www.buildcraft.tech')" style="cursor:pointer;color:#4285f4">www.buildcraft.tech</a> · <a onclick="browserNavigate('www.stargazer.space')" style="cursor:pointer;color:#4285f4">www.stargazer.space</a> · <a onclick="browserNavigate('www.munchbox.net')" style="cursor:pointer;color:#4285f4">www.munchbox.net</a> · <a onclick="browserNavigate('www.codecubs.io')" style="cursor:pointer;color:#4285f4">www.codecubs.io</a> · <a onclick="browserNavigate('www.sketchwild.org')" style="cursor:pointer;color:#4285f4">www.sketchwild.org</a> · <a onclick="browserNavigate('www.factblast.fun')" style="cursor:pointer;color:#4285f4">www.factblast.fun</a></p></div>`;
     }
 
-    resultsDiv.innerHTML = `
-        <div class="search-results">
-            <h2>Search Results for "${query}"</h2>
-            ${content}
-        </div>
-    `;
+    if (siteKey) {
+        resultsDiv.innerHTML = content;
+    } else {
+        resultsDiv.innerHTML = `
+            <div class="search-results">
+                <h2>Search Results for "${query}"</h2>
+                ${content}
+            </div>
+        `;
+    }
     if (siteKey && (siteKey.includes('quickpick'))) { initQuickPick(); }
 }
 
