@@ -1661,9 +1661,11 @@ body, html {
     z-index: 10;
 }
 .qp-logo {
-    font-size: 20px;
+    font-size: 22px;
     font-weight: 700;
-    background: linear-gradient(45deg, #833ab4, #fd1d1d, #fcb045);
+    font-style: italic;
+    font-family: 'Georgia', serif;
+    background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
