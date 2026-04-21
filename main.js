@@ -35,13 +35,6 @@ const APPS = {
         minWidth: 500,
         minHeight: 450
     },
-    football: {
-        name: 'Throwball',
-        icon: '⚽',
-        color: '#228B22',
-        minWidth: 600,
-        minHeight: 400
-    },
     calendar: {
         name: 'Calendar',
         icon: '📅',
@@ -63,6 +56,13 @@ const APPS = {
         minWidth: 700,
         minHeight: 500
     },
+    mapes: {
+        name: 'Mapes',
+        icon: '🗺️',
+        color: '#007b55',
+        minWidth: 900,
+        minHeight: 620
+    },
     simpleai: {
         name: 'Simple AI',
         icon: '🤖',
@@ -80,7 +80,7 @@ const APPS = {
 };
 
 // Store app installation state
-const installedApps = new Set(['playstore', 'notes', 'game2048', 'calculator', 'memory', 'football', 'calendar', 'net2', 'browser', 'simpleai', 'vibe']);
+const installedApps = new Set(['playstore', 'notes', 'game2048', 'calculator', 'memory', 'calendar', 'net2', 'browser', 'mapes', 'simpleai', 'vibe']);
 
 // Global error handler for better debugging
 window.addEventListener('error', (e) => {
@@ -317,10 +317,8 @@ class WindowManager {
 
     cleanupApp(appId) {
         switch(appId) {
-            case 'football':
-                // Clean up football game
-                clearInterval(footballGameState.interval);
-                document.removeEventListener('keydown', footballKeyHandler);
+            case 'mapes':
+                destroyMapes();
                 break;
             // Add cleanup for other apps if needed
         }
@@ -340,14 +338,14 @@ class WindowManager {
                 return this.getCalculatorContent();
             case 'memory':
                 return this.getMemoryGameContent();
-            case 'football':
-                return this.getFootballGameContent();
             case 'calendar':
                 return this.getCalendarContent();
             case 'net2':
                 return this.getNet2Content();
             case 'browser':
                 return this.getBrowserContent();
+            case 'mapes':
+                return this.getMapesContent();
             case 'simpleai':
                 return this.getSimpleAIContent();
             case 'vibe':
@@ -737,6 +735,39 @@ class WindowManager {
         `;
     }
 
+    getMapesContent() {
+        return `
+            <div class="mapes-app">
+                <div class="mapes-topbar">
+                    <div class="mapes-brand">
+                        <h2>Mapes</h2>
+                        <p>Simple map preview</p>
+                    </div>
+                    <div class="mapes-search-wrap">
+                        <input type="text" id="mapes-query" placeholder="Search a place, city, or address" aria-label="Search place">
+                        <button id="mapes-search-btn">Search</button>
+                    </div>
+                </div>
+                <div class="mapes-layout">
+                    <aside class="mapes-panel">
+                        <h3>Map Type</h3>
+                        <div class="mapes-actions">
+                            <button class="mapes-layer-btn active" data-layer="street">Map</button>
+                            <button class="mapes-layer-btn" data-layer="satellite">Satellite</button>
+                        </div>
+                        <button id="mapes-location-btn" class="mapes-location-btn">Use My Location</button>
+                        <h3>Results</h3>
+                        <ul id="mapes-results" class="mapes-results"></ul>
+                        <p id="mapes-status" class="mapes-status">Search to preview locations.</p>
+                    </aside>
+                    <div class="mapes-map-shell">
+                        <div id="mapes-map" class="mapes-map" role="application" aria-label="Interactive map preview"></div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
     shadeColor(color, amount) {
         let usePound = false;
         if (color[0] === "#") {
@@ -764,14 +795,14 @@ class WindowManager {
             case 'memory':
                 initMemoryGame();
                 break;
-            case 'football':
-                initFootballGame();
-                break;
             case 'calendar':
                 initCalendar();
                 break;
             case 'net2':
                 initNet2();
+                break;
+            case 'mapes':
+                initMapes(contentEl);
                 break;
             case 'simpleai':
                 initSimpleAI();
@@ -3804,6 +3835,270 @@ function browserRefresh() {
 }
 
 
+// ===== MAPES APP =====
+const mapesState = {
+    map: null,
+    marker: null,
+    activeLayer: 'street',
+    tileLayers: {},
+    places: [],
+    assetsPromise: null
+};
+
+function loadMapesAssets() {
+    if (window.L) {
+        return Promise.resolve();
+    }
+    if (mapesState.assetsPromise) {
+        return mapesState.assetsPromise;
+    }
+
+    mapesState.assetsPromise = new Promise((resolve, reject) => {
+        const cssId = 'mapes-leaflet-css';
+        const jsId = 'mapes-leaflet-js';
+
+        if (!document.getElementById(cssId)) {
+            const cssLink = document.createElement('link');
+            cssLink.id = cssId;
+            cssLink.rel = 'stylesheet';
+            cssLink.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+            document.head.appendChild(cssLink);
+        }
+
+        if (document.getElementById(jsId)) {
+            const waitForLeaflet = () => {
+                if (window.L) {
+                    resolve();
+                } else {
+                    setTimeout(waitForLeaflet, 50);
+                }
+            };
+            waitForLeaflet();
+            return;
+        }
+
+        const script = document.createElement('script');
+        script.id = jsId;
+        script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+        script.async = true;
+        script.onload = () => resolve();
+        script.onerror = () => reject(new Error('Unable to load map library.'));
+        document.body.appendChild(script);
+    });
+
+    return mapesState.assetsPromise;
+}
+
+function initMapes(contentEl) {
+    loadMapesAssets()
+        .then(() => {
+            if (!contentEl || !contentEl.isConnected) return;
+
+            const mapContainer = contentEl.querySelector('#mapes-map');
+            const searchButton = contentEl.querySelector('#mapes-search-btn');
+            const searchInput = contentEl.querySelector('#mapes-query');
+            const locationButton = contentEl.querySelector('#mapes-location-btn');
+            const layerButtons = contentEl.querySelectorAll('.mapes-layer-btn');
+
+            if (!mapContainer) return;
+
+            if (mapesState.map) {
+                mapesState.map.remove();
+            }
+
+            mapesState.map = L.map(mapContainer, {
+                zoomControl: true,
+                attributionControl: true
+            }).setView([40.7128, -74.0060], 12);
+
+            mapesState.tileLayers.street = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '&copy; OpenStreetMap contributors'
+            });
+
+            mapesState.tileLayers.satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                maxZoom: 19,
+                attribution: 'Tiles &copy; Esri'
+            });
+
+            mapesState.tileLayers.street.addTo(mapesState.map);
+            mapesSetStatus('Search to preview locations.');
+
+            searchButton.addEventListener('click', mapesSearchPlace);
+            locationButton.addEventListener('click', mapesUseMyLocation);
+            searchInput.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter') {
+                    mapesSearchPlace();
+                }
+            });
+
+            layerButtons.forEach((button) => {
+                button.addEventListener('click', () => mapesSetLayer(button.dataset.layer));
+            });
+
+            setTimeout(() => {
+                if (mapesState.map) {
+                    mapesState.map.invalidateSize();
+                }
+            }, 200);
+        })
+        .catch((error) => {
+            console.error(error);
+            mapesSetStatus('Map failed to load. Please check your connection.');
+        });
+}
+
+function mapesSetLayer(layerName) {
+    if (!mapesState.map || !mapesState.tileLayers[layerName]) return;
+
+    Object.keys(mapesState.tileLayers).forEach((layerKey) => {
+        if (mapesState.map.hasLayer(mapesState.tileLayers[layerKey])) {
+            mapesState.map.removeLayer(mapesState.tileLayers[layerKey]);
+        }
+    });
+
+    mapesState.tileLayers[layerName].addTo(mapesState.map);
+    mapesState.activeLayer = layerName;
+
+    document.querySelectorAll('.mapes-layer-btn').forEach((button) => {
+        button.classList.toggle('active', button.dataset.layer === layerName);
+    });
+}
+
+async function mapesSearchPlace() {
+    const input = document.getElementById('mapes-query');
+    const resultsList = document.getElementById('mapes-results');
+    if (!input || !resultsList) return;
+
+    const query = input.value.trim();
+    if (!query) {
+        mapesSetStatus('Type a place and search.');
+        return;
+    }
+
+    mapesSetStatus('Searching...');
+    resultsList.innerHTML = '';
+
+    try {
+        const endpoint = `https://nominatim.openstreetmap.org/search?format=jsonv2&limit=7&q=${encodeURIComponent(query)}`;
+        const response = await fetch(endpoint, {
+            headers: {
+                'Accept-Language': 'en'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Search request failed.');
+        }
+
+        const places = await response.json();
+        mapesState.places = places;
+        mapesRenderResults(places);
+
+        if (!places.length) {
+            mapesSetStatus('No places found. Try a different search.');
+            return;
+        }
+
+        mapesSetStatus(`Showing ${places.length} result${places.length === 1 ? '' : 's'}.`);
+        mapesSelectPlace(places[0]);
+    } catch (error) {
+        console.error(error);
+        mapesSetStatus('Search failed. Try again in a moment.');
+    }
+}
+
+function mapesRenderResults(places) {
+    const resultsList = document.getElementById('mapes-results');
+    if (!resultsList) return;
+
+    resultsList.innerHTML = '';
+    places.forEach((place, index) => {
+        const item = document.createElement('li');
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'mapes-result-btn';
+        button.textContent = place.display_name;
+        button.addEventListener('click', () => mapesSelectPlace(place));
+        if (index === 0) {
+            button.classList.add('active');
+        }
+        item.appendChild(button);
+        resultsList.appendChild(item);
+    });
+}
+
+function mapesSelectPlace(place) {
+    if (!mapesState.map || !place) return;
+
+    const lat = Number(place.lat);
+    const lon = Number(place.lon);
+    mapesState.map.flyTo([lat, lon], 14, { duration: 0.7 });
+
+    if (mapesState.marker) {
+        mapesState.marker.remove();
+    }
+
+    mapesState.marker = L.marker([lat, lon])
+        .addTo(mapesState.map)
+        .bindPopup(place.display_name)
+        .openPopup();
+
+    document.querySelectorAll('.mapes-result-btn').forEach((button) => {
+        button.classList.toggle('active', button.textContent === place.display_name);
+    });
+}
+
+function mapesUseMyLocation() {
+    if (!navigator.geolocation) {
+        mapesSetStatus('Geolocation is not supported by this browser.');
+        return;
+    }
+
+    mapesSetStatus('Finding your location...');
+    navigator.geolocation.getCurrentPosition(
+        (position) => {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+
+            if (!mapesState.map) return;
+
+            mapesState.map.flyTo([lat, lon], 14, { duration: 0.7 });
+            if (mapesState.marker) {
+                mapesState.marker.remove();
+            }
+
+            mapesState.marker = L.marker([lat, lon])
+                .addTo(mapesState.map)
+                .bindPopup('You are here')
+                .openPopup();
+
+            mapesSetStatus('Showing your current location.');
+        },
+        () => {
+            mapesSetStatus('Location access was denied or unavailable.');
+        }
+    );
+}
+
+function mapesSetStatus(message) {
+    const status = document.getElementById('mapes-status');
+    if (status) {
+        status.textContent = message;
+    }
+}
+
+function destroyMapes() {
+    if (mapesState.map) {
+        mapesState.map.remove();
+    }
+
+    mapesState.map = null;
+    mapesState.marker = null;
+    mapesState.places = [];
+}
+
+
 
 // ===== BOOKS APP =====
 const BOOKS = [
@@ -3946,13 +4241,12 @@ const AI_KNOWLEDGE = [
     { keys: ['eye','eyes','sight','vision'], answer: '👁️ Human <b>eyes</b> can distinguish about 10 million colours! The eye can process 36,000 pieces of information per hour. Your eyes focus by changing the shape of the lens. The cornea is the only part of the body with no blood supply — it gets oxygen directly from the air. Eagles can see 4–5 times farther than humans.' },
     { keys: ['sleep','sleeping','dream','dreams'], answer: '💤 <b>Sleep</b> is essential for health! Adults need 7–9 hours; kids need 9–12 hours. Your brain is very active during sleep — it processes memories and repairs itself. You spend about 2 hours dreaming every night. The record for staying awake is 11 days (but that\'s very dangerous!). Dolphins sleep with one half of their brain at a time.' },
     // Simple PC apps
-    { keys: ['simple pc','this computer','this app','this program'], answer: '💻 <b>Simple PC</b> is your virtual computer! You can open apps from the desktop or the Start menu. Available apps include: Web Browser, Notes, Calculator, 2048, Memory Game, Books, Throaball, Calendar, Net2, Vibe and Simple AI (that\'s me!)' },
+    { keys: ['simple pc','this computer','this app','this program'], answer: '💻 <b>Simple PC</b> is your virtual computer! You can open apps from the desktop or the Start menu. Available apps include: Web Browser, Notes, Calculator, 2048, Memory Game, Books, Calendar, Net2, Mapes, Vibe and Simple AI (that\'s me!)' },
     { keys: ['notes','notepad'], answer: '📝 The <b>Notes</b> app on Simple PC lets you write and save text notes. Click the Notes icon on the desktop or find it in the Start menu to open it!' },
     { keys: ['calculator'], answer: '🧮 The <b>Calculator</b> app can do basic maths — addition, subtraction, multiplication and division. Find it on the desktop or Start menu!' },
     { keys: ['2048'], answer: '🔢 <b>2048</b> is a sliding tile puzzle game! You combine matching numbers by swiping tiles. The goal is to reach the 2048 tile. Use arrow keys to play. Can you get to 4096?!' },
     { keys: ['memory game','memory match'], answer: '🃏 The <b>Memory Game</b> has a grid of face-down cards. Flip two at a time — if they match, they stay face-up. Try to match all pairs in as few moves as possible! Find it on the Start menu.' },
     { keys: ['net2','streaming','show','shows','watch'], answer: '🎬 <b>Net2</b> is Simple PC\'s streaming app — like a mini Netflix! It shows ASCII art animations of TV shows. Find it on the desktop.' },
-    { keys: ['throaball','football game'], answer: '⚽ <b>Throaball</b> is a football throwing game on Simple PC! Press SPACEBAR to charge and throw the ball at the targets. Hit the targets for points and beat your high score!' },
     { keys: ['calendar'], answer: '📅 The <b>Calendar</b> app shows the current date and lets you browse months. Find it on the desktop!' },
     // Fun / Random
     { keys: ['joke','tell me a joke','funny'], answer: '😄 Here\'s a joke: Why don\'t scientists trust atoms?<br><br>Because they make up everything! 😂' },

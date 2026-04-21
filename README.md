@@ -11,10 +11,10 @@ A fun web-based simulation of a Simple PC desktop environment with a built-in Pl
   - 🎵 Music Player - Audio player with playlist
   - 🧮 Calculator - Basic calculator
   - 🧠 Memory Game - Card matching game
-  - ⚽ Throwball - Score goals in this football game
   - 📅 Calendar - View and navigate dates
   - 🎬 Net2 - Netflix-style streaming with animated cinematic shows
   - 🌐 Web Browser - Browse fake websites and search topics
+  - 🗺️ Mapes - Google-Maps-style preview with place search and map/satellite view
   - 🤖 Simple AI - AI chatbot with knowledge across many topics
   - 📸 QuickPick - Instagram-style social media app
 - **Window Management**: Drag, resize, minimize, maximize, and close windows
