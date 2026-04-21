@@ -1672,7 +1672,7 @@ function playNet2Info(title) {
 function closeNet2Player() {
     const player = document.getElementById('net2-player');
     if (player) player.classList.add('hidden');
-    if (net2Raf) { cancelAnimationFrame(net2Raf); net2Raf = null; }
+    if (net2Raf) { window.cancelAnimationFrame(net2Raf); net2Raf = null; }
     if (net2VideoInterval) { clearInterval(net2VideoInterval); net2VideoInterval = null; }
     net2IsPlaying = false;
 }
@@ -1722,7 +1722,11 @@ function startNet2Video(customScenes, frames, emoji) {
     let lastTick = performance.now();
 
     function renderFrame(now) {
-        if (!net2IsPlaying) return;
+        if (!net2IsPlaying) {
+            // Paused — stop advancing, loop will be restarted by net2PlayPause
+            lastTick = now;
+            return;
+        }
 
         // Advance wall-clock seconds
         const delta = now - lastTick;
@@ -1740,11 +1744,11 @@ function startNet2Video(customScenes, frames, emoji) {
             return;
         }
 
-        net2Raf = requestAnimationFrame(renderFrame);
+        net2Raf = window.requestAnimationFrame(renderFrame);
     }
 
     net2DrawAnimFrame(0, 0, net2Duration, net2ActiveScenes);
-    net2Raf = requestAnimationFrame(renderFrame);
+    net2Raf = window.requestAnimationFrame(renderFrame);
 }
 
 // Colour palette per show genre (keyed by emoji for simplicity)
@@ -2533,6 +2537,21 @@ function net2PlayPause() {
     const btn = document.getElementById('net2-play-btn');
     net2IsPlaying = !net2IsPlaying;
     btn.textContent = net2IsPlaying ? '⏸️' : '▶️';
+    if (net2IsPlaying) {
+        // Restart the render loop after unpause
+        let lastTick = performance.now();
+        function resumeFrame(now) {
+            if (!net2IsPlaying) return;
+            const dt = (now - lastTick) / 1000;
+            lastTick = now;
+            net2CurrentTime = Math.min(net2CurrentTime + dt, net2Duration);
+            updateNet2Progress();
+            net2DrawAnimFrame(dt, net2CurrentTime, net2Duration, net2ActiveScenes);
+            if (net2CurrentTime >= net2Duration) { net2IsPlaying = false; drawNet2CanvasEnd(net2ShowEmoji); return; }
+            net2Raf = window.requestAnimationFrame(resumeFrame);
+        }
+        net2Raf = window.requestAnimationFrame(resumeFrame);
+    }
 }
 
 function net2Skip(seconds) {
