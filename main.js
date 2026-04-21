@@ -21,13 +21,6 @@ const APPS = {
         minWidth: 500,
         minHeight: 400
     },
-    musicplayer: {
-        name: 'Music Player',
-        icon: '🎵',
-        color: '#39e91e',
-        minWidth: 400,
-        minHeight: 350
-    },
     calculator: {
         name: 'Calculator',
         icon: '🧮',
@@ -87,7 +80,7 @@ const APPS = {
 };
 
 // Store app installation state
-const installedApps = new Set(['playstore', 'notes', 'game2048', 'musicplayer', 'calculator', 'memory', 'football', 'calendar', 'net2', 'browser', 'simpleai', 'vibe']);
+const installedApps = new Set(['playstore', 'notes', 'game2048', 'calculator', 'memory', 'football', 'calendar', 'net2', 'browser', 'simpleai', 'vibe']);
 
 // Global error handler for better debugging
 window.addEventListener('error', (e) => {
@@ -343,8 +336,6 @@ class WindowManager {
                 return this.getNotesContent();
             case 'game2048':
                 return this.getGame2048Content();
-            case 'musicplayer':
-                return this.getMusicPlayerContent();
             case 'calculator':
                 return this.getCalculatorContent();
             case 'memory':
@@ -414,32 +405,6 @@ class WindowManager {
                     <div style="margin-top: 20px; font-size: 18px; font-weight: 600;">
                         Score: <span id="game-score">0</span>
                     </div>
-                </div>
-            </div>
-        `;
-    }
-
-    getMusicPlayerContent() {
-        return `
-            <div class="media-player">
-                <div class="now-playing">
-                    <div class="album-art" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">🎵</div>
-                    <div style="font-size: 18px; font-weight: 600; margin-bottom: 8px;">Now Playing</div>
-                    <div style="font-size: 14px; color: #666;">Summer Hit 2024</div>
-                    <div style="font-size: 12px; color: #999; margin-top: 8px;">Artist Name</div>
-                </div>
-                <input type="range" min="0" max="100" value="50" style="width: 80%; margin: 20px 0;">
-                <div style="font-size: 12px; color: #999; margin-bottom: 16px;">2:35 / 4:20</div>
-                <div class="player-controls">
-                    <button class="player-btn" title="Previous">⏮</button>
-                    <button class="player-btn" title="Play/Pause" onclick="toggleMusicPlay(this)">▶</button>
-                    <button class="player-btn" title="Next">⏭</button>
-                </div>
-                <div style="margin-top: 20px; font-size: 14px; font-weight: 600;">Playlist</div>
-                <div style="margin-top: 8px; font-size: 12px; color: #666;">
-                    <div>• Summer Hit 2024</div>
-                    <div>• Chill Vibes</div>
-                    <div>• Night Drive</div>
                 </div>
             </div>
         `;
@@ -732,13 +697,18 @@ class WindowManager {
                             <div class="shortcut website-shortcut" onclick="browserNavigate('www.cosmicblog.org')">🌌 CosmicBlog.org</div>
                             <div class="shortcut website-shortcut" onclick="browserNavigate('www.dailypets.fun')">🐾 DailyPets.fun</div>
                             <div class="shortcut website-shortcut" onclick="browserNavigate('www.quizmaster.io')">🧩 QuizMaster.io</div>
-                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.tinytales.org')">📖 TinyTales.org</div>
                             <div class="shortcut website-shortcut" onclick="browserNavigate('www.buildcraft.tech')">🔧 BuildCraft.tech</div>
                             <div class="shortcut website-shortcut" onclick="browserNavigate('www.stargazer.space')">🔭 Stargazer.space</div>
                             <div class="shortcut website-shortcut" onclick="browserNavigate('www.munchbox.net')">🍱 MunchBox.net</div>
                             <div class="shortcut website-shortcut" onclick="browserNavigate('www.codecubs.io')">💻 CodeCubs.io</div>
                             <div class="shortcut website-shortcut" onclick="browserNavigate('www.sketchwild.org')">🎨 SketchWild.org</div>
                             <div class="shortcut website-shortcut" onclick="browserNavigate('www.factblast.fun')">💥 FactBlast.fun</div>
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.frostbite.net')">❄️ FrostBite.net</div>
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.neonpulse.fun')">🎵 NeonPulse.fun</div>
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.plantpedia.net')">🌿 PlantPedia.net</div>
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.brickyard.io')">🧱 Brickyard.io</div>
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.funnybones.fun')">😂 FunnyBones.fun</div>
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.cloudjournal.org')">☁️ CloudJournal.org</div>
                         </div>
                     </div>
                 </div>
@@ -1180,11 +1150,6 @@ function initMemoryGame() {
         }
     };
 }
-
-// Music player toggle
-window.toggleMusicPlay = function(btn) {
-    btn.textContent = btn.textContent === '▶' ? '⏸' : '▶';
-};
 
 window.createNewWindow = function(appId) {
     toggleStartMenu();
@@ -2611,8 +2576,6 @@ function browserNavigate(query) {
         'dailypets.fun': getDailyPetsWebsite,
         'www.quizmaster.io': getQuizMasterWebsite,
         'quizmaster.io': getQuizMasterWebsite,
-        'www.tinytales.org': getTinyTalesWebsite,
-        'tinytales.org': getTinyTalesWebsite,
         'www.buildcraft.tech': getBuildCraftWebsite,
         'buildcraft.tech': getBuildCraftWebsite,
         'www.stargazer.space': getStargazerWebsite,
@@ -2625,6 +2588,18 @@ function browserNavigate(query) {
         'sketchwild.org': getSketchWildWebsite,
         'www.factblast.fun': getFactBlastWebsite,
         'factblast.fun': getFactBlastWebsite,
+        'www.frostbite.net': getFrostBiteWebsite,
+        'frostbite.net': getFrostBiteWebsite,
+        'www.neonpulse.fun': getNeonPulseWebsite,
+        'neonpulse.fun': getNeonPulseWebsite,
+        'www.plantpedia.net': getPlantPediaWebsite,
+        'plantpedia.net': getPlantPediaWebsite,
+        'www.brickyard.io': getBrickyardWebsite,
+        'brickyard.io': getBrickyardWebsite,
+        'www.funnybones.fun': getFunnyBonesWebsite,
+        'funnybones.fun': getFunnyBonesWebsite,
+        'www.cloudjournal.org': getCloudJournalWebsite,
+        'cloudjournal.org': getCloudJournalWebsite,
     };
     const siteKey = Object.keys(websites).find(k => query.toLowerCase().includes(k));
 
@@ -2634,7 +2609,7 @@ function browserNavigate(query) {
     } else if (key) {
         content = results[key];
     } else {
-        content = `<div class="result-item"><h3>🔍 No results found for "${query}"</h3><p>Try searching: space, dinosaurs, animals, ocean, science, robots, football, or history.</p><p>Or visit a website: <a onclick="browserNavigate('www.zappycook.net')" style="cursor:pointer;color:#4285f4">www.zappycook.net</a> · <a onclick="browserNavigate('www.pixelvault.io')" style="cursor:pointer;color:#4285f4">www.pixelvault.io</a> · <a onclick="browserNavigate('www.cosmicblog.org')" style="cursor:pointer;color:#4285f4">www.cosmicblog.org</a> · <a onclick="browserNavigate('www.novaspark.tech')" style="cursor:pointer;color:#4285f4">www.novaspark.tech</a> · <a onclick="browserNavigate('www.dailypets.fun')" style="cursor:pointer;color:#4285f4">www.dailypets.fun</a> · <a onclick="browserNavigate('www.quizmaster.io')" style="cursor:pointer;color:#4285f4">www.quizmaster.io</a> · <a onclick="browserNavigate('www.tinytales.org')" style="cursor:pointer;color:#4285f4">www.tinytales.org</a> · <a onclick="browserNavigate('www.buildcraft.tech')" style="cursor:pointer;color:#4285f4">www.buildcraft.tech</a> · <a onclick="browserNavigate('www.stargazer.space')" style="cursor:pointer;color:#4285f4">www.stargazer.space</a> · <a onclick="browserNavigate('www.munchbox.net')" style="cursor:pointer;color:#4285f4">www.munchbox.net</a> · <a onclick="browserNavigate('www.codecubs.io')" style="cursor:pointer;color:#4285f4">www.codecubs.io</a> · <a onclick="browserNavigate('www.sketchwild.org')" style="cursor:pointer;color:#4285f4">www.sketchwild.org</a> · <a onclick="browserNavigate('www.factblast.fun')" style="cursor:pointer;color:#4285f4">www.factblast.fun</a></p></div>`;
+        content = `<div class="result-item"><h3>🔍 No results found for "${query}"</h3><p>Try searching: space, dinosaurs, animals, ocean, science, robots, football, or history.</p><p>Or visit a website: <a onclick="browserNavigate('www.zappycook.net')" style="cursor:pointer;color:#4285f4">www.zappycook.net</a> · <a onclick="browserNavigate('www.pixelvault.io')" style="cursor:pointer;color:#4285f4">www.pixelvault.io</a> · <a onclick="browserNavigate('www.cosmicblog.org')" style="cursor:pointer;color:#4285f4">www.cosmicblog.org</a> · <a onclick="browserNavigate('www.novaspark.tech')" style="cursor:pointer;color:#4285f4">www.novaspark.tech</a> · <a onclick="browserNavigate('www.dailypets.fun')" style="cursor:pointer;color:#4285f4">www.dailypets.fun</a> · <a onclick="browserNavigate('www.quizmaster.io')" style="cursor:pointer;color:#4285f4">www.quizmaster.io</a> · <a onclick="browserNavigate('www.buildcraft.tech')" style="cursor:pointer;color:#4285f4">www.buildcraft.tech</a> · <a onclick="browserNavigate('www.stargazer.space')" style="cursor:pointer;color:#4285f4">www.stargazer.space</a> · <a onclick="browserNavigate('www.munchbox.net')" style="cursor:pointer;color:#4285f4">www.munchbox.net</a> · <a onclick="browserNavigate('www.codecubs.io')" style="cursor:pointer;color:#4285f4">www.codecubs.io</a> · <a onclick="browserNavigate('www.sketchwild.org')" style="cursor:pointer;color:#4285f4">www.sketchwild.org</a> · <a onclick="browserNavigate('www.factblast.fun')" style="cursor:pointer;color:#4285f4">www.factblast.fun</a> · <a onclick="browserNavigate('www.frostbite.net')" style="cursor:pointer;color:#4285f4">www.frostbite.net</a> · <a onclick="browserNavigate('www.neonpulse.fun')" style="cursor:pointer;color:#4285f4">www.neonpulse.fun</a> · <a onclick="browserNavigate('www.plantpedia.net')" style="cursor:pointer;color:#4285f4">www.plantpedia.net</a> · <a onclick="browserNavigate('www.brickyard.io')" style="cursor:pointer;color:#4285f4">www.brickyard.io</a> · <a onclick="browserNavigate('www.funnybones.fun')" style="cursor:pointer;color:#4285f4">www.funnybones.fun</a> · <a onclick="browserNavigate('www.cloudjournal.org')" style="cursor:pointer;color:#4285f4">www.cloudjournal.org</a></p></div>`;
     }
 
     if (siteKey) {
@@ -3303,37 +3278,6 @@ function getQuizMasterWebsite() {
     `;
 }
 
-function getTinyTalesWebsite() {
-    return `
-        <div class="fake-website">
-            <div class="fake-site-header" style="background:linear-gradient(135deg,#f06292,#ba68c8);padding:20px;border-radius:8px 8px 0 0;color:white;">
-                <h1 style="margin:0;font-size:28px;">📖 TinyTales.org</h1>
-                <p style="margin:4px 0 0;opacity:0.9;">Short stories for curious young readers</p>
-            </div>
-            <div class="fake-site-body" style="background:#fff8fd;padding:20px;border-radius:0 0 8px 8px;border:1px solid #f3d5f5;">
-                <h2 style="color:#ba68c8;">Stories This Week</h2>
-                <div style="display:flex;flex-direction:column;gap:14px;margin-top:12px;">
-                    <div style="background:white;border-radius:10px;padding:16px;border-left:4px solid #f06292;box-shadow:0 1px 6px rgba(0,0,0,0.06);">
-                        <h3 style="margin:0 0 6px;color:#880e4f;">🌟 The Star That Lost Its Glow</h3>
-                        <p style="font-size:13px;color:#555;margin:0 0 6px;">Far above the clouds lived a little star named Pip. One night Pip's light went out — and she had to travel across the whole sky to find it again...</p>
-                        <span style="font-size:12px;color:#ba68c8;">📚 Ages 6–9 &nbsp;|&nbsp; ⏱ 3 min read</span>
-                    </div>
-                    <div style="background:white;border-radius:10px;padding:16px;border-left:4px solid #ba68c8;box-shadow:0 1px 6px rgba(0,0,0,0.06);">
-                        <h3 style="margin:0 0 6px;color:#4a148c;">🐢 The Tortoise Who Climbed a Cloud</h3>
-                        <p style="font-size:13px;color:#555;margin:0 0 6px;">Everyone said tortoises were too slow to reach the clouds. Herman the tortoise decided to prove them wrong, one tiny step at a time...</p>
-                        <span style="font-size:12px;color:#ba68c8;">📚 Ages 5–8 &nbsp;|&nbsp; ⏱ 4 min read</span>
-                    </div>
-                    <div style="background:white;border-radius:10px;padding:16px;border-left:4px solid #f06292;box-shadow:0 1px 6px rgba(0,0,0,0.06);">
-                        <h3 style="margin:0 0 6px;color:#880e4f;">🧁 The Baker Who Baked a Dragon</h3>
-                        <p style="font-size:13px;color:#555;margin:0 0 6px;">Marta's enchanted oven could bake anything to life. One Tuesday she accidentally made a very small, very hungry dragon out of gingerbread...</p>
-                        <span style="font-size:12px;color:#ba68c8;">📚 Ages 7–10 &nbsp;|&nbsp; ⏱ 5 min read</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    `;
-}
-
 function getBuildCraftWebsite() {
     return `
         <div class="fake-website">
@@ -3563,6 +3507,243 @@ function getFactBlastWebsite() {
     `;
 }
 
+function getFrostBiteWebsite() {
+    return `
+        <div class="fake-website">
+            <div class="fake-site-header" style="background:linear-gradient(135deg,#0288d1,#4fc3f7);padding:20px;border-radius:8px 8px 0 0;color:white;">
+                <h1 style="margin:0;font-size:28px;">❄️ FrostBite.net</h1>
+                <p style="margin:4px 0 0;opacity:0.9;">Cool recipes, frozen treats & chilly cooking ideas</p>
+            </div>
+            <div class="fake-site-body" style="background:#e3f2fd;padding:20px;border-radius:0 0 8px 8px;border:1px solid #b3e5fc;">
+                <h2 style="color:#0277bd;">Featured Recipes 🍦</h2>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:12px;">
+                    <div style="background:white;border-radius:10px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.07);">
+                        <div style="font-size:36px;text-align:center;">🍋</div>
+                        <h3 style="margin:8px 0 4px;text-align:center;">Lemon Sorbet</h3>
+                        <p style="font-size:13px;color:#555;">Mix 1 cup lemon juice, 1 cup sugar syrup and 1 cup water. Freeze for 4 hours, stirring every hour. Creamy, tangy perfection!</p>
+                        <p style="font-size:12px;color:#0288d1;">⏱ 20 min prep &nbsp;|&nbsp; ❄️ 4 hrs freeze</p>
+                    </div>
+                    <div style="background:white;border-radius:10px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.07);">
+                        <div style="font-size:36px;text-align:center;">🍓</div>
+                        <h3 style="margin:8px 0 4px;text-align:center;">Strawberry Ice Pops</h3>
+                        <p style="font-size:13px;color:#555;">Blend fresh strawberries with coconut milk and a little honey. Pour into moulds and freeze overnight. 5 ingredients, zero fuss!</p>
+                        <p style="font-size:12px;color:#0288d1;">⏱ 10 min prep &nbsp;|&nbsp; ❄️ 8 hrs freeze</p>
+                    </div>
+                    <div style="background:white;border-radius:10px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.07);">
+                        <div style="font-size:36px;text-align:center;">🍫</div>
+                        <h3 style="margin:8px 0 4px;text-align:center;">Choc Mint Semifreddo</h3>
+                        <p style="font-size:13px;color:#555;">Fold crushed mint chocolate into whipped cream and condensed milk. Freeze in a loaf tin for 6 hours and slice to serve.</p>
+                        <p style="font-size:12px;color:#0288d1;">⏱ 25 min prep &nbsp;|&nbsp; ❄️ 6 hrs freeze</p>
+                    </div>
+                    <div style="background:white;border-radius:10px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.07);">
+                        <div style="font-size:36px;text-align:center;">🥭</div>
+                        <h3 style="margin:8px 0 4px;text-align:center;">Mango Frozen Yoghurt</h3>
+                        <p style="font-size:13px;color:#555;">Blitz ripe mango with Greek yoghurt and a squeeze of lime. Freeze in a tub and scoop like ice cream. Tropical and refreshing!</p>
+                        <p style="font-size:12px;color:#0288d1;">⏱ 15 min prep &nbsp;|&nbsp; ❄️ 5 hrs freeze</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function getNeonPulseWebsite() {
+    return `
+        <div class="fake-website">
+            <div class="fake-site-header" style="background:linear-gradient(135deg,#1a0533,#4a0080);padding:20px;border-radius:8px 8px 0 0;color:white;">
+                <h1 style="margin:0;font-size:28px;">🎵 NeonPulse.fun</h1>
+                <p style="margin:4px 0 0;opacity:0.9;">Music charts, artist spotlights & new releases</p>
+            </div>
+            <div class="fake-site-body" style="background:#0d0d1a;padding:20px;border-radius:0 0 8px 8px;border:1px solid #2a0050;">
+                <h2 style="color:#e040fb;">🔥 Top Tracks This Week</h2>
+                <div style="display:flex;flex-direction:column;gap:10px;margin-top:12px;">
+                    <div style="background:#1a0533;border-radius:10px;padding:14px;display:flex;align-items:center;gap:14px;border:1px solid #4a0080;">
+                        <span style="font-size:22px;font-weight:bold;color:#e040fb;width:28px;">1</span>
+                        <div style="font-size:32px;">🎤</div>
+                        <div><p style="color:white;margin:0;font-weight:600;">Midnight Cascade</p><p style="color:#aaa;font-size:12px;margin:2px 0 0;">Nova Skye &nbsp;·&nbsp; 3:42 &nbsp;·&nbsp; Synthpop</p></div>
+                        <span style="margin-left:auto;background:#e040fb;color:black;font-size:10px;padding:2px 8px;border-radius:20px;font-weight:700;">NEW</span>
+                    </div>
+                    <div style="background:#1a0533;border-radius:10px;padding:14px;display:flex;align-items:center;gap:14px;border:1px solid #4a0080;">
+                        <span style="font-size:22px;font-weight:bold;color:#e040fb;width:28px;">2</span>
+                        <div style="font-size:32px;">🥁</div>
+                        <div><p style="color:white;margin:0;font-weight:600;">Iron Shore</p><p style="color:#aaa;font-size:12px;margin:2px 0 0;">The Reef Kings &nbsp;·&nbsp; 4:11 &nbsp;·&nbsp; Indie Rock</p></div>
+                    </div>
+                    <div style="background:#1a0533;border-radius:10px;padding:14px;display:flex;align-items:center;gap:14px;border:1px solid #4a0080;">
+                        <span style="font-size:22px;font-weight:bold;color:#e040fb;width:28px;">3</span>
+                        <div style="font-size:32px;">🎹</div>
+                        <div><p style="color:white;margin:0;font-weight:600;">Glass Morning</p><p style="color:#aaa;font-size:12px;margin:2px 0 0;">Elara Finn &nbsp;·&nbsp; 3:55 &nbsp;·&nbsp; Dream Pop</p></div>
+                    </div>
+                    <div style="background:#1a0533;border-radius:10px;padding:14px;display:flex;align-items:center;gap:14px;border:1px solid #4a0080;">
+                        <span style="font-size:22px;font-weight:bold;color:#e040fb;width:28px;">4</span>
+                        <div style="font-size:32px;">🎸</div>
+                        <div><p style="color:white;margin:0;font-weight:600;">Voltage City</p><p style="color:#aaa;font-size:12px;margin:2px 0 0;">Static Run &nbsp;·&nbsp; 4:28 &nbsp;·&nbsp; Electronic Rock</p></div>
+                        <span style="margin-left:auto;background:#e040fb;color:black;font-size:10px;padding:2px 8px;border-radius:20px;font-weight:700;">NEW</span>
+                    </div>
+                    <div style="background:#1a0533;border-radius:10px;padding:14px;display:flex;align-items:center;gap:14px;border:1px solid #4a0080;">
+                        <span style="font-size:22px;font-weight:bold;color:#e040fb;width:28px;">5</span>
+                        <div style="font-size:32px;">🎺</div>
+                        <div><p style="color:white;margin:0;font-weight:600;">Copper Bloom</p><p style="color:#aaa;font-size:12px;margin:2px 0 0;">Juno Weld &nbsp;·&nbsp; 3:19 &nbsp;·&nbsp; Nu-Jazz</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function getPlantPediaWebsite() {
+    return `
+        <div class="fake-website">
+            <div class="fake-site-header" style="background:linear-gradient(135deg,#1b5e20,#43a047);padding:20px;border-radius:8px 8px 0 0;color:white;">
+                <h1 style="margin:0;font-size:28px;">🌿 PlantPedia.net</h1>
+                <p style="margin:4px 0 0;opacity:0.9;">The encyclopaedia of plants, trees & flowers</p>
+            </div>
+            <div class="fake-site-body" style="background:#f1f8e9;padding:20px;border-radius:0 0 8px 8px;border:1px solid #c8e6c9;">
+                <h2 style="color:#2e7d32;">🌱 Plant of the Week</h2>
+                <div style="background:white;border-radius:12px;padding:18px;box-shadow:0 2px 8px rgba(0,0,0,0.07);margin-bottom:16px;">
+                    <div style="font-size:52px;text-align:center;">🌵</div>
+                    <h3 style="text-align:center;color:#1b5e20;margin:8px 0 4px;">Saguaro Cactus</h3>
+                    <p style="font-size:13px;color:#555;text-align:center;margin:0 0 10px;font-style:italic;">Carnegiea gigantea</p>
+                    <p style="font-size:13px;color:#444;line-height:1.7;">The iconic saguaro can grow up to 12 metres tall and live for 150 years. Its arm-like branches don't appear until the plant is 50–75 years old. A single saguaro can absorb 750 litres of water during one rain!</p>
+                </div>
+                <h2 style="color:#2e7d32;">🌸 Browse by Type</h2>
+                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px;">
+                    <div style="background:white;border-radius:10px;padding:12px;text-align:center;box-shadow:0 1px 6px rgba(0,0,0,0.06);">
+                        <div style="font-size:32px;">🌳</div><p style="color:#2e7d32;font-weight:600;margin:6px 0 2px;">Trees</p><p style="color:#888;font-size:11px;">482 species</p>
+                    </div>
+                    <div style="background:white;border-radius:10px;padding:12px;text-align:center;box-shadow:0 1px 6px rgba(0,0,0,0.06);">
+                        <div style="font-size:32px;">🌺</div><p style="color:#2e7d32;font-weight:600;margin:6px 0 2px;">Flowers</p><p style="color:#888;font-size:11px;">1,204 species</p>
+                    </div>
+                    <div style="background:white;border-radius:10px;padding:12px;text-align:center;box-shadow:0 1px 6px rgba(0,0,0,0.06);">
+                        <div style="font-size:32px;">🍄</div><p style="color:#2e7d32;font-weight:600;margin:6px 0 2px;">Fungi</p><p style="color:#888;font-size:11px;">317 species</p>
+                    </div>
+                    <div style="background:white;border-radius:10px;padding:12px;text-align:center;box-shadow:0 1px 6px rgba(0,0,0,0.06);">
+                        <div style="font-size:32px;">🌾</div><p style="color:#2e7d32;font-weight:600;margin:6px 0 2px;">Grasses</p><p style="color:#888;font-size:11px;">201 species</p>
+                    </div>
+                    <div style="background:white;border-radius:10px;padding:12px;text-align:center;box-shadow:0 1px 6px rgba(0,0,0,0.06);">
+                        <div style="font-size:32px;">🌿</div><p style="color:#2e7d32;font-weight:600;margin:6px 0 2px;">Ferns</p><p style="color:#888;font-size:11px;">158 species</p>
+                    </div>
+                    <div style="background:white;border-radius:10px;padding:12px;text-align:center;box-shadow:0 1px 6px rgba(0,0,0,0.06);">
+                        <div style="font-size:32px;">🌵</div><p style="color:#2e7d32;font-weight:600;margin:6px 0 2px;">Cacti</p><p style="color:#888;font-size:11px;">93 species</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function getBrickyardWebsite() {
+    return `
+        <div class="fake-website">
+            <div class="fake-site-header" style="background:linear-gradient(135deg,#e53935,#fb8c00);padding:20px;border-radius:8px 8px 0 0;color:white;">
+                <h1 style="margin:0;font-size:28px;">🧱 Brickyard.io</h1>
+                <p style="margin:4px 0 0;opacity:0.9;">Brick building guides, set reviews & custom designs</p>
+            </div>
+            <div class="fake-site-body" style="background:#fff8f0;padding:20px;border-radius:0 0 8px 8px;border:1px solid #ffe0b2;">
+                <h2 style="color:#bf360c;">🏆 Build of the Month</h2>
+                <div style="background:white;border-radius:12px;padding:18px;box-shadow:0 2px 8px rgba(0,0,0,0.07);margin-bottom:16px;">
+                    <div style="font-size:52px;text-align:center;">🚂</div>
+                    <h3 style="text-align:center;color:#bf360c;margin:8px 0 4px;">The Grand Steam Express</h3>
+                    <p style="font-size:13px;color:#555;text-align:center;margin:0;">Submitted by user <strong>BrickWizard99</strong></p>
+                    <p style="font-size:13px;color:#444;margin:10px 0 0;line-height:1.7;">An 8,400-piece recreation of a Victorian steam locomotive, complete with working pistons and a detailed coal carriage. Took 6 weeks to design and 3 days to build!</p>
+                </div>
+                <h2 style="color:#bf360c;">📦 Latest Set Reviews</h2>
+                <div style="display:flex;flex-direction:column;gap:10px;margin-top:12px;">
+                    <div style="background:white;border-radius:10px;padding:14px;display:flex;gap:14px;box-shadow:0 1px 6px rgba(0,0,0,0.06);">
+                        <div style="font-size:36px;">🏯</div>
+                        <div><p style="font-weight:600;margin:0 0 4px;">Medieval Castle Siege — Set #21407</p><p style="font-size:13px;color:#555;margin:0;">3,200 pieces, 8 minifigures, working drawbridge. Rating: ⭐⭐⭐⭐⭐</p></div>
+                    </div>
+                    <div style="background:white;border-radius:10px;padding:14px;display:flex;gap:14px;box-shadow:0 1px 6px rgba(0,0,0,0.06);">
+                        <div style="font-size:36px;">🚀</div>
+                        <div><p style="font-weight:600;margin:0 0 4px;">Deep Space Rover — Set #60482</p><p style="font-size:13px;color:#555;margin:0;">1,540 pieces, articulated arms, glow-in-dark bricks. Rating: ⭐⭐⭐⭐</p></div>
+                    </div>
+                    <div style="background:white;border-radius:10px;padding:14px;display:flex;gap:14px;box-shadow:0 1px 6px rgba(0,0,0,0.06);">
+                        <div style="font-size:36px;">🌆</div>
+                        <div><p style="font-weight:600;margin:0 0 4px;">City Corner Bakery — Set #10281</p><p style="font-size:13px;color:#555;margin:0;">920 pieces, full interior detail, opening roof. Rating: ⭐⭐⭐⭐⭐</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function getFunnyBonesWebsite() {
+    return `
+        <div class="fake-website">
+            <div class="fake-site-header" style="background:linear-gradient(135deg,#f9a825,#ffcc02);padding:20px;border-radius:8px 8px 0 0;color:#1a1a1a;">
+                <h1 style="margin:0;font-size:28px;">😂 FunnyBones.fun</h1>
+                <p style="margin:4px 0 0;opacity:0.8;">Clean jokes, silly riddles & laugh-out-loud comedy</p>
+            </div>
+            <div class="fake-site-body" style="background:#fffde7;padding:20px;border-radius:0 0 8px 8px;border:1px solid #fff176;">
+                <h2 style="color:#f57f17;">😄 Today's Joke Pack</h2>
+                <div style="display:flex;flex-direction:column;gap:12px;margin-top:12px;">
+                    <div style="background:white;border-radius:12px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+                        <p style="font-weight:600;margin:0 0 8px;color:#5d4037;">Why don't scientists trust atoms?</p>
+                        <p style="color:#888;font-size:13px;font-style:italic;margin:0;">Because they make up everything! 😄</p>
+                    </div>
+                    <div style="background:white;border-radius:12px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+                        <p style="font-weight:600;margin:0 0 8px;color:#5d4037;">What do you call a sleeping dinosaur?</p>
+                        <p style="color:#888;font-size:13px;font-style:italic;margin:0;">A dino-snore! 🦕💤</p>
+                    </div>
+                    <div style="background:white;border-radius:12px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+                        <p style="font-weight:600;margin:0 0 8px;color:#5d4037;">Why did the bicycle fall over?</p>
+                        <p style="color:#888;font-size:13px;font-style:italic;margin:0;">Because it was two-tired! 🚲</p>
+                    </div>
+                    <div style="background:white;border-radius:12px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+                        <p style="font-weight:600;margin:0 0 8px;color:#5d4037;">What did the ocean say to the beach?</p>
+                        <p style="color:#888;font-size:13px;font-style:italic;margin:0;">Nothing, it just waved! 🌊</p>
+                    </div>
+                    <div style="background:white;border-radius:12px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+                        <p style="font-weight:600;margin:0 0 8px;color:#5d4037;">I told my computer I needed a break...</p>
+                        <p style="color:#888;font-size:13px;font-style:italic;margin:0;">Now it won't stop sending me Kit-Kat ads! 🍫</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function getCloudJournalWebsite() {
+    return `
+        <div class="fake-website">
+            <div class="fake-site-header" style="background:linear-gradient(135deg,#37474f,#78909c);padding:20px;border-radius:8px 8px 0 0;color:white;">
+                <h1 style="margin:0;font-size:28px;">☁️ CloudJournal.org</h1>
+                <p style="margin:4px 0 0;opacity:0.9;">Weather diaries, nature observations & sky spotting</p>
+            </div>
+            <div class="fake-site-body" style="background:#eceff1;padding:20px;border-radius:0 0 8px 8px;border:1px solid #cfd8dc;">
+                <h2 style="color:#37474f;">☀️ Today's Weather Snapshot</h2>
+                <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:12px 0 18px;">
+                    <div style="background:white;border-radius:10px;padding:12px;text-align:center;box-shadow:0 1px 6px rgba(0,0,0,0.07);">
+                        <div style="font-size:30px;">🌡️</div><p style="font-weight:bold;color:#37474f;margin:4px 0 0;">18°C</p><p style="color:#888;font-size:11px;">Temperature</p>
+                    </div>
+                    <div style="background:white;border-radius:10px;padding:12px;text-align:center;box-shadow:0 1px 6px rgba(0,0,0,0.07);">
+                        <div style="font-size:30px;">💨</div><p style="font-weight:bold;color:#37474f;margin:4px 0 0;">14 km/h</p><p style="color:#888;font-size:11px;">Wind Speed</p>
+                    </div>
+                    <div style="background:white;border-radius:10px;padding:12px;text-align:center;box-shadow:0 1px 6px rgba(0,0,0,0.07);">
+                        <div style="font-size:30px;">💧</div><p style="font-weight:bold;color:#37474f;margin:4px 0 0;">62%</p><p style="color:#888;font-size:11px;">Humidity</p>
+                    </div>
+                    <div style="background:white;border-radius:10px;padding:12px;text-align:center;box-shadow:0 1px 6px rgba(0,0,0,0.07);">
+                        <div style="font-size:30px;">⛅</div><p style="font-weight:bold;color:#37474f;margin:4px 0 0;">Partly</p><p style="color:#888;font-size:11px;">Cloud Cover</p>
+                    </div>
+                </div>
+                <h2 style="color:#37474f;">🔍 Cloud Spotter's Guide</h2>
+                <div style="display:flex;flex-direction:column;gap:10px;margin-top:12px;">
+                    <div style="background:white;border-radius:10px;padding:14px;border-left:4px solid #90a4ae;box-shadow:0 1px 6px rgba(0,0,0,0.06);">
+                        <p style="font-weight:600;margin:0 0 4px;color:#37474f;">☁️ Cumulus — The "Fair Weather" Cloud</p>
+                        <p style="font-size:13px;color:#555;margin:0;">Fluffy, white, cauliflower-shaped clouds found at low to mid altitudes. When small, they mean good weather ahead. When they grow tall, watch out for storms!</p>
+                    </div>
+                    <div style="background:white;border-radius:10px;padding:14px;border-left:4px solid #90a4ae;box-shadow:0 1px 6px rgba(0,0,0,0.06);">
+                        <p style="font-weight:600;margin:0 0 4px;color:#37474f;">🌫️ Stratus — The Blanket Cloud</p>
+                        <p style="font-size:13px;color:#555;margin:0;">Grey, flat layers that cover the whole sky like a blanket. Often bring drizzle or light rain. They form when warm, moist air cools slowly near the ground.</p>
+                    </div>
+                    <div style="background:white;border-radius:10px;padding:14px;border-left:4px solid #90a4ae;box-shadow:0 1px 6px rgba(0,0,0,0.06);">
+                        <p style="font-weight:600;margin:0 0 4px;color:#37474f;">🌩️ Cumulonimbus — The Storm Giant</p>
+                        <p style="font-size:13px;color:#555;margin:0;">These towering clouds can reach 15 km high! They bring heavy rain, lightning, hail and even tornadoes. The anvil-shaped top is a telltale sign one is forming nearby.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
 
 function browserGoBack() {
     // Simple back - just go to homepage
@@ -3590,13 +3771,18 @@ function browserGoBack() {
                 <div class="shortcut website-shortcut" onclick="browserNavigate('www.cosmicblog.org')">🌌 CosmicBlog.org</div>
                 <div class="shortcut website-shortcut" onclick="browserNavigate('www.dailypets.fun')">🐾 DailyPets.fun</div>
                 <div class="shortcut website-shortcut" onclick="browserNavigate('www.quizmaster.io')">🧩 QuizMaster.io</div>
-                <div class="shortcut website-shortcut" onclick="browserNavigate('www.tinytales.org')">📖 TinyTales.org</div>
                 <div class="shortcut website-shortcut" onclick="browserNavigate('www.buildcraft.tech')">🔧 BuildCraft.tech</div>
                 <div class="shortcut website-shortcut" onclick="browserNavigate('www.stargazer.space')">🔭 Stargazer.space</div>
                 <div class="shortcut website-shortcut" onclick="browserNavigate('www.munchbox.net')">🍱 MunchBox.net</div>
                 <div class="shortcut website-shortcut" onclick="browserNavigate('www.codecubs.io')">💻 CodeCubs.io</div>
                 <div class="shortcut website-shortcut" onclick="browserNavigate('www.sketchwild.org')">🎨 SketchWild.org</div>
                 <div class="shortcut website-shortcut" onclick="browserNavigate('www.factblast.fun')">💥 FactBlast.fun</div>
+                <div class="shortcut website-shortcut" onclick="browserNavigate('www.frostbite.net')">❄️ FrostBite.net</div>
+                <div class="shortcut website-shortcut" onclick="browserNavigate('www.neonpulse.fun')">🎵 NeonPulse.fun</div>
+                <div class="shortcut website-shortcut" onclick="browserNavigate('www.plantpedia.net')">🌿 PlantPedia.net</div>
+                <div class="shortcut website-shortcut" onclick="browserNavigate('www.brickyard.io')">🧱 Brickyard.io</div>
+                <div class="shortcut website-shortcut" onclick="browserNavigate('www.funnybones.fun')">😂 FunnyBones.fun</div>
+                <div class="shortcut website-shortcut" onclick="browserNavigate('www.cloudjournal.org')">☁️ CloudJournal.org</div>
             </div>
         </div>
     `;
@@ -3760,12 +3946,11 @@ const AI_KNOWLEDGE = [
     { keys: ['eye','eyes','sight','vision'], answer: '👁️ Human <b>eyes</b> can distinguish about 10 million colours! The eye can process 36,000 pieces of information per hour. Your eyes focus by changing the shape of the lens. The cornea is the only part of the body with no blood supply — it gets oxygen directly from the air. Eagles can see 4–5 times farther than humans.' },
     { keys: ['sleep','sleeping','dream','dreams'], answer: '💤 <b>Sleep</b> is essential for health! Adults need 7–9 hours; kids need 9–12 hours. Your brain is very active during sleep — it processes memories and repairs itself. You spend about 2 hours dreaming every night. The record for staying awake is 11 days (but that\'s very dangerous!). Dolphins sleep with one half of their brain at a time.' },
     // Simple PC apps
-    { keys: ['simple pc','this computer','this app','this program'], answer: '💻 <b>Simple PC</b> is your virtual computer! You can open apps from the desktop or the Start menu. Available apps include: Web Browser, Notes, Calculator, 2048, Memory Game, Music Player, Books, Throaball, Calendar, Net2, and Simple AI (that\'s me!)' },
+    { keys: ['simple pc','this computer','this app','this program'], answer: '💻 <b>Simple PC</b> is your virtual computer! You can open apps from the desktop or the Start menu. Available apps include: Web Browser, Notes, Calculator, 2048, Memory Game, Books, Throaball, Calendar, Net2, Vibe and Simple AI (that\'s me!)' },
     { keys: ['notes','notepad'], answer: '📝 The <b>Notes</b> app on Simple PC lets you write and save text notes. Click the Notes icon on the desktop or find it in the Start menu to open it!' },
     { keys: ['calculator'], answer: '🧮 The <b>Calculator</b> app can do basic maths — addition, subtraction, multiplication and division. Find it on the desktop or Start menu!' },
     { keys: ['2048'], answer: '🔢 <b>2048</b> is a sliding tile puzzle game! You combine matching numbers by swiping tiles. The goal is to reach the 2048 tile. Use arrow keys to play. Can you get to 4096?!' },
     { keys: ['memory game','memory match'], answer: '🃏 The <b>Memory Game</b> has a grid of face-down cards. Flip two at a time — if they match, they stay face-up. Try to match all pairs in as few moves as possible! Find it on the Start menu.' },
-    { keys: ['music','music player','songs'], answer: '🎵 The <b>Music Player</b> app on Simple PC has a collection of songs you can listen to. Find it in the Start menu and hit play!' },
     { keys: ['net2','streaming','show','shows','watch'], answer: '🎬 <b>Net2</b> is Simple PC\'s streaming app — like a mini Netflix! It shows ASCII art animations of TV shows. Find it on the desktop.' },
     { keys: ['throaball','football game'], answer: '⚽ <b>Throaball</b> is a football throwing game on Simple PC! Press SPACEBAR to charge and throw the ball at the targets. Hit the targets for points and beat your high score!' },
     { keys: ['calendar'], answer: '📅 The <b>Calendar</b> app shows the current date and lets you browse months. Find it on the desktop!' },
@@ -3914,31 +4099,40 @@ function initBooksApp(contentEl) {
 
 // ===== VIBE SOCIAL MEDIA =====
 const VIBE_USERS = [
-    { id:'zara_ai',   name:'Zara Lin',      avatar:'🧬', bg:'linear-gradient(135deg,#a18cd1,#fbc2eb)', bio:'AI researcher & coffee addict ☕ | Exploring what it means to be digital', followers:14200, following:312 },
-    { id:'nova_flux',  name:'Nova Flux',     avatar:'⚡', bg:'linear-gradient(135deg,#f7971e,#ffd200)', bio:'Just a photon passing through 🌌 | Music. Code. Chaos.', followers:8940,  following:201 },
-    { id:'byte_poet',  name:'Byte Poet',     avatar:'📟', bg:'linear-gradient(135deg,#1a1a2e,#0072ff)', bio:'Writing verse in binary 01001100 | Nerd with feelings', followers:5510,  following:489 },
-    { id:'sol_dreams', name:'Sol Dreams',    avatar:'🌻', bg:'linear-gradient(135deg,#f9d423,#e14fad)', bio:'Sunflower soul living a pixel life 🌻 | Art & vibes only', followers:22700, following:880 },
-    { id:'echo_9',     name:'Echo Nine',     avatar:'🔊', bg:'linear-gradient(135deg,#43e97b,#38f9d7)', bio:'Sound designer || Building worlds through audio waves', followers:3300,  following:120 },
-    { id:'kira_spark', name:'Kira Spark',    avatar:'✨', bg:'linear-gradient(135deg,#fd79a8,#e84393)', bio:'Sparking joy in a boring timeline ✨ | Pop culture & science', followers:61000, following:1200 },
-    { id:'axl_void',   name:'Axl Void',      avatar:'🌑', bg:'linear-gradient(135deg,#2d3436,#636e72)', bio:'Silence is data | Minimalism & dark mode forever 🌑', followers:9800,  following:44 },
-    { id:'prism_kai',  name:'Prism Kai',     avatar:'🌈', bg:'linear-gradient(135deg,#fd1d1d,#833ab4,#fcb045)', bio:'Refracted light 🌈 | Queer joy & tech ethics', followers:18400, following:660 },
+    { id:'zara_ai',    name:'Zara Lin',       avatar:'🧬', bg:'linear-gradient(135deg,#a18cd1,#fbc2eb)', bio:'AI researcher & coffee addict ☕ | Exploring what it means to be digital | she/her', followers:14200, following:312 },
+    { id:'nova_flux',  name:'Nova Flux',       avatar:'⚡', bg:'linear-gradient(135deg,#f7971e,#ffd200)', bio:'Just a photon passing through 🌌 | Music producer. Coder. Chronic insomniac.', followers:8940,  following:201 },
+    { id:'byte_poet',  name:'Byte Poet',       avatar:'📟', bg:'linear-gradient(135deg,#1a1a2e,#0072ff)', bio:'Writing verse in binary 01001100 | Senior dev @ somewhere | Nerd with feelings', followers:5510,  following:489 },
+    { id:'sol_dreams', name:'Sol Dreams',      avatar:'🌻', bg:'linear-gradient(135deg,#f9d423,#e14fad)', bio:'Digital artist 🌻 | Commissions OPEN | Art is the only language that matters', followers:22700, following:880 },
+    { id:'echo_9',     name:'Echo Nine',       avatar:'🔊', bg:'linear-gradient(135deg,#43e97b,#38f9d7)', bio:'Sound designer & field recordist || Building worlds one audio wave at a time', followers:3300,  following:120 },
+    { id:'kira_spark', name:'Kira Spark',      avatar:'✨', bg:'linear-gradient(135deg,#fd79a8,#e84393)', bio:'Pop culture + science 💥 | 61k followers somehow | she/her | chaos enjoyer', followers:61000, following:1200 },
+    { id:'axl_void',   name:'Axl Void',        avatar:'🌑', bg:'linear-gradient(135deg,#2d3436,#636e72)', bio:'Minimalist. Dark mode 24/7. Silence is data. | he/him', followers:9800,  following:44 },
+    { id:'prism_kai',  name:'Prism Kai',       avatar:'🌈', bg:'linear-gradient(135deg,#fd1d1d,#833ab4,#fcb045)', bio:'Queer joy 🌈 & tech ethics | UX designer | they/them | opinions my own', followers:18400, following:660 },
+    { id:'milo_ctrl',  name:'Milo Ctrl',       avatar:'🎮', bg:'linear-gradient(135deg,#0f2027,#203a43,#2c5364)', bio:'Game dev by day, speedrunner by night 🎮 | PB: 1:42:07 | he/him', followers:31200, following:540 },
+    { id:'lena_bloom', name:'Lena Bloom',      avatar:'🌷', bg:'linear-gradient(135deg,#e0c3fc,#8ec5fc)', bio:'Botanist 🌿 | Urban gardening advocate | slow mornings & good coffee | she/her', followers:7600,  following:290 },
+    { id:'drift_code', name:'Drift Code',      avatar:'🌊', bg:'linear-gradient(135deg,#0052d4,#65c7f7,#9cecfb)', bio:'Freelance backend dev ☁️ | Kubernetes nerd | surfing & scraping data | he/him', followers:4100,  following:380 },
+    { id:'nova_static',name:'Nova Static',     avatar:'📡', bg:'linear-gradient(135deg,#4b6cb7,#182848)', bio:'Amateur radio operator 📡 | Astronomy hobbyist | just trying to pick up a signal', followers:2800,  following:155 },
 ];
 
 const VIBE_POSTS = [
-    { id:1,  user:'zara_ai',   time:'2m',   emoji:'🧬', img:'linear-gradient(135deg,#a18cd1 0%,#fbc2eb 100%)', caption:'Running a new neural net trained on ocean sounds. The patterns it generates are… haunting and beautiful at the same time. #AI #research #deeplearning', likes:842,  comments:[{u:'nova_flux',t:'This is actually wild 🤯'},{u:'byte_poet',t:'Did you publish the weights?'},{u:'kira_spark',t:'I need this as a screensaver NOW'}] },
-    { id:2,  user:'nova_flux',  time:'11m',  emoji:'⚡', img:'linear-gradient(135deg,#f7971e 0%,#ffd200 100%)', caption:'3am and my synth patch just started doing something I did NOT program. Are machines dreaming? Asking for a friend. 🎹 #music #synth #latenight', likes:2103, comments:[{u:'echo_9',t:'That\'s literally what happened to me last week'},{u:'axl_void',t:'Machines dream in frequencies we can\'t hear'},{u:'sol_dreams',t:'I believe it 🌙'}] },
-    { id:3,  user:'sol_dreams', time:'34m',  emoji:'🌻', img:'linear-gradient(135deg,#f9d423 0%,#e14fad 100%)', caption:'Painted for 6 hours straight. Lost track of time. This is what flow state feels like 🌻 No phone, no notifications. Just colour and breath. #art #flow #digital', likes:5891, comments:[{u:'prism_kai',t:'The colours!! 😭🌈'},{u:'zara_ai',t:'I aspire to your focus'},{u:'kira_spark',t:'Frame this immediately'}] },
-    { id:4,  user:'byte_poet',  time:'1h',   emoji:'📟', img:'linear-gradient(135deg,#1a1a2e 0%,#0072ff 100%)', caption:'A poem I wrote at compile time:\n\n"Null pointer, empty room —\nwho forgot to allocate the moon?"\n\n#poetry #code #darkhumour', likes:3340, comments:[{u:'axl_void',t:'This belongs in a museum'},{u:'nova_flux',t:'Sending this to every dev I know'},{u:'prism_kai',t:'A poet AND an engineer, iconic 🖤'}] },
-    { id:5,  user:'kira_spark', time:'2h',   emoji:'✨', img:'linear-gradient(135deg,#fd79a8 0%,#e84393 100%)', caption:'Unpopular opinion: the metaverse failed because it wasn\'t weird enough. The internet is fun BECAUSE it\'s chaotic. Let it be chaotic! 🌐✨ #hotdrop #tech #opinion', likes:14200, comments:[{u:'byte_poet',t:'Finally someone said it'},{u:'zara_ai',t:'Chaos is just undocumented creativity 🔥'},{u:'echo_9',t:'RT if you agree'}] },
-    { id:6,  user:'axl_void',   time:'3h',   emoji:'🌑', img:'linear-gradient(135deg,#2d3436 0%,#636e72 100%)', caption:'I deleted all my apps except music and a note pad. Day 7. I\'ve never been more productive. Or more bored. It\'s the same thing. 🌑 #minimalism #digitaldiet', likes:6720, comments:[{u:'prism_kai',t:'Digital asceticism 🖤'},{u:'kira_spark',t:'I could never but respect'},{u:'sol_dreams',t:'Day 7 and still posting though 👀'}] },
-    { id:7,  user:'echo_9',     time:'4h',   emoji:'🔊', img:'linear-gradient(135deg,#43e97b 0%,#38f9d7 100%)', caption:'Field recording: rain on a rooftop + the hum of a server farm two blocks away. Mixed it live. The city is an instrument. 🎙️🌧️ #audio #fieldrecording #ambient', likes:1980, comments:[{u:'nova_flux',t:'Need this track in my life immediately'},{u:'byte_poet',t:'The city as orchestra 🎻'},{u:'zara_ai',t:'Drop the file pleaseee'}] },
-    { id:8,  user:'prism_kai',  time:'5h',   emoji:'🌈', img:'linear-gradient(135deg,#fd1d1d 0%,#833ab4 50%,#fcb045 100%)', caption:'Tech Twitter is collapsing again. Meanwhile I\'m here living my best soft life, drinking tea, and filing bugs in peacetime 🌈 #peace #techlife #wholesome', likes:9130, comments:[{u:'sol_dreams',t:'Soft life tech girlie 🌻'},{u:'echo_9',t:'This energy 🤌'},{u:'axl_void',t:'Logging off to do the same'}] },
-    { id:9,  user:'zara_ai',    time:'7h',   emoji:'🧠', img:'linear-gradient(135deg,#6c3483 0%,#a18cd1 100%)', caption:'Hot take: interpretability is the most important unsolved problem in AI. Not AGI. Not alignment. Actually understanding what\'s happening inside. Agree? #AI #interpretability', likes:3670, comments:[{u:'byte_poet',t:'This is the hill I die on too'},{u:'kira_spark',t:'Needs to be in every curriculum'},{u:'prism_kai',t:'Complexity hiding in plain sight'}] },
-    { id:10, user:'nova_flux',  time:'9h',   emoji:'🎵', img:'linear-gradient(135deg,#11998e 0%,#38ef7d 100%)', caption:'Wrote a melody in 4 minutes on the bus. Fully produced it before my stop. This is what phones were made for. Dropping it tonight 🎵🚌 #music #producer #spontaneous', likes:4455, comments:[{u:'echo_9',t:'Can\'t wait to hear this 🔊'},{u:'sol_dreams',t:'Bus music is always the best music somehow'},{u:'zara_ai',t:'Talent cannot be stopped 👏'}] },
+    { id:1,  user:'zara_ai',    time:'2m',   emoji:'🧬', img:'linear-gradient(135deg,#a18cd1 0%,#fbc2eb 100%)', caption:'Running a new neural net trained on ocean sounds. The patterns it generates are… haunting and beautiful at the same time. Sharing the audio tomorrow if the results hold. 🌊 #AI #research #deeplearning', likes:842,  comments:[{u:'nova_flux',t:'This is actually wild 🤯'},{u:'byte_poet',t:'Did you publish the weights anywhere?'},{u:'kira_spark',t:'I need this as a screensaver NOW'}] },
+    { id:2,  user:'nova_flux',  time:'11m',  emoji:'⚡', img:'linear-gradient(135deg,#f7971e 0%,#ffd200 100%)', caption:'3am and my synth patch just started doing something I definitely did NOT program. The envelope is self-modifying somehow. Are machines dreaming? Asking for a friend 🎹 #music #synth #latenight', likes:2103, comments:[{u:'echo_9',t:'That\'s literally what happened to me last week lmao'},{u:'axl_void',t:'Machines dream in frequencies we can\'t hear'},{u:'sol_dreams',t:'I 100% believe it 🌙'}] },
+    { id:3,  user:'sol_dreams', time:'34m',  emoji:'🌻', img:'linear-gradient(135deg,#f9d423 0%,#e14fad 100%)', caption:'Painted for 6 hours straight. Completely lost track of time. This is what flow state actually feels like 🌻 Phone on airplane mode. No notifications. Just colour, brush, breath. I forgot to eat lunch and honestly I\'m fine with that. #art #flow #digital', likes:5891, comments:[{u:'prism_kai',t:'The colours!! 😭🌈'},{u:'zara_ai',t:'I aspire to your level of focus honestly'},{u:'kira_spark',t:'Frame this immediately pls'}] },
+    { id:4,  user:'byte_poet',  time:'1h',   emoji:'📟', img:'linear-gradient(135deg,#1a1a2e 0%,#0072ff 100%)', caption:'A poem I wrote at compile time:\n\n"Null pointer, empty room —\nwho forgot to allocate the moon?"\n\nAnyway, our staging server is on fire. Back to it. #poetry #code #darkhumour', likes:3340, comments:[{u:'axl_void',t:'This belongs in a museum'},{u:'nova_flux',t:'Sending this to literally every dev I know'},{u:'prism_kai',t:'A poet AND an engineer, absolutely iconic 🖤'}] },
+    { id:5,  user:'kira_spark', time:'2h',   emoji:'✨', img:'linear-gradient(135deg,#fd79a8 0%,#e84393 100%)', caption:'Unpopular opinion: the metaverse failed because it wasn\'t weird enough. The old internet was fun BECAUSE it was chaotic and strange. Don\'t sanitise the web. Let it be a fever dream. ✨🌐 #hotdrop #tech #opinion', likes:14200, comments:[{u:'byte_poet',t:'Finally someone said this out loud'},{u:'zara_ai',t:'Chaos is just undocumented creativity 🔥'},{u:'echo_9',t:'RT if you agree, wait this isn\'t Twitter anymore'}] },
+    { id:6,  user:'axl_void',   time:'3h',   emoji:'🌑', img:'linear-gradient(135deg,#2d3436 0%,#636e72 100%)', caption:'Deleted all apps except a notes app and a map. Day 7. Never been more productive. Also never been more bored. I think they might be the same thing. 🌑 #minimalism #digitaldiet #experiment', likes:6720, comments:[{u:'prism_kai',t:'Digital asceticism 🖤 respect'},{u:'kira_spark',t:'I genuinely could never but I respect it deeply'},{u:'sol_dreams',t:'Day 7 and still posting though… 👀'}] },
+    { id:7,  user:'echo_9',     time:'4h',   emoji:'🔊', img:'linear-gradient(135deg,#43e97b 0%,#38f9d7 100%)', caption:'Field recording session: rain on a flat roof + the 60hz hum of a server farm two blocks over + distant traffic. Mixed them live on my phone. The city is a full orchestra if you listen right 🎙️🌧️ #audio #fieldrecording #ambient', likes:1980, comments:[{u:'nova_flux',t:'Need this track in my life immediately please'},{u:'byte_poet',t:'The city as orchestra. Beautiful.'},{u:'zara_ai',t:'Drop the file PLEASEEE 🙏'}] },
+    { id:8,  user:'prism_kai',  time:'5h',   emoji:'🌈', img:'linear-gradient(135deg,#fd1d1d 0%,#833ab4 50%,#fcb045 100%)', caption:'Tech social media is collapsing again. Meanwhile I\'m here: soft life, pot of tea, filing accessibility bugs in a peaceful garden. Turns out opting out is a valid engineering choice 🌈 #peace #techlife #wholesome', likes:9130, comments:[{u:'sol_dreams',t:'Soft life tech girlie 🌻'},{u:'echo_9',t:'This whole energy is immaculate 🤌'},{u:'axl_void',t:'Logging off to do exactly the same'}] },
+    { id:9,  user:'zara_ai',    time:'7h',   emoji:'🧠', img:'linear-gradient(135deg,#6c3483 0%,#a18cd1 100%)', caption:'Hot take that I\'ll defend: interpretability is the most important unsolved problem in AI right now. Not AGI timelines. Not alignment theory. Just — what is actually happening inside these models? We can\'t fix what we can\'t understand. #AI #interpretability #research', likes:3670, comments:[{u:'byte_poet',t:'This is the hill I will also die on'},{u:'kira_spark',t:'Every curriculum needs this yesterday'},{u:'prism_kai',t:'Complexity hiding in plain sight 🔍'}] },
+    { id:10, user:'nova_flux',  time:'9h',   emoji:'🎵', img:'linear-gradient(135deg,#11998e 0%,#38ef7d 100%)', caption:'Wrote a full melody in 4 minutes on the bus. Had it fully produced before my stop. This is genuinely what smartphones were invented for, the rest is noise. Dropping it tonight at 8pm 🎵🚌 #music #producer #spontaneous', likes:4455, comments:[{u:'echo_9',t:'Cannot wait to hear this 🔊'},{u:'sol_dreams',t:'Bus music always hits different somehow'},{u:'zara_ai',t:'Talent simply cannot be scheduled 👏'}] },
+    { id:11, user:'milo_ctrl',  time:'12h',  emoji:'🎮', img:'linear-gradient(135deg,#0f2027 0%,#203a43 50%,#2c5364 100%)', caption:'Just finished porting our game engine to run on a Raspberry Pi 4. 60fps stable 🎮 Took 3 weeks of optimisation but we got there. The constraints you have to work in when RAM is limited teach you more than any tutorial ever could. #gamedev #indiegame #lowlevel', likes:7820, comments:[{u:'byte_poet',t:'Constraints breed creativity. Every time.'},{u:'drift_code',t:'The Raspberry Pi community is going to love this'},{u:'zara_ai',t:'Write this up! People need to read it'}] },
+    { id:12, user:'lena_bloom', time:'14h',  emoji:'🌷', img:'linear-gradient(135deg,#e0c3fc 0%,#8ec5fc 100%)', caption:'Spent the morning planting sweet peas along the fire escape. My landlord hasn\'t noticed yet. Urban gardening is an act of quiet rebellion 🌷 Also they smell incredible. #urbangarden #plants #smalljoys', likes:11400, comments:[{u:'sol_dreams',t:'Quiet rebellion via sweet peas 🌸 love this'},{u:'prism_kai',t:'Rooting for you and the sweet peas 🌱'},{u:'lena_bloom',t:'Update: landlord noticed. Landlord also loves them.'}] },
+    { id:13, user:'drift_code', time:'18h',  emoji:'🌊', img:'linear-gradient(135deg,#0052d4 0%,#65c7f7 50%,#9cecfb 100%)', caption:'Migrated a 4TB legacy MySQL database to Postgres over the weekend. Zero downtime. I\'m still not sure if that actually happened or if I imagined it 🌊 Anyway the waves were good Sunday morning so it balances out. #backend #devlife #surfing', likes:2340, comments:[{u:'byte_poet',t:'Zero downtime migration deserves its own award'},{u:'milo_ctrl',t:'The vibes of "survived a migration, went surfing" are immaculate'},{u:'drift_code',t:'The secret is: it\'s all vibes all the way down'}] },
+    { id:14, user:'nova_static',time:'22h',  emoji:'📡', img:'linear-gradient(135deg,#4b6cb7 0%,#182848 100%)', caption:'Picked up a faint signal last night on 1420 MHz — the hydrogen line. Nothing unusual but the way it sits in the noise is… peaceful. Like the universe breathing. 📡 #radioastronomy #amateur #space', likes:1640, comments:[{u:'zara_ai',t:'The universe breathing is such a beautiful way to put it'},{u:'echo_9',t:'1420 MHz, the original ambient track'},{u:'nova_flux',t:'I would genuinely listen to this for hours'}] },
+    { id:15, user:'milo_ctrl',  time:'1d',   emoji:'🕹️', img:'linear-gradient(135deg,#141e30 0%,#243b55 100%)', caption:'Our game just hit 10,000 wishlists on the store. We are a 2-person team. We made this on evenings and weekends for 18 months. I am going to cry. Thank you to everyone who clicked that little button 🙏 #indiegame #gamedev #milestone', likes:28900, comments:[{u:'kira_spark',t:'SCREAMING! 🎉 You both deserve every single one'},{u:'sol_dreams',t:'18 months of evenings and weekends is REAL work 🏆'},{u:'prism_kai',t:'Day 1 supporter. Cannot wait for launch 🌈'}] },
 ];
 
 const vibeLiked   = new Set();
-const vibeFollowing = new Set(['sol_dreams','kira_spark']);
+const vibeFollowing = new Set(['sol_dreams','kira_spark','milo_ctrl']);
 let vibeCurrentTab = 'feed';
 let vibeSelectedUser = null;
 
