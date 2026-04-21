@@ -2677,6 +2677,12 @@ function getHazyGamesWebsite() {
                         <p style="color:#aaa;font-size:11px;">How fast are you?</p>
                         <span style="background:#27ae60;color:white;font-size:10px;padding:2px 8px;border-radius:20px;">PLAY NOW</span>
                     </div>
+                    <div onclick="hazyGame('dropblock')" style="background:#2d2d5e;border-radius:10px;padding:14px;text-align:center;cursor:pointer;border:2px solid transparent;" onmouseover="this.style.borderColor='#a29bfe'" onmouseout="this.style.borderColor='transparent'">
+                        <div style="font-size:40px;">🟦</div>
+                        <p style="color:white;margin:8px 0 2px;font-weight:600;">Drop Block</p>
+                        <p style="color:#aaa;font-size:11px;">Stack & clear rows!</p>
+                        <span style="background:#27ae60;color:white;font-size:10px;padding:2px 8px;border-radius:20px;">PLAY NOW</span>
+                    </div>
                 </div>
                 <div id="hazy-game-area"></div>
             </div>
@@ -2719,8 +2725,194 @@ function hazyGame(name) {
             </div>
         `;
         initReaction();
+    } else if (name === 'dropblock') {
+        area.innerHTML = `
+            <div style="background:#111827;border-radius:10px;padding:16px;text-align:center;">
+                <h3 style="color:#a29bfe;margin:0 0 4px;">🟦 Drop Block</h3>
+                <p style="color:#aaa;font-size:12px;margin:0 0 6px;">← → move &nbsp;|&nbsp; ↑ rotate &nbsp;|&nbsp; ↓ faster &nbsp;|&nbsp; Space hard drop</p>
+                <p id="db-score" style="color:#60a5fa;font-size:13px;font-weight:bold;margin:0 0 8px;">Score: 0</p>
+                <canvas id="db-canvas" style="border:2px solid #374151;border-radius:6px;display:block;margin:0 auto;"></canvas>
+                <br><button onclick="initDropBlock()" style="margin-top:8px;background:#6c3483;color:white;border:none;padding:6px 18px;border-radius:20px;cursor:pointer;font-size:13px;">New Game</button>
+            </div>
+        `;
+        initDropBlock();
     }
     area.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+// Drop Block (Tetris-like) — 5 wide x 9 high
+let dropBlockState = null;
+function initDropBlock() {
+    const COLS = 5, ROWS = 9, CELL = 44;
+    const PIECES = [
+        { shape: [[1,1,1,1]], color: '#00bcd4' },           // I
+        { shape: [[1,1],[1,1]], color: '#fdd835' },          // O
+        { shape: [[0,1,0],[1,1,1]], color: '#ab47bc' },      // T
+        { shape: [[1,0],[1,0],[1,1]], color: '#ef5350' },    // L
+        { shape: [[0,1],[0,1],[1,1]], color: '#ff9800' },    // J
+        { shape: [[0,1,1],[1,1,0]], color: '#66bb6a' },      // S
+        { shape: [[1,1,0],[0,1,1]], color: '#ec407a' }       // Z
+    ];
+    const canvas = document.getElementById('db-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    canvas.width = COLS * CELL;
+    canvas.height = ROWS * CELL;
+
+    const board = Array.from({length: ROWS}, () => Array(COLS).fill(0));
+    let score = 0, gameOver = false, dropInterval = null;
+
+    function randomPiece() {
+        const p = PIECES[Math.floor(Math.random() * PIECES.length)];
+        return { shape: p.shape.map(r => [...r]), color: p.color, x: Math.floor((COLS - p.shape[0].length) / 2), y: 0 };
+    }
+
+    let current = randomPiece();
+
+    function rotate(shape) {
+        const rows = shape.length, cols = shape[0].length;
+        const result = Array.from({length: cols}, () => Array(rows).fill(0));
+        for (let r = 0; r < rows; r++)
+            for (let c = 0; c < cols; c++)
+                result[c][rows - 1 - r] = shape[r][c];
+        return result;
+    }
+
+    function valid(shape, ox, oy) {
+        for (let r = 0; r < shape.length; r++)
+            for (let c = 0; c < shape[r].length; c++)
+                if (shape[r][c]) {
+                    const nx = ox + c, ny = oy + r;
+                    if (nx < 0 || nx >= COLS || ny >= ROWS) return false;
+                    if (ny >= 0 && board[ny][nx]) return false;
+                }
+        return true;
+    }
+
+    function lock() {
+        for (let r = 0; r < current.shape.length; r++)
+            for (let c = 0; c < current.shape[r].length; c++)
+                if (current.shape[r][c]) {
+                    const ny = current.y + r;
+                    if (ny < 0) { endGame(); return; }
+                    board[ny][current.x + c] = current.color;
+                }
+        clearLines();
+        current = randomPiece();
+        if (!valid(current.shape, current.x, current.y)) endGame();
+    }
+
+    function clearLines() {
+        let cleared = 0;
+        for (let r = ROWS - 1; r >= 0; r--) {
+            if (board[r].every(v => v)) {
+                board.splice(r, 1);
+                board.unshift(Array(COLS).fill(0));
+                cleared++; r++;
+            }
+        }
+        if (cleared) {
+            score += [0,10,25,45,70][cleared] || cleared * 10;
+            const sc = document.getElementById('db-score');
+            if (sc) sc.textContent = 'Score: ' + score;
+        }
+    }
+
+    function draw() {
+        ctx.fillStyle = '#111827';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        // Grid lines
+        ctx.strokeStyle = '#1f2937';
+        ctx.lineWidth = 1;
+        for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS; c++) {
+            ctx.strokeRect(c * CELL, r * CELL, CELL, CELL);
+        }
+        // Board
+        for (let r = 0; r < ROWS; r++)
+            for (let c = 0; c < COLS; c++)
+                if (board[r][c]) {
+                    ctx.fillStyle = board[r][c];
+                    ctx.fillRect(c*CELL+1, r*CELL+1, CELL-2, CELL-2);
+                    ctx.fillStyle = 'rgba(255,255,255,0.15)';
+                    ctx.fillRect(c*CELL+1, r*CELL+1, CELL-2, 8);
+                }
+        // Ghost piece
+        let ghostY = current.y;
+        while (valid(current.shape, current.x, ghostY + 1)) ghostY++;
+        ctx.globalAlpha = 0.2;
+        for (let r = 0; r < current.shape.length; r++)
+            for (let c = 0; c < current.shape[r].length; c++)
+                if (current.shape[r][c]) {
+                    ctx.fillStyle = current.color;
+                    ctx.fillRect((current.x+c)*CELL+1, (ghostY+r)*CELL+1, CELL-2, CELL-2);
+                }
+        ctx.globalAlpha = 1;
+        // Current piece
+        for (let r = 0; r < current.shape.length; r++)
+            for (let c = 0; c < current.shape[r].length; c++)
+                if (current.shape[r][c]) {
+                    ctx.fillStyle = current.color;
+                    ctx.fillRect((current.x+c)*CELL+1, (current.y+r)*CELL+1, CELL-2, CELL-2);
+                    ctx.fillStyle = 'rgba(255,255,255,0.2)';
+                    ctx.fillRect((current.x+c)*CELL+1, (current.y+r)*CELL+1, CELL-2, 8);
+                }
+        if (gameOver) {
+            ctx.fillStyle = 'rgba(0,0,0,0.6)';
+            ctx.fillRect(0,0,canvas.width,canvas.height);
+            ctx.fillStyle = 'white';
+            ctx.font = 'bold 18px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('GAME OVER', canvas.width/2, canvas.height/2 - 10);
+            ctx.font = '13px sans-serif';
+            ctx.fillText('Score: ' + score, canvas.width/2, canvas.height/2 + 12);
+        }
+    }
+
+    function drop() {
+        if (gameOver) return;
+        if (valid(current.shape, current.x, current.y + 1)) {
+            current.y++;
+        } else {
+            lock();
+        }
+        draw();
+    }
+
+    function endGame() {
+        gameOver = true;
+        clearInterval(dropInterval);
+        draw();
+        document.removeEventListener('keydown', onKey);
+    }
+
+    function onKey(e) {
+        if (gameOver) return;
+        if (!document.getElementById('db-canvas')) { document.removeEventListener('keydown', onKey); return; }
+        if (e.key === 'ArrowLeft') { if (valid(current.shape, current.x-1, current.y)) { current.x--; draw(); } e.preventDefault(); }
+        else if (e.key === 'ArrowRight') { if (valid(current.shape, current.x+1, current.y)) { current.x++; draw(); } e.preventDefault(); }
+        else if (e.key === 'ArrowDown') { drop(); e.preventDefault(); }
+        else if (e.key === 'ArrowUp') {
+            const rot = rotate(current.shape);
+            if (valid(rot, current.x, current.y)) { current.shape = rot; draw(); }
+            else if (valid(rot, current.x-1, current.y)) { current.shape = rot; current.x--; draw(); }
+            else if (valid(rot, current.x+1, current.y)) { current.shape = rot; current.x++; draw(); }
+            e.preventDefault();
+        } else if (e.key === ' ') {
+            while (valid(current.shape, current.x, current.y + 1)) current.y++;
+            lock(); draw(); e.preventDefault();
+        }
+    }
+
+    // Clean up old listeners/intervals
+    if (dropBlockState) {
+        clearInterval(dropBlockState.interval);
+        document.removeEventListener('keydown', dropBlockState.onKey);
+    }
+    dropBlockState = { interval: null, onKey };
+    document.addEventListener('keydown', onKey);
+    dropInterval = setInterval(drop, 600);
+    dropBlockState.interval = dropInterval;
+    draw();
 }
 
 function initBattleship() {
