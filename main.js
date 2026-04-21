@@ -56,13 +56,6 @@ const APPS = {
         minWidth: 700,
         minHeight: 500
     },
-    mapes: {
-        name: 'Mapes',
-        icon: '🗺️',
-        color: '#007b55',
-        minWidth: 900,
-        minHeight: 620
-    },
     simpleai: {
         name: 'Simple AI',
         icon: '🤖',
@@ -80,7 +73,7 @@ const APPS = {
 };
 
 // Store app installation state
-const installedApps = new Set(['playstore', 'notes', 'game2048', 'calculator', 'memory', 'calendar', 'net2', 'browser', 'mapes', 'simpleai', 'vibe']);
+const installedApps = new Set(['playstore', 'notes', 'game2048', 'calculator', 'memory', 'calendar', 'net2', 'browser', 'simpleai', 'vibe']);
 
 // Global error handler for better debugging
 window.addEventListener('error', (e) => {
@@ -317,9 +310,7 @@ class WindowManager {
 
     cleanupApp(appId) {
         switch(appId) {
-            case 'mapes':
-                destroyMapes();
-                break;
+
             // Add cleanup for other apps if needed
         }
     }
@@ -344,8 +335,7 @@ class WindowManager {
                 return this.getNet2Content();
             case 'browser':
                 return this.getBrowserContent();
-            case 'mapes':
-                return this.getMapesContent();
+
             case 'simpleai':
                 return this.getSimpleAIContent();
             case 'vibe':
@@ -707,6 +697,51 @@ class WindowManager {
                             <div class="shortcut website-shortcut" onclick="browserNavigate('www.brickyard.io')">🧱 Brickyard.io</div>
                             <div class="shortcut website-shortcut" onclick="browserNavigate('www.funnybones.fun')">😂 FunnyBones.fun</div>
                             <div class="shortcut website-shortcut" onclick="browserNavigate('www.cloudjournal.org')">☁️ CloudJournal.org</div>
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.thunderbolt.tv')">⚡ ThunderBolt.tv</div>
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.mysticforge.com')">🔮 MysticForge.com</div>
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.rocketlab.space')">🚀 RocketLab.space</div>
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.goldpeak.net')">⛰️ GoldPeak.net</div>
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.crystalcave.org')">💎 CrystalCave.org</div>
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.firefly.games')">🔥 FireFly.games</div>
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.moonbeam.tech')">🌙 MoonBeam.tech</div>
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.puzzlebox.fun')">🧩 PuzzleBox.fun</div>
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.dreamweaver.io')">✨ DreamWeaver.io</div>
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.wildcard.zone')">🃏 WildCard.zone</div>
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.bluewhale.ocean')">🐋 BlueWhale.ocean</div>
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.timekeeper.net')">⏰ TimeKeeper.net</div>
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.shadowtail.com')">🌗 ShadowTail.com</div>
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.robotics.hub')">🤖 Robotics.hub</div>
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.mindbridge.org')">🧠 MindBridge.org</div>
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.speedlight.tech')">💨 SpeedLight.tech</div>
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.magicmirror.io')">🪞 MagicMirror.io</div>
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.jewelbox.fun')">💍 JewelBox.fun</div>
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.stormcloud.net')">⛈️ StormCloud.net</div>
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.greenthumb.garden')">🌱 GreenThumb.garden</div>
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.nightowl.zone')">🦉 NightOwl.zone</div>
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.dazzle.games')">✨ Dazzle.games</div>
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.iceberg.cool')">🧊 Iceberg.cool</div>
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.luckystar.win')">🌟 LuckyStar.win</div>
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.bookworm.library')">📚 BookWorm.library</div>
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.thunderstorm.weather')">⛈️ ThunderStorm.weather</div>
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.epicquest.adventure')">⚔️ EpicQuest.adventure</div>
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.buzzhive.social')">🐝 BuzzHive.social</div>
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.ninjadojo.training')">🥷 NinjaDojo.training</div>
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.galaxyride.space')">🌌 GalaxyRide.space</div>
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.phoenixfire.rise')">🔥 PhoenixFire.rise</div>
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.oceanwave.surf')">🏄 OceanWave.surf</div>
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.dragonlair.fantasy')">🐉 DragonLair.fantasy</div>
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.clocktower.time')">🕰️ ClockTower.time</div>
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.sweetdream.sleep')">💤 SweetDream.sleep</div>
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.railwaytrain.travel')">🚂 RailwayTrain.travel</div>
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.cityscape.urban')">🏙️ CityScape.urban</div>
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.mountainpeak.climb')">⛰️ MountainPeak.climb</div>
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.lightsaber.jedi')">⚔️ Lightsaber.jedi</div>
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.papership.origami')">📄 PaperShip.origami</div>
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.dancehall.music')">💃 DanceHall.music</div>
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.fishbowl.aquarium')">🐠 FishBowl.aquarium</div>
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.carnival.festival')">🎪 Carnival.festival</div>
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.blackhole.physics')">🕳️ BlackHole.physics</div>
+                            <div class="shortcut website-shortcut" onclick="browserNavigate('www.sunflower.bloom')">🌻 Sunflower.bloom</div>
                         </div>
                     </div>
                 </div>
@@ -730,39 +765,6 @@ class WindowManager {
                 <div style="padding:10px 14px;background:#1a1a2e;display:flex;gap:8px;">
                     <input id="ai-input" type="text" placeholder="Ask me anything..." style="flex:1;background:#2d2d5e;border:1px solid #4a4a8a;border-radius:20px;padding:8px 14px;color:white;font-size:13px;outline:none;" onkeydown="if(event.key==='Enter')simpleAISend()">
                     <button onclick="simpleAISend()" style="background:#6c3483;color:white;border:none;border-radius:20px;padding:8px 16px;cursor:pointer;font-size:13px;font-weight:bold;">Send</button>
-                </div>
-            </div>
-        `;
-    }
-
-    getMapesContent() {
-        return `
-            <div class="mapes-app">
-                <div class="mapes-topbar">
-                    <div class="mapes-brand">
-                        <h2>Mapes</h2>
-                        <p>Simple map preview</p>
-                    </div>
-                    <div class="mapes-search-wrap">
-                        <input type="text" id="mapes-query" placeholder="Search a place, city, or address" aria-label="Search place">
-                        <button id="mapes-search-btn">Search</button>
-                    </div>
-                </div>
-                <div class="mapes-layout">
-                    <aside class="mapes-panel">
-                        <h3>Map Type</h3>
-                        <div class="mapes-actions">
-                            <button class="mapes-layer-btn active" data-layer="street">Map</button>
-                            <button class="mapes-layer-btn" data-layer="satellite">Satellite</button>
-                        </div>
-                        <button id="mapes-location-btn" class="mapes-location-btn">Use My Location</button>
-                        <h3>Results</h3>
-                        <ul id="mapes-results" class="mapes-results"></ul>
-                        <p id="mapes-status" class="mapes-status">Search to preview locations.</p>
-                    </aside>
-                    <div class="mapes-map-shell">
-                        <div id="mapes-map" class="mapes-map" role="application" aria-label="Interactive map preview"></div>
-                    </div>
                 </div>
             </div>
         `;
@@ -801,9 +803,7 @@ class WindowManager {
             case 'net2':
                 initNet2();
                 break;
-            case 'mapes':
-                initMapes(contentEl);
-                break;
+
             case 'simpleai':
                 initSimpleAI();
                 break;
@@ -3835,300 +3835,6 @@ function browserRefresh() {
 }
 
 
-// ===== MAPES APP =====
-const mapesState = {
-    map: null,
-    marker: null,
-    activeLayer: 'street',
-    tileLayers: {},
-    places: [],
-    assetsPromise: null
-};
-
-function mapesAddLayerSet(layerSet) {
-    if (!mapesState.map || !layerSet) return;
-    const layers = Array.isArray(layerSet) ? layerSet : [layerSet];
-    layers.forEach((layer) => layer.addTo(mapesState.map));
-}
-
-function mapesRemoveLayerSet(layerSet) {
-    if (!mapesState.map || !layerSet) return;
-    const layers = Array.isArray(layerSet) ? layerSet : [layerSet];
-    layers.forEach((layer) => {
-        if (mapesState.map.hasLayer(layer)) {
-            mapesState.map.removeLayer(layer);
-        }
-    });
-}
-
-function mapesCreateMarker(lat, lon, popupText) {
-    if (!window.L || !mapesState.map) return;
-
-    if (mapesState.marker) {
-        mapesState.marker.remove();
-    }
-
-    const markerIcon = L.divIcon({
-        className: 'mapes-pin-wrap',
-        html: '<div class="mapes-pin"></div>',
-        iconSize: [24, 36],
-        iconAnchor: [12, 34],
-        popupAnchor: [0, -30]
-    });
-
-    mapesState.marker = L.marker([lat, lon], { icon: markerIcon })
-        .addTo(mapesState.map)
-        .bindPopup(popupText)
-        .openPopup();
-}
-
-function loadMapesAssets() {
-    if (window.L) {
-        return Promise.resolve();
-    }
-    if (mapesState.assetsPromise) {
-        return mapesState.assetsPromise;
-    }
-
-    mapesState.assetsPromise = new Promise((resolve, reject) => {
-        const cssId = 'mapes-leaflet-css';
-        const jsId = 'mapes-leaflet-js';
-
-        if (!document.getElementById(cssId)) {
-            const cssLink = document.createElement('link');
-            cssLink.id = cssId;
-            cssLink.rel = 'stylesheet';
-            cssLink.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
-            document.head.appendChild(cssLink);
-        }
-
-        if (document.getElementById(jsId)) {
-            const waitForLeaflet = () => {
-                if (window.L) {
-                    resolve();
-                } else {
-                    setTimeout(waitForLeaflet, 50);
-                }
-            };
-            waitForLeaflet();
-            return;
-        }
-
-        const script = document.createElement('script');
-        script.id = jsId;
-        script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
-        script.async = true;
-        script.onload = () => resolve();
-        script.onerror = () => reject(new Error('Unable to load map library.'));
-        document.body.appendChild(script);
-    });
-
-    return mapesState.assetsPromise;
-}
-
-function initMapes(contentEl) {
-    loadMapesAssets()
-        .then(() => {
-            if (!contentEl || !contentEl.isConnected) return;
-
-            const mapContainer = contentEl.querySelector('#mapes-map');
-            const searchButton = contentEl.querySelector('#mapes-search-btn');
-            const searchInput = contentEl.querySelector('#mapes-query');
-            const locationButton = contentEl.querySelector('#mapes-location-btn');
-            const layerButtons = contentEl.querySelectorAll('.mapes-layer-btn');
-
-            if (!mapContainer) return;
-
-            if (mapesState.map) {
-                mapesState.map.remove();
-            }
-
-            mapesState.map = L.map(mapContainer, {
-                zoomControl: true,
-                attributionControl: true
-            }).setView([40.7128, -74.0060], 12);
-
-            mapesState.tileLayers.street = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-                maxZoom: 20,
-                subdomains: 'abcd',
-                attribution: '&copy; OpenStreetMap contributors &copy; CARTO'
-            });
-
-            mapesState.tileLayers.satellite = [
-                L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-                    maxZoom: 20,
-                    attribution: 'Tiles &copy; Esri'
-                }),
-                L.tileLayer('https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', {
-                    maxZoom: 20,
-                    attribution: 'Labels &copy; Esri'
-                })
-            ];
-
-            mapesAddLayerSet(mapesState.tileLayers.street);
-            mapesSetStatus('Search to preview locations.');
-
-            searchButton.addEventListener('click', mapesSearchPlace);
-            locationButton.addEventListener('click', mapesUseMyLocation);
-            searchInput.addEventListener('keydown', (event) => {
-                if (event.key === 'Enter') {
-                    mapesSearchPlace();
-                }
-            });
-
-            layerButtons.forEach((button) => {
-                button.addEventListener('click', () => mapesSetLayer(button.dataset.layer));
-            });
-
-            setTimeout(() => {
-                if (mapesState.map) {
-                    mapesState.map.invalidateSize();
-                }
-            }, 200);
-        })
-        .catch((error) => {
-            console.error(error);
-            mapesSetStatus('Map failed to load. Please check your connection.');
-        });
-}
-
-function mapesSetLayer(layerName) {
-    if (!mapesState.map || !mapesState.tileLayers[layerName]) return;
-
-    Object.keys(mapesState.tileLayers).forEach((layerKey) => {
-        mapesRemoveLayerSet(mapesState.tileLayers[layerKey]);
-    });
-
-    mapesAddLayerSet(mapesState.tileLayers[layerName]);
-    mapesState.activeLayer = layerName;
-
-    document.querySelectorAll('.mapes-layer-btn').forEach((button) => {
-        button.classList.toggle('active', button.dataset.layer === layerName);
-    });
-}
-
-async function mapesSearchPlace() {
-    const input = document.getElementById('mapes-query');
-    const resultsList = document.getElementById('mapes-results');
-    if (!input || !resultsList) return;
-
-    const query = input.value.trim();
-    if (!query) {
-        mapesSetStatus('Type a place and search.');
-        return;
-    }
-
-    mapesSetStatus('Searching...');
-    resultsList.innerHTML = '';
-
-    try {
-        const endpoint = `https://nominatim.openstreetmap.org/search?format=jsonv2&limit=7&q=${encodeURIComponent(query)}`;
-        const response = await fetch(endpoint, {
-            headers: {
-                'Accept-Language': 'en'
-            }
-        });
-
-        if (!response.ok) {
-            throw new Error('Search request failed.');
-        }
-
-        const places = await response.json();
-        mapesState.places = places;
-        mapesRenderResults(places);
-
-        if (!places.length) {
-            mapesSetStatus('No places found. Try a different search.');
-            return;
-        }
-
-        mapesSetStatus(`Showing ${places.length} result${places.length === 1 ? '' : 's'}.`);
-        mapesSelectPlace(places[0]);
-    } catch (error) {
-        console.error(error);
-        mapesSetStatus('Search failed. Try again in a moment.');
-    }
-}
-
-function mapesRenderResults(places) {
-    const resultsList = document.getElementById('mapes-results');
-    if (!resultsList) return;
-
-    resultsList.innerHTML = '';
-    places.forEach((place, index) => {
-        const item = document.createElement('li');
-        const button = document.createElement('button');
-        button.type = 'button';
-        button.className = 'mapes-result-btn';
-        button.textContent = place.display_name;
-        button.addEventListener('click', () => mapesSelectPlace(place));
-        if (index === 0) {
-            button.classList.add('active');
-        }
-        item.appendChild(button);
-        resultsList.appendChild(item);
-    });
-}
-
-function mapesSelectPlace(place) {
-    if (!mapesState.map || !place) return;
-
-    const lat = Number(place.lat);
-    const lon = Number(place.lon);
-    mapesState.map.flyTo([lat, lon], 14, { duration: 0.7 });
-
-    mapesCreateMarker(lat, lon, place.display_name);
-
-    document.querySelectorAll('.mapes-result-btn').forEach((button) => {
-        button.classList.toggle('active', button.textContent === place.display_name);
-    });
-}
-
-function mapesUseMyLocation() {
-    if (!navigator.geolocation) {
-        mapesSetStatus('Geolocation is not supported by this browser.');
-        return;
-    }
-
-    mapesSetStatus('Finding your location...');
-    navigator.geolocation.getCurrentPosition(
-        (position) => {
-            const lat = position.coords.latitude;
-            const lon = position.coords.longitude;
-
-            if (!mapesState.map) return;
-
-            mapesState.map.flyTo([lat, lon], 14, { duration: 0.7 });
-
-            mapesCreateMarker(lat, lon, 'You are here');
-
-            mapesSetStatus('Showing your current location.');
-        },
-        () => {
-            mapesSetStatus('Location access was denied or unavailable.');
-        }
-    );
-}
-
-function mapesSetStatus(message) {
-    const status = document.getElementById('mapes-status');
-    if (status) {
-        status.textContent = message;
-    }
-}
-
-function destroyMapes() {
-    if (mapesState.map) {
-        mapesState.map.remove();
-    }
-
-    mapesState.map = null;
-    mapesState.marker = null;
-    mapesState.places = [];
-}
-
-
-
 // ===== BOOKS APP =====
 const BOOKS = [
     {
@@ -4270,7 +3976,7 @@ const AI_KNOWLEDGE = [
     { keys: ['eye','eyes','sight','vision'], answer: '👁️ Human <b>eyes</b> can distinguish about 10 million colours! The eye can process 36,000 pieces of information per hour. Your eyes focus by changing the shape of the lens. The cornea is the only part of the body with no blood supply — it gets oxygen directly from the air. Eagles can see 4–5 times farther than humans.' },
     { keys: ['sleep','sleeping','dream','dreams'], answer: '💤 <b>Sleep</b> is essential for health! Adults need 7–9 hours; kids need 9–12 hours. Your brain is very active during sleep — it processes memories and repairs itself. You spend about 2 hours dreaming every night. The record for staying awake is 11 days (but that\'s very dangerous!). Dolphins sleep with one half of their brain at a time.' },
     // Simple PC apps
-    { keys: ['simple pc','this computer','this app','this program'], answer: '💻 <b>Simple PC</b> is your virtual computer! You can open apps from the desktop or the Start menu. Available apps include: Web Browser, Notes, Calculator, 2048, Memory Game, Books, Calendar, Net2, Mapes, Vibe and Simple AI (that\'s me!)' },
+    { keys: ['simple pc','this computer','this app','this program'], answer: '💻 <b>Simple PC</b> is your virtual computer! You can open apps from the desktop or the Start menu. Available apps include: Web Browser, Notes, Calculator, 2048, Memory Game, Books, Calendar, Net2, Vibe and Simple AI (that\'s me!)' },
     { keys: ['notes','notepad'], answer: '📝 The <b>Notes</b> app on Simple PC lets you write and save text notes. Click the Notes icon on the desktop or find it in the Start menu to open it!' },
     { keys: ['calculator'], answer: '🧮 The <b>Calculator</b> app can do basic maths — addition, subtraction, multiplication and division. Find it on the desktop or Start menu!' },
     { keys: ['2048'], answer: '🔢 <b>2048</b> is a sliding tile puzzle game! You combine matching numbers by swiping tiles. The goal is to reach the 2048 tile. Use arrow keys to play. Can you get to 4096?!' },
