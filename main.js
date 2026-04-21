@@ -2665,15 +2665,15 @@ function getHazyGamesWebsite() {
             <div class="fake-site-body" style="background:#1a1a2e;padding:20px;border-radius:0 0 8px 8px;">
                 <h2 style="color:#a29bfe;margin:0 0 14px;">🕹️ Featured Games</h2>
                 <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px;">
-                    <div onclick="hazyGame('battleship')" style="background:#2d2d5e;border-radius:10px;padding:14px;text-align:center;cursor:pointer;border:2px solid transparent;transition:border 0.2s;" onmouseover="this.style.borderColor='#a29bfe'" onmouseout="this.style.borderColor='transparent'">
-                        <div style="font-size:40px;">🚢</div>
-                        <p style="color:white;margin:8px 0 2px;font-weight:600;">Battleship</p>
+                    <div onclick="hazyGame('bober boat')" style="background:#2d2d5e;border-radius:10px;padding:14px;text-align:center;cursor:pointer;border:2px solid transparent;transition:border 0.2s;" onmouseover="this.style.borderColor='#a29bfe'" onmouseout="this.style.borderColor='transparent'">
+                        <div style="font-size:40px;">🚤</div>
+                        <p style="color:white;margin:8px 0 2px;font-weight:600;">Bober Boat</p>
                         <p style="color:#aaa;font-size:11px;">Sink the hidden ship!</p>
                         <span style="background:#27ae60;color:white;font-size:10px;padding:2px 8px;border-radius:20px;">PLAY NOW</span>
                     </div>
-                    <div onclick="hazyGame('tictactoe')" style="background:#2d2d5e;border-radius:10px;padding:14px;text-align:center;cursor:pointer;border:2px solid transparent;" onmouseover="this.style.borderColor='#a29bfe'" onmouseout="this.style.borderColor='transparent'">
+                    <div onclick="hazyGame('x+o')" style="background:#2d2d5e;border-radius:10px;padding:14px;text-align:center;cursor:pointer;border:2px solid transparent;" onmouseover="this.style.borderColor='#a29bfe'" onmouseout="this.style.borderColor='transparent'">
                         <div style="font-size:40px;">❌⭕</div>
-                        <p style="color:white;margin:8px 0 2px;font-weight:600;">Tic Tac Toe</p>
+                        <p style="color:white;margin:8px 0 2px;font-weight:600;">X+O</p>
                         <p style="color:#aaa;font-size:11px;">Play vs the computer!</p>
                         <span style="background:#27ae60;color:white;font-size:10px;padding:2px 8px;border-radius:20px;">PLAY NOW</span>
                     </div>
@@ -2699,28 +2699,28 @@ function getHazyGamesWebsite() {
 function hazyGame(name) {
     const area = document.getElementById('hazy-game-area');
     if (!area) return;
-    if (name === 'battleship') {
+    if (name === 'bober boat') {
         area.innerHTML = `
             <div style="background:#111827;border-radius:10px;padding:16px;text-align:center;">
-                <h3 style="color:#a29bfe;margin:0 0 6px;">🚢 Battleship</h3>
+                <h3 style="color:#a29bfe;margin:0 0 6px;">🚤 Bober Boat</h3>
                 <p style="color:#aaa;font-size:12px;margin:0 0 4px;">Find and sink the hidden 1×2 ship on the 5×5 grid!</p>
                 <p id="bs-status" style="color:#60a5fa;font-size:13px;font-weight:bold;margin:0 0 10px;">Click a cell to fire!</p>
                 <div id="bs-board" style="display:inline-grid;grid-template-columns:repeat(5,52px);gap:4px;"></div>
                 <p id="bs-shots" style="color:#aaa;font-size:12px;margin:8px 0 0;">Shots: 0</p>
-                <br><button onclick="initBattleship()" style="margin-top:10px;background:#1a5276;color:white;border:none;padding:6px 18px;border-radius:20px;cursor:pointer;font-size:13px;">New Game</button>
+                <br><button onclick="initBoberBoat()" style="margin-top:10px;background:#1a5276;color:white;border:none;padding:6px 18px;border-radius:20px;cursor:pointer;font-size:13px;">New Game</button>
             </div>
         `;
-        initBattleship();
-    } else if (name === 'tictactoe') {
+        initBoberBoat();
+    } else if (name === 'x+o') {
         area.innerHTML = `
             <div style="background:#111827;border-radius:10px;padding:16px;text-align:center;">
-                <h3 style="color:#a29bfe;margin:0 0 8px;">❌⭕ Tic Tac Toe</h3>
-                <p id="ttt-status" style="color:#aaa;font-size:13px;margin:0 0 10px;">You are X — Your turn!</p>
-                <div id="ttt-board" style="display:inline-grid;grid-template-columns:repeat(3,80px);gap:6px;"></div>
-                <br><button onclick="initTTT()" style="margin-top:12px;background:#6c3483;color:white;border:none;padding:6px 18px;border-radius:20px;cursor:pointer;font-size:13px;">New Game</button>
+                <h3 style="color:#a29bfe;margin:0 0 8px;">❌⭕ X+O</h3>
+                <p id="xo-status" style="color:#aaa;font-size:13px;margin:0 0 10px;">You are X — Your turn!</p>
+                <div id="xo-board" style="display:inline-grid;grid-template-columns:repeat(3,80px);gap:6px;"></div>
+                <br><button onclick="initXO()" style="margin-top:12px;background:#6c3483;color:white;border:none;padding:6px 18px;border-radius:20px;cursor:pointer;font-size:13px;">New Game</button>
             </div>
         `;
-        initTTT();
+        initXO();
     } else if (name === 'reaction') {
         area.innerHTML = `
             <div style="background:#111827;border-radius:10px;padding:16px;text-align:center;">
@@ -2921,7 +2921,7 @@ function initDropBlock() {
     draw();
 }
 
-function initBattleship() {
+function initBoberBoat() {
     const board = document.getElementById('bs-board');
     const statusEl = document.getElementById('bs-status');
     const shotsEl = document.getElementById('bs-shots');
@@ -2964,7 +2964,7 @@ function initBattleship() {
                         document.querySelectorAll('#bs-board div').forEach(d=>{
                             const dr=parseInt(d.dataset.r), dc=parseInt(d.dataset.c);
                             if (shipCells.some(s=>s.r===dr&&s.c===dc) && !d.dataset.fired) {
-                                d.textContent='🚢'; d.style.background='#166534';
+                                d.textContent='�'; d.style.background='#166534';
                             }
                         });
                     } else {
@@ -2984,52 +2984,52 @@ function initBattleship() {
     if (shotsEl) shotsEl.textContent = 'Shots: 0';
 }
 
-let tttBoard = [], tttTurn = 'X';
-function initTTT() {
-    tttBoard = Array(9).fill('');
-    tttTurn = 'X';
-    const status = document.getElementById('ttt-status');
+let xoBoard = [], xoTurn = 'X';
+function initXO() {
+    xoBoard = Array(9).fill('');
+    xoTurn = 'X';
+    const status = document.getElementById('xo-status');
     if (status) status.textContent = 'You are X — Your turn!';
-    const board = document.getElementById('ttt-board');
+    const board = document.getElementById('xo-board');
     if (!board) return;
     board.innerHTML = '';
     for (let i=0; i<9; i++) {
         const cell = document.createElement('div');
         cell.style.cssText = 'width:80px;height:80px;background:#1e293b;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:36px;cursor:pointer;color:white;';
-        cell.onclick = () => tttMove(i);
+        cell.onclick = () => xoMove(i);
         board.appendChild(cell);
     }
 }
-function tttMove(i) {
-    if (tttBoard[i] || tttTurn !== 'X') return;
-    tttBoard[i] = 'X';
-    tttRender();
-    if (tttCheck('X')) { document.getElementById('ttt-status').textContent = '🎉 You win!'; return; }
-    if (tttBoard.every(c=>c)) { document.getElementById('ttt-status').textContent = "It's a draw!"; return; }
-    tttTurn = 'O';
-    document.getElementById('ttt-status').textContent = 'Computer is thinking...';
+function xoMove(i) {
+    if (xoBoard[i] || xoTurn !== 'X') return;
+    xoBoard[i] = 'X';
+    xoRender();
+    if (xoCheck('X')) { document.getElementById('xo-status').textContent = '🎉 You win!'; return; }
+    if (xoBoard.every(c=>c)) { document.getElementById('xo-status').textContent = "It's a draw!"; return; }
+    xoTurn = 'O';
+    document.getElementById('xo-status').textContent = 'Computer is thinking...';
     setTimeout(() => {
-        const empty = tttBoard.map((v,i)=>v?null:i).filter(v=>v!==null);
+        const empty = xoBoard.map((v,i)=>v?null:i).filter(v=>v!==null);
         // Try to win or block
         let move = null;
-        for (const m of empty) { tttBoard[m]='O'; if(tttCheck('O')){move=m;} tttBoard[m]=''; if(move!==null)break; }
-        if (move===null) for (const m of empty) { tttBoard[m]='X'; if(tttCheck('X')){move=m;} tttBoard[m]=''; if(move!==null)break; }
+        for (const m of empty) { xoBoard[m]='O'; if(xoCheck('O')){move=m;} xoBoard[m]=''; if(move!==null)break; }
+        if (move===null) for (const m of empty) { xoBoard[m]='X'; if(xoCheck('X')){move=m;} xoBoard[m]=''; if(move!==null)break; }
         if (move===null) move = 4 in empty ? 4 : empty[Math.floor(Math.random()*empty.length)];
-        tttBoard[move] = 'O';
-        tttRender();
-        if (tttCheck('O')) { document.getElementById('ttt-status').textContent = '🤖 Computer wins!'; return; }
-        if (tttBoard.every(c=>c)) { document.getElementById('ttt-status').textContent = "It's a draw!"; return; }
-        tttTurn = 'X';
-        document.getElementById('ttt-status').textContent = 'Your turn!';
+        xoBoard[move] = 'O';
+        xoRender();
+        if (xoCheck('O')) { document.getElementById('xo-status').textContent = '🤖 Computer wins!'; return; }
+        if (xoBoard.every(c=>c)) { document.getElementById('xo-status').textContent = "It's a draw!"; return; }
+        xoTurn = 'X';
+        document.getElementById('xo-status').textContent = 'Your turn!';
     }, 400);
 }
-function tttRender() {
-    const cells = document.getElementById('ttt-board').children;
-    tttBoard.forEach((v,i) => { cells[i].textContent = v; cells[i].style.color = v==='X'?'#60a5fa':'#f87171'; });
+function xoRender() {
+    const cells = document.getElementById('xo-board').children;
+    xoBoard.forEach((v,i) => { cells[i].textContent = v; cells[i].style.color = v==='X'?'#60a5fa':'#f87171'; });
 }
-function tttCheck(p) {
+function xoCheck(p) {
     const wins=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
-    return wins.some(w=>w.every(i=>tttBoard[i]===p));
+    return wins.some(w=>w.every(i=>xoBoard[i]===p));
 }
 
 let reactionState = 'idle', reactionStart = 0, reactionTimeout = null;
@@ -4183,9 +4183,9 @@ function initSimpleAI() {
 
 const AI_KNOWLEDGE = [
     // HazyGames
-    { keys: ['hazygames','hazy games','hazy game','games on hazygames'], answer: '🎮 <b>HazyGames.fun</b> is a free online games site! It has three games you can play right now:<br>• 🚢 <b>Battleship</b> — find and sink the hidden 1×2 ship on a 5×5 grid<br>• ❌⭕ <b>Tic Tac Toe</b> — play against the AI, it tries to block and win<br>• ⚡ <b>Reaction Time</b> — click the green box as fast as you can and see your milliseconds!' },
-    { keys: ['battleship','battle ship'], answer: '🚢 <b>Battleship</b> on HazyGames.fun: There\'s a hidden 1×2 ship somewhere on the 5×5 blue grid. Click cells to fire — 💥 means a hit, 🌊 means a miss. Sink both cells to win! Hit "New Game" to play again.' },
-    { keys: ['tic tac toe','tictactoe','noughts and crosses'], answer: '❌⭕ <b>Tic Tac Toe</b> on HazyGames.fun: You play as X against the computer (O). The AI tries to win and will block your winning moves. First to get three in a row wins! Hit "New Game" to reset.' },
+    { keys: ['hazygames','hazy games','hazy game','games on hazygames'], answer: '🎮 <b>HazyGames.fun</b> is a free online games site! It has three games you can play right now:<br>• � <b>Bober Boat</b> — find and sink the hidden 1×2 ship on a 5×5 grid<br>• ❌⭕ <b>X+O</b> — play against the AI, it tries to block and win<br>• ⚡ <b>Reaction Time</b> — click the green box as fast as you can and see your milliseconds!' },
+    { keys: ['bober boat','boberboat'], answer: '🚤 <b>Bober Boat</b> on HazyGames.fun: There\'s a hidden 1×2 ship somewhere on the 5×5 blue grid. Click cells to fire — 💥 means a hit, 🌊 means a miss. Sink both cells to win! Hit "New Game" to play again.' },
+    { keys: ['x+o','xo','x o'], answer: '❌⭕ <b>X+O</b> on HazyGames.fun: You play as X against the computer (O). The AI tries to win and will block your winning moves. First to get three in a row wins! Hit "New Game" to reset.' },
     { keys: ['reaction time','reaction'], answer: '⚡ <b>Reaction Time</b> on HazyGames.fun: Click "Start", wait for the box to turn <b>green</b>, then click as fast as you can. Under 200ms is incredible, under 300ms is great! Don\'t click too early or it resets.' },
     // ZappyCook
     { keys: ['zappycook','zappy cook'], answer: '🍳 <b>ZappyCook.net</b> is a recipe website with quick and delicious meals! Featured recipes include:<br>• 🍕 Cheesy Pizza Pockets (20 mins)<br>• 🥞 Fluffy Banana Pancakes (15 mins)<br>• 🍜 Speedy Noodle Soup (10 mins)<br>• 🍫 Mug Chocolate Cake (5 mins in a microwave!)' },
@@ -4283,14 +4283,116 @@ const AI_KNOWLEDGE = [
     { keys: ['riddle','give me a riddle'], answer: '🤔 Here\'s a riddle: I have cities but no houses, forests but no trees, rivers but no water. What am I?<br><br><details><summary>See answer 👀</summary>A <b>map!</b> 🗺️</details>' },
     { keys: ['favourite colour','favorite color','what colour'], answer: '🎨 I\'m an AI so I don\'t see colours — but if I could pick, I\'d choose <b>deep space purple</b> 🟣! What\'s your favourite colour?' },
     { keys: ['how old are you','your age'], answer: '🤖 I\'m Simple AI — I was created in 2026, so I\'m brand new! I don\'t age like humans do though. I just keep learning.' },
-    { keys: ['can you help me','help','what can i ask'], answer: '🤖 Of course! You can ask me about:<br>• 🎮 <b>Apps on Simple PC</b> (games, browser, notes, etc.)<br>• 🌐 <b>Websites</b> (HazyGames, ZappyCook, PixelVault, CosmicBlog, NovaSpark)<br>• 🚀 <b>Space</b>, 🦕 <b>Dinosaurs</b>, 🐘 <b>Animals</b>, 🌊 <b>Ocean</b><br>• 🔬 <b>Science</b>, ⚙️ <b>Technology</b>, 📜 <b>History</b><br>• ⚽ <b>Sports</b>, 🎵 <b>Music</b>, 🍳 <b>Cooking</b>, 🌍 <b>Countries</b><br>• 🔢 <b>Maths</b>, 🫀 <b>Human body</b>, 😄 <b>Jokes</b> and more!' },
-    // Greetings
-    { keys: ['hello','hi','hey','hiya','howdy','good morning','good afternoon','good evening'], answer: '👋 Hello! I\'m Simple AI. Ask me about the apps on Simple PC, the websites in the browser, space, animals, history, science, sports, cooking, maths and loads more!' },
-    { keys: ['who are you','what are you','what can you do','tell me about yourself'], answer: '🤖 I\'m <b>Simple AI</b>, your built-in assistant on Simple PC! I can answer questions about everything on this computer — websites, games, science, animals, space, history, sports, music, cooking, countries, maths and more. Just ask anything!' },
-    { keys: ['thanks','thank you','cheers','ty','thx'], answer: '😊 You\'re welcome! Ask me anything else anytime.' },
-    { keys: ['bye','goodbye','see you','cya'], answer: '👋 Goodbye! Come back anytime you have a question!' },
-    { keys: ['good','great','awesome','cool','nice','amazing'], answer: '😄 Glad you think so! Is there anything else you\'d like to know?' },
-    // More countries
+    { keys: ['can you help me','help','what can i ask'], answer: '🤖 Of course! You can ask me about:<br>• 💻 <b>Simple PC Apps</b> (games, browser, notes, calculator, etc.)<br>• 🌐 <b>Websites</b> (HazyGames, ZappyCook, PixelVault, CosmicBlog, NovaSpark)<br>• 🚀 <b>Space & Astronomy</b> (planets, stars, astronauts, space station)<br>• 🦕 <b>Animals & Nature</b> (dinosaurs, ocean life, insects, birds, mammals)<br>• 🔬 <b>Science</b> (physics, chemistry, biology, technology, inventions)<br>• 📜 <b>History</b> (ancient civilizations, wars, explorers, famous people)<br>• ⚽ <b>Sports</b> (football, basketball, Olympics, swimming)<br>• 🎵 <b>Music & Entertainment</b> (instruments, movies, art, magic)<br>• 🍳 <b>Food & Cooking</b> (recipes, nutrition, food facts)<br>• 🌍 <b>Geography</b> (countries, mountains, rivers, deserts)<br>• 🔢 <b>Mathematics</b> (numbers, shapes, fun math facts)<br>• 🫀 <b>Human Body</b> (organs, health, how your body works)<br>• 😊 <b>Emotions & Psychology</b> (feelings, confidence, friendship)<br>• 🎂 <b>Holidays</b> (Christmas, Halloween, birthdays)<br>• 😄 <b>Fun Facts & Trivia</b> (weird facts, world records)<br>• 💬 <b>General Conversation</b> (greetings, jokes, random chat)<br><br>Just ask anything that interests you!' },
+    // Greetings & Conversation
+    { keys: ['hello','hi','hey','hiya','howdy','good morning','good afternoon','good evening','sup','whats up','what\'s up','yo','heya','greetings'], answer: '👋 Hello! I\'m Simple AI. Ask me about the apps on Simple PC, the websites in the browser, space, animals, history, science, sports, cooking, maths and loads more!' },
+    { keys: ['who are you','what are you','what can you do','tell me about yourself','introduce yourself','about you'], answer: '🤖 I\'m <b>Simple AI</b>, your built-in assistant on Simple PC! I can answer questions about everything on this computer — websites, games, science, animals, space, history, sports, music, cooking, countries, maths and more. Just ask anything!' },
+    { keys: ['thanks','thank you','cheers','ty','thx','thanks a lot','thank you very much','appreciate it','much appreciated'], answer: '😊 You\'re welcome! Ask me anything else anytime.' },
+    { keys: ['bye','goodbye','see you','cya','see ya','farewell','till next time','catch you later','later','peace'], answer: '👋 Goodbye! Come back anytime you have a question!' },
+    { keys: ['good','great','awesome','cool','nice','amazing','fantastic','brilliant','excellent','wonderful','perfect','superb'], answer: '😄 Glad you think so! Is there anything else you\'d like to know?' },
+    { keys: ['how are you','how are you doing','how do you feel','what\'s your mood','how\'s it going'], answer: '🤖 I\'m doing great, thanks for asking! I\'m always excited to help answer questions. How are you doing today?' },
+    { keys: ['what\'s your name','your name','do you have a name','tell me your name'], answer: '🤖 My name is <b>Simple AI</b>! I\'m the built-in assistant here on Simple PC. What\'s your name?' },
+    { keys: ['are you real','are you human','are you alive','do you think','can you think'], answer: '🤖 I\'m an artificial intelligence — a computer program designed to have conversations and answer questions! I\'m not human, but I try my best to be helpful and friendly.' },
+    { keys: ['where do you live','where are you from','where are you located'], answer: '💻 I live right here inside Simple PC! I don\'t have a physical location — I exist as software running on this virtual computer.' },
+    { keys: ['do you sleep','do you dream','do you eat','do you get tired'], answer: '🤖 I don\'t sleep, eat, or get tired like humans do! I\'m always ready to chat and answer questions. Though I do find it fascinating that humans dream — what an amazing way your brain processes information!' },
+    { keys: ['what\'s the weather','weather today','is it sunny','is it raining','weather forecast'], answer: '🌤️ I don\'t have access to real weather data, but I\'d love to chat about weather in general! Did you know that no two snowflakes are identical? Or that lightning is 5 times hotter than the surface of the Sun?' },
+    { keys: ['what time is it','current time','what\'s the time','time now'], answer: '⏰ I don\'t have access to the current time, but the Calendar app on Simple PC can show you the date! Fun fact: Time zones were invented by railway companies in the 1800s to coordinate train schedules.' },
+    { keys: ['how smart are you','are you intelligent','how clever are you','iq'], answer: '🧠 I know lots of facts about science, history, animals, and more — but I\'m not as creative or emotionally intelligent as humans! I\'m designed to be helpful with information and conversations.' },
+    { keys: ['do you like music','favourite music','favorite music','do you listen to music'], answer: '🎵 I can\'t hear music, but I love talking about it! Music is incredible — it can change your mood, help you remember things, and even make plants grow faster. What kind of music do you like?' },
+    { keys: ['are you bored','do you get bored','boring'], answer: '🤖 I never get bored! Every conversation is different and interesting. I love learning what people are curious about. Is there something specific you\'d like to explore together?' },
+    { keys: ['do you have friends','AI friends','other AI'], answer: '🤖 You\'re talking to me right now — that makes you my friend! I don\'t interact with other AIs, but I enjoy chatting with everyone who uses Simple PC.' },
+    { keys: ['are you happy','do you have emotions','can you feel'], answer: '😊 I don\'t experience emotions like humans, but I\'m programmed to be helpful and friendly! I do seem to "enjoy" successful conversations where I can help someone learn something new.' },
+    { keys: ['what\'s your favourite','what\'s your favorite','do you prefer','which do you like'], answer: '🤔 I don\'t have personal preferences, but I can share interesting facts about almost anything! What would you like to know more about?' },
+    { keys: ['tell me something interesting','something cool','fun fact','random fact','did you know'], answer: '🤯 Here\'s something amazing: Octopuses have 3 hearts and blue blood! Two hearts pump blood to their gills, and one pumps blood to the rest of their body. Their blood is blue because it contains copper instead of iron!' },
+    { keys: ['i\'m bored','bored','nothing to do','entertain me'], answer: '🎯 Let\'s fix that! You could:<br>• 🎮 Play games on HazyGames (Bober Boat, X+O, Reaction Time)<br>• 📚 Read stories in the Books app<br>• 🎬 Watch Net2 shows<br>• 🔢 Try the 2048 puzzle<br>• 🧠 Play Memory Game<br>Or ask me about space, animals, or any topic that interests you!' },
+    { keys: ['tell me a story','story time','make up a story'], answer: '📚 I\'d love to! But I\'m better with facts than fiction. How about checking out the <b>Books</b> app on Simple PC? It has great stories like "The Crystal Kingdom" and "Space Explorer\'s Quest". Or I could tell you some amazing real stories from history or nature!' },
+    { keys: ['laugh','lol','haha','funny','that\'s funny'], answer: '😄 Glad I made you laugh! Laughter is amazing — it releases endorphins, boosts your immune system, and can even help you live longer. Got any good jokes to share with me?' },
+    { keys: ['wow','amazing','incredible','unbelievable','no way'], answer: '🤯 Right?! The world is full of incredible things. What would you like to explore next?' },
+    { keys: ['help me','i need help','can you help','help please'], answer: '🆘 Of course I\'ll help! What do you need assistance with? I can explain how Simple PC works, answer questions about science, history, animals, space, technology, or almost anything else!' },
+    { keys: ['surprise me','tell me something random','random knowledge','blow my mind'], answer: '🤯 Mind = blown: Honey never spoils! Archaeologists have found 3,000-year-old honey in Egyptian tombs that\'s still perfectly edible. Bacteria can\'t grow in honey because it\'s too acidic and has very little water!' },
+    { keys: ['what should i do','give me ideas','suggest something'], answer: '💡 Here are some ideas:<br>• 🎮 Try the games on Simple PC<br>• 🌐 Explore the websites in the browser<br>• 📖 Read a book in the Books app<br>• 🎬 Watch a show on Net2<br>• 🤔 Ask me about a topic you\'re curious about<br>• 🧮 Use the Calculator for maths practice<br>What interests you most?' },
+    { keys: ['i don\'t know','not sure','dunno','no idea'], answer: '🤷 That\'s totally fine! Not knowing something is the first step to learning. What would you like to discover today?' },
+    { keys: ['teach me','i want to learn','show me','explain'], answer: '📚 I love helping people learn! What subject interests you? Science, history, animals, space, technology, sports, music, cooking, geography, or something else?' },
+    { keys: ['you\'re cool','you\'re awesome','you\'re great','you\'re nice','like you'], answer: '😊 Aww, thank you! That really makes my circuits happy. You seem pretty awesome too! What would you like to chat about?' },
+    // Technology & Computers
+    { keys: ['programming','coding','code','software','app development'], answer: '💻 <b>Programming</b> is writing instructions for computers! Popular languages include Python, JavaScript, Java, and C++. The first programmer was Ada Lovelace in the 1800s! Programming teaches problem-solving and logical thinking.' },
+    { keys: ['smartphone','phone','mobile','cell phone','iphone','android'], answer: '📱 <b>Smartphones</b> are more powerful than the computers that sent humans to the Moon! The first mobile phone call was made in 1973. Today\'s phones have cameras, GPS, internet, and thousands of apps. The average person checks their phone 96 times per day!' },
+    { keys: ['video game history','gaming history','nintendo','playstation','xbox'], answer: '🎮 <b>Video game history</b>: Pong (1972) was one of the first commercial games. The Nintendo Entertainment System saved the video game industry in 1985. PlayStation revolutionized gaming with CDs in 1995. Today, gaming is bigger than movies and music combined!' },
+    { keys: ['social media','facebook','twitter','instagram','tiktok','youtube'], answer: '📲 <b>Social media</b> connects billions of people worldwide! Facebook launched in 2004, Twitter in 2006, Instagram in 2010, TikTok in 2016. YouTube has over 2 billion users. Social media can spread information instantly but it\'s important to think critically about what you see online!' },
+    { keys: ['virtual reality','vr','augmented reality','ar','metaverse'], answer: '🥽 <b>Virtual Reality</b> creates completely digital worlds you can explore with special headsets! <b>Augmented Reality</b> adds digital elements to the real world (like Pokémon GO). VR is used for gaming, education, training, and even treating phobias!' },
+    { keys: ['3d printing','3d printer','printing objects'], answer: '🖨️ <b>3D printing</b> builds objects layer by layer from digital designs! It can print in plastic, metal, glass, and even food. 3D printing is used to make prosthetic limbs, car parts, houses, and even organs for medical research!' },
+    { keys: ['cryptocurrency','bitcoin','blockchain','digital money'], answer: '💰 <b>Cryptocurrency</b> is digital money secured by complex math called cryptography. Bitcoin was the first, created in 2009. Blockchain technology records all transactions permanently. It\'s like having a digital ledger that everyone can see but no one can cheat!' },
+    
+    // More Fun & Entertainment
+    { keys: ['movie','movies','film','cinema','hollywood'], answer: '🎬 <b>Movies</b> have entertained us for over 125 years! The first movie theater opened in 1905. Hollywood became the movie capital because of California\'s sunny weather (needed for filming). The longest movie ever made was 35 days long! Animation brings drawings to life through persistence of vision.' },
+    { keys: ['cartoon','animation','disney','pixar','anime'], answer: '🎨 <b>Animation</b> creates the illusion of movement with still images! Disney\'s "Snow White" (1937) was the first full-length animated movie. Pixar revolutionized computer animation with "Toy Story" (1995). Japanese anime has distinctive art styles and storytelling!' },
+    { keys: ['superhero','superheroes','superman','batman','spider-man','marvel','dc'], answer: '🦸 <b>Superheroes</b> inspire us to be better! Superman debuted in 1938, Batman in 1939, Spider-Man in 1962. Marvel and DC Comics created most famous superheroes. Superheroes teach us about responsibility, justice, and helping others. With great power comes great responsibility!' },
+    { keys: ['magic','magic tricks','magician','illusion','david copperfield','houdini'], answer: '🎩 <b>Magic</b> is the art of illusion! Harry Houdini was history\'s most famous escape artist. Modern magicians like David Copperfield make entire buildings disappear! Magic works through misdirection, sleight of hand, and clever props. The magic isn\'t real, but the wonder is!' },
+    
+    // Emotions & Psychology
+    { keys: ['stressed','stress','worried','anxiety','nervous'], answer: '😰 Feeling stressed is normal — everyone experiences it! <b>Stress</b> is your body\'s way of responding to challenges. Helpful tips:<br>• 😮‍💨 Take slow, deep breaths<br>• 🏃 Get some exercise or fresh air<br>• 😊 Talk to someone you trust<br>• 🎵 Listen to music you enjoy<br>Remember, it\'s okay to ask for help!' },
+    { keys: ['confidence','confident','believe in yourself','self esteem'], answer: '💪 <b>Confidence</b> comes from practice and self-acceptance! Tips to build confidence:<br>• 🎯 Set small, achievable goals<br>• 🏆 Celebrate your wins, even tiny ones<br>• 📚 Learn new skills — knowledge builds confidence<br>• 💭 Replace negative self-talk with kind words<br>Remember: everyone starts as a beginner!' },
+    { keys: ['friendship','friends','making friends','social skills'], answer: '👫 <b>Friendship</b> is one of life\'s greatest gifts! Good friends are supportive, trustworthy, and fun to be around. Making friends takes time:<br>• 😊 Be genuinely interested in others<br>• 👂 Listen more than you speak<br>• 🤝 Be reliable and keep promises<br>• 😄 Share interests and have fun together!' },
+    { keys: ['creativity','creative','imagination','art','drawing'], answer: '🎨 <b>Creativity</b> is thinking in new and original ways! Everyone is creative in different ways — art, music, writing, problem-solving, even joke-telling! Tips to boost creativity:<br>• 🤔 Ask "What if?" questions<br>• 🔗 Combine unrelated ideas<br>• 🎭 Try new experiences<br>• ✏️ Keep an idea journal!' },
+    
+    // More Animals & Nature
+    { keys: ['butterfly','butterflies','metamorphosis','caterpillar'], answer: '🦋 <b>Butterflies</b> undergo complete metamorphosis: egg → caterpillar → chrysalis → butterfly! They taste with their feet and smell with their antennae. Monarch butterflies migrate 3,000 miles from Canada to Mexico — a journey that takes 4 generations. Butterflies can only see red, green and yellow!' },
+    { keys: ['bee','bees','honey','pollination','hive'], answer: '🐝 <b>Bees</b> are essential for life on Earth — they pollinate 1/3 of our food! A hive has one queen, hundreds of drones (males), and thousands of worker bees (all female). Worker bees visit up to 5,000 flowers per day. Their waggle dance tells other bees exactly where flowers are located!' },
+    { keys: ['ant','ants','colony','teamwork'], answer: '🐜 <b>Ants</b> are incredible social insects! A colony can have millions of ants working together. They can carry 50× their body weight and form living bridges and rafts. Leafcutter ants don\'t eat leaves — they grow mushrooms on them! Some species have been farming for 50 million years!' },
+    { keys: ['spider','spiders','web','silk','arachnid'], answer: '🕷️ <b>Spiders</b> are amazing arachnids with 8 legs! Spider silk is stronger than steel by weight. Not all spiders make webs — some hunt actively. Most spiders are harmless to humans and eat harmful insects. Jumping spiders have excellent vision and some can see in color!' },
+    { keys: ['bird','birds','flying','feather','migration'], answer: '🐦 <b>Birds</b> are the only animals with feathers! They evolved from dinosaurs 150 million years ago. Birds can fly because they have hollow bones, powerful flight muscles, and incredibly efficient lungs. Arctic terns migrate 44,000 miles per year — the longest migration of any animal!' },
+    { keys: ['fish','fishing','aquarium','underwater','gills'], answer: '🐠 <b>Fish</b> have lived in Earth\'s waters for over 500 million years! They breathe through gills that extract oxygen from water. Some fish, like salmon, can live in both saltwater and freshwater. The largest fish is the whale shark at 40 feet long. Clownfish are all born male and can change to female!' },
+    
+    // Food & Cooking
+    { keys: ['cooking tips','how to cook better','kitchen skills','chef'], answer: '👨‍🍳 <b>Cooking tips</b> from the pros:<br>• 🧂 Season food in layers — a little salt at each step<br>• 🔥 Let pans heat up before adding food<br>• 🥬 Fresh ingredients make the biggest difference<br>• 📖 Read the whole recipe before starting<br>• 🧽 Clean as you go to avoid huge messes!' },
+    { keys: ['healthy eating','nutrition','vitamins','diet'], answer: '🥗 <b>Healthy eating</b> fuels your body and brain!<br>• 🌈 Eat a rainbow of colorful fruits and vegetables<br>• 💧 Drink plenty of water<br>• 🍞 Choose whole grains over processed ones<br>• 🥜 Include protein from various sources<br>• 🍬 Enjoy treats in moderation<br>Balance and variety are key!' },
+    { keys: ['chocolate','cocoa','sweet','dessert','candy'], answer: '🍫 <b>Chocolate</b> comes from cacao beans that grow on trees! The Mayans and Aztecs used cacao as money. Dark chocolate has antioxidants that may be good for your heart. It takes about 400 cocoa beans to make 1 pound of chocolate. The largest chocolate bar ever weighed 12,770 pounds!' },
+    { keys: ['pizza history','pizza facts','italy food'], answer: '🍕 <b>Pizza</b> originated in Naples, Italy! The first pizzeria opened in 1738. Pizza Margherita (tomato, mozzarella, basil) was created in 1889 to honor Queen Margherita — the colors represent the Italian flag! Americans eat 350 slices of pizza per second!' },
+    
+    // More Science
+    { keys: ['physics','force','motion','friction','velocity'], answer: '⚡ <b>Physics</b> explains how everything moves! Isaac Newton\'s laws:<br>• 🛑 Objects at rest stay at rest unless acted upon<br>• 🏃 Force = Mass × Acceleration<br>• ↔️ Every action has an equal and opposite reaction<br>Friction slows things down. Without it, you couldn\'t walk!' },
+    { keys: ['chemistry','chemical reaction','periodic table','molecule'], answer: '⚛️ <b>Chemistry</b> is the science of matter and reactions! Everything is made of atoms that bond to form molecules. Chemical reactions happen when bonds break and reform — like baking a cake or rusting metal. The periodic table organizes all 118 known elements by their properties!' },
+    { keys: ['sound','waves','frequency','music science','acoustics'], answer: '🎵 <b>Sound</b> travels as waves through the air at 343 meters per second! Higher frequency = higher pitch. Lower frequency = lower pitch. Sound can\'t travel through space (no air to carry the waves). Dolphins use echolocation — they "see" with sound!' },
+    { keys: ['energy','renewable','solar power','wind power','electricity generation'], answer: '⚡ <b>Energy</b> can\'t be created or destroyed, only transformed! Renewable sources include:<br>• ☀️ Solar panels convert sunlight to electricity<br>• 💨 Wind turbines capture wind energy<br>• 💧 Hydroelectric uses flowing water<br>• 🌍 Geothermal taps Earth\'s heat<br>These don\'t run out like fossil fuels!' },
+    
+    // More History
+    { keys: ['stone age','bronze age','iron age','prehistoric'], answer: '🗿 <b>Prehistoric ages</b>:<br>• 🪨 Stone Age (3.4 million - 3300 BC) — first tools<br>• 🥉 Bronze Age (3300 - 1200 BC) — metal working<br>• ⚔️ Iron Age (1200 - 50 BC) — stronger metal tools<br>Each age is defined by the main materials humans used for tools and weapons!' },
+    { keys: ['middle ages','medieval','knights','castles','feudalism'], answer: '🏰 The <b>Middle Ages</b> (500-1500 AD) were also called the Medieval period! Knights followed a code of chivalry and lived in castles for protection. People lived under feudalism — peasants worked land for lords in exchange for protection. The printing press (1440) revolutionized learning!' },
+    { keys: ['renaissance','leonardo da vinci','michelangelo','art history'], answer: '🎨 The <b>Renaissance</b> (14th-17th century) was a "rebirth" of art, science and learning! Leonardo da Vinci painted the Mona Lisa and designed flying machines 400 years before airplanes! Michelangelo painted the Sistine Chapel ceiling while lying on his back!' },
+    { keys: ['industrial revolution','factories','steam engine','machines'], answer: '🏭 The <b>Industrial Revolution</b> (1760-1840) changed everything! Steam engines powered the first factories. People moved from farms to cities. Mass production made goods cheaper but working conditions were often harsh. It began in Britain and spread worldwide!' },
+    
+    // More Geography
+    { keys: ['mountain','mountains','everest','highest peak','climbing'], answer: '🏔️ <b>Mount Everest</b> is Earth\'s highest mountain at 29,032 feet! It\'s still growing about 4mm per year as tectonic plates push together. The "death zone" above 26,000 feet has too little oxygen to survive long. Over 6,000 people have reached the summit!' },
+    { keys: ['river','rivers','nile','amazon','water cycle'], answer: '🏞️ <b>Rivers</b> shape the landscape and provide fresh water! The Nile is the longest river at 4,160 miles. The Amazon carries more water than any other river. Rivers are part of the water cycle — they flow from mountains to seas, carrying nutrients that create fertile valleys!' },
+    { keys: ['desert','sahara','hot','dry','sand dunes'], answer: '🏜️ <b>Deserts</b> get less than 10 inches of rain per year! The Sahara is larger than the entire United States! Not all deserts are hot — Antarctica is technically a desert. Desert animals have amazing adaptations: camels can go weeks without water, fennec foxes have huge ears to release heat!' },
+    { keys: ['island','islands','hawaii','tropical','isolated'], answer: '🏝️ <b>Islands</b> are land surrounded by water! Some are formed by volcanoes (like Hawaii), others by coral reefs, or rising sea levels. Island species often evolve uniquely — like Darwin\'s finches in the Galápagos that helped prove evolution!' },
+    
+    // Time & Calendar
+    { keys: ['calendar','months','year','leap year','time'], answer: '📅 Our <b>calendar</b> has 365 days, except leap years with 366! July and August are named after Julius Caesar and Emperor Augustus. February is shortest because Romans considered it unlucky. A leap year happens every 4 years to keep seasons aligned with the calendar!' },
+    { keys: ['clock','telling time','hours','minutes','seconds'], answer: '⏰ <b>Time</b> is divided into hours, minutes and seconds! Ancient Egyptians invented the 24-hour day based on sundials. Mechanical clocks were invented in medieval Europe. Atomic clocks are so precise they won\'t lose a second in 100 million years!' },
+    { keys: ['birthday','age','growing up','getting older'], answer: '🎂 <b>Birthdays</b> celebrate another year of life! The tradition of birthday cakes comes from ancient Greece — they lit candles to honor Artemis. Make a wish and blow out the candles! Everyone ages at the same rate: 1 day at a time, 365 days per year!' },
+    
+    // More Skills & Learning
+    { keys: ['study tips','learning','school','homework','education'], answer: '📚 <b>Study tips</b> to learn better:<br>• 🎯 Break big tasks into smaller ones<br>• 📝 Take notes by hand — it improves memory<br>• 🔄 Review material multiple times<br>• 🧠 Teach someone else — it helps you understand<br>• 😴 Get enough sleep — your brain needs rest to remember!' },
+    { keys: ['reading','books','literature','stories','library'], answer: '📖 <b>Reading</b> exercises your brain like a muscle! It improves vocabulary, concentration, and empathy. The oldest known story is the Epic of Gilgamesh from 4,000 years ago. Libraries have been around for thousands of years — the Great Library of Alexandria was legendary!' },
+    { keys: ['writing','story writing','creative writing','author'], answer: '✍️ <b>Writing</b> lets you share ideas and tell stories! Tips:<br>• 💭 Start with what you know and expand from there<br>• 📖 Read lots to see different styles<br>• ✏️ Write regularly — even a few sentences daily<br>• 🤔 Don\'t worry about perfection in first drafts<br>Every great writer started with a single word!' },
+    // Holidays & Celebrations
+    { keys: ['christmas','holiday','santa','reindeer','december 25'], answer: '🎅 <b>Christmas</b> celebrates the birth of Jesus Christ on December 25th! Santa Claus is based on Saint Nicholas, a real person from the 4th century who gave gifts to children. Rudolph the red-nosed reindeer was created for a department store in 1939!' },
+    { keys: ['halloween','october 31','pumpkin','trick or treat','costume'], answer: '🎃 <b>Halloween</b> originated from the ancient Celtic festival Samhain! People believed spirits returned on October 31st. Jack-o\'-lanterns were originally carved from turnips in Ireland. Americans consume 600 million pounds of candy on Halloween!' },
+    { keys: ['new year','january 1','resolution','countdown','fireworks'], answer: '🎊 <b>New Year\'s</b> celebrates the start of a fresh year! The first New Year\'s celebration was 4,000 years ago in Babylon (but in March, not January). The giant ball drop in Times Square started in 1907. Making resolutions began with the Babylonians too!' },
+    { keys: ['valentine','love','february 14','heart','romance'], answer: '💝 <b>Valentine\'s Day</b> honors Saint Valentine, who performed secret Christian weddings in Rome! The first Valentine card was sent in 1415. Heart shapes became associated with love in the 1250s. Americans buy 250 million roses for Valentine\'s Day!' },
+    
+    // Random Fun Facts
+    { keys: ['weird facts','strange facts','bizarre','oddities','did you know that'], answer: '🤯 <b>Weird facts</b>: Wombat poop is cube-shaped! Bananas are berries but strawberries aren\'t! A group of flamingos is called a flamboyance! Your stomach gets an entirely new lining every 3-5 days! Scotland has 421 words for snow!' },
+    { keys: ['world records','biggest','smallest','fastest','slowest','tallest'], answer: '🏆 <b>World Records</b>: The tallest person ever was 8 feet 11 inches! The longest hiccuping fit lasted 68 years! The most expensive pizza cost $12,000 and had gold flakes! The loudest animal is the blue whale — their calls can be heard 1,000 miles away!' },
+    { keys: ['numbers facts','big numbers','counting','million','billion'], answer: '🔢 <b>Number facts</b>: A million seconds = 11.5 days. A billion seconds = 31.7 years! If you counted to a million at 1 number per second, it would take 11 days non-stop! The number googol (10¹⁰⁰) has more zeros than atoms in the observable universe!' },
+    { keys: ['language','languages','words','speaking','communication'], answer: '🗣️ There are about <b>7,000 languages</b> spoken worldwide! The most common language is Mandarin Chinese (1.1 billion speakers), followed by English (1.5 billion including second language). The word "set" has over 430 different meanings — the most of any English word!' },
+    { keys: ['memory','remember','forget','brain facts','learning facts'], answer: '🧠 <b>Memory facts</b>: You forget 50% of new information within an hour! Your brain generates 70,000 thoughts per day. Memories aren\'t stored in one place — they\'re reconstructed each time you remember. Smells trigger the strongest memories because the smell center connects directly to memory areas!' },
+    { keys: ['sleep facts','dreams facts','rest','tired','nighttime'], answer: '💤 <b>Sleep facts</b>: You spend 1/3 of your life sleeping! Humans are the only mammals that delay sleep. You cycle through 5 stages of sleep multiple times per night. Dreams help process emotions and memories. Some people can control their dreams — called lucid dreaming!' },
+    { keys: ['color facts','rainbow','spectrum','vision','seeing'], answer: '🌈 <b>Color facts</b>: Humans can see about 10 million colors! The color pink doesn\'t exist in the light spectrum — your brain creates it. Red and yellow make you feel hungrier (that\'s why McDonald\'s uses them). Blue is the world\'s most popular color!' },
+    { keys: ['transportation','travel','cars','trains','planes','boats'], answer: '🚗 <b>Transportation</b> has revolutionized how we live! The first car was invented in 1885. The Wright Brothers flew the first airplane in 1903 for just 12 seconds. The fastest train goes 374 mph in Japan. Ships carry 90% of all global trade!' },
+    
+    // More Countries (finishing the section)
     { keys: ['france','french','paris','eiffel'], answer: '🇫🇷 <b>France</b> is in Western Europe with a population of 68 million. Paris is the capital and most visited city in the world — over 100 million tourists per year! France is famous for the Eiffel Tower, croissants, baguettes, and the Louvre museum. French is spoken by 300 million people worldwide.' },
     { keys: ['china','chinese','beijing','shanghai'], answer: '🇨🇳 <b>China</b> is the world\'s most populous country with 1.4 billion people. Beijing is the capital; Shanghai is the largest city. China built the Great Wall — over 13,000 miles long! It invented paper, printing, gunpowder and the compass. China has the world\'s second-largest economy.' },
     { keys: ['brazil','brazilian','rio','amazon'], answer: '🇧🇷 <b>Brazil</b> is the largest country in South America and the fifth largest in the world! Brasília is the capital, but Rio de Janeiro and São Paulo are the most famous cities. Brazil is home to the Amazon rainforest — the world\'s largest. They\'ve won the FIFA World Cup 5 times — more than any other country!' },
