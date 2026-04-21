@@ -3845,6 +3845,43 @@ const mapesState = {
     assetsPromise: null
 };
 
+function mapesAddLayerSet(layerSet) {
+    if (!mapesState.map || !layerSet) return;
+    const layers = Array.isArray(layerSet) ? layerSet : [layerSet];
+    layers.forEach((layer) => layer.addTo(mapesState.map));
+}
+
+function mapesRemoveLayerSet(layerSet) {
+    if (!mapesState.map || !layerSet) return;
+    const layers = Array.isArray(layerSet) ? layerSet : [layerSet];
+    layers.forEach((layer) => {
+        if (mapesState.map.hasLayer(layer)) {
+            mapesState.map.removeLayer(layer);
+        }
+    });
+}
+
+function mapesCreateMarker(lat, lon, popupText) {
+    if (!window.L || !mapesState.map) return;
+
+    if (mapesState.marker) {
+        mapesState.marker.remove();
+    }
+
+    const markerIcon = L.divIcon({
+        className: 'mapes-pin-wrap',
+        html: '<div class="mapes-pin"></div>',
+        iconSize: [24, 36],
+        iconAnchor: [12, 34],
+        popupAnchor: [0, -30]
+    });
+
+    mapesState.marker = L.marker([lat, lon], { icon: markerIcon })
+        .addTo(mapesState.map)
+        .bindPopup(popupText)
+        .openPopup();
+}
+
 function loadMapesAssets() {
     if (window.L) {
         return Promise.resolve();
@@ -3911,17 +3948,24 @@ function initMapes(contentEl) {
                 attributionControl: true
             }).setView([40.7128, -74.0060], 12);
 
-            mapesState.tileLayers.street = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxZoom: 19,
-                attribution: '&copy; OpenStreetMap contributors'
+            mapesState.tileLayers.street = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+                maxZoom: 20,
+                subdomains: 'abcd',
+                attribution: '&copy; OpenStreetMap contributors &copy; CARTO'
             });
 
-            mapesState.tileLayers.satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-                maxZoom: 19,
-                attribution: 'Tiles &copy; Esri'
-            });
+            mapesState.tileLayers.satellite = [
+                L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                    maxZoom: 20,
+                    attribution: 'Tiles &copy; Esri'
+                }),
+                L.tileLayer('https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', {
+                    maxZoom: 20,
+                    attribution: 'Labels &copy; Esri'
+                })
+            ];
 
-            mapesState.tileLayers.street.addTo(mapesState.map);
+            mapesAddLayerSet(mapesState.tileLayers.street);
             mapesSetStatus('Search to preview locations.');
 
             searchButton.addEventListener('click', mapesSearchPlace);
@@ -3952,12 +3996,10 @@ function mapesSetLayer(layerName) {
     if (!mapesState.map || !mapesState.tileLayers[layerName]) return;
 
     Object.keys(mapesState.tileLayers).forEach((layerKey) => {
-        if (mapesState.map.hasLayer(mapesState.tileLayers[layerKey])) {
-            mapesState.map.removeLayer(mapesState.tileLayers[layerKey]);
-        }
+        mapesRemoveLayerSet(mapesState.tileLayers[layerKey]);
     });
 
-    mapesState.tileLayers[layerName].addTo(mapesState.map);
+    mapesAddLayerSet(mapesState.tileLayers[layerName]);
     mapesState.activeLayer = layerName;
 
     document.querySelectorAll('.mapes-layer-btn').forEach((button) => {
@@ -4035,14 +4077,7 @@ function mapesSelectPlace(place) {
     const lon = Number(place.lon);
     mapesState.map.flyTo([lat, lon], 14, { duration: 0.7 });
 
-    if (mapesState.marker) {
-        mapesState.marker.remove();
-    }
-
-    mapesState.marker = L.marker([lat, lon])
-        .addTo(mapesState.map)
-        .bindPopup(place.display_name)
-        .openPopup();
+    mapesCreateMarker(lat, lon, place.display_name);
 
     document.querySelectorAll('.mapes-result-btn').forEach((button) => {
         button.classList.toggle('active', button.textContent === place.display_name);
@@ -4064,14 +4099,8 @@ function mapesUseMyLocation() {
             if (!mapesState.map) return;
 
             mapesState.map.flyTo([lat, lon], 14, { duration: 0.7 });
-            if (mapesState.marker) {
-                mapesState.marker.remove();
-            }
 
-            mapesState.marker = L.marker([lat, lon])
-                .addTo(mapesState.map)
-                .bindPopup('You are here')
-                .openPopup();
+            mapesCreateMarker(lat, lon, 'You are here');
 
             mapesSetStatus('Showing your current location.');
         },
