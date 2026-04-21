@@ -1626,233 +1626,24 @@ body, html {
     margin-bottom: 4px;
 }
 
-/* ===== MAPES APP ===== */
-.mapes-app {
+/* ===== VIBE SOCIAL MEDIA ===== */
+.vibe-app {
     display: flex;
     flex-direction: column;
     height: 100%;
-    background: linear-gradient(135deg, #0f172a, #1e3a8a);
-    color: #f8fafc;
+    background: #f4f2ff;
+    font-family: 'Segoe UI', sans-serif;
+    overflow: hidden;
+    position: relative;
 }
-
-.mapes-topbar {
-    padding: 12px;
+.vibe-nav {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    background: rgba(2, 6, 23, 0.48);
-    border-bottom: 1px solid rgba(148, 163, 184, 0.25);
-}
-
-.mapes-brand h2 {
-    margin: 0;
-    line-height: 1;
-    font-size: 1.2rem;
-    letter-spacing: 0.03em;
-}
-
-.mapes-brand p {
-    margin: 4px 0 0;
-    font-size: 0.82rem;
-    color: #dbeafe;
-}
-
-.mapes-search-wrap {
     flex: 1;
     max-width: 540px;
     display: grid;
     grid-template-columns: 1fr auto;
     gap: 8px;
-}
-
-.mapes-search-wrap input,
-.mapes-search-wrap button,
-.mapes-actions button,
-.mapes-location-btn,
-.mapes-result-btn {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    border-radius: 10px;
-    border: 1px solid transparent;
-}
-
-.mapes-search-wrap input {
-    padding: 10px 12px;
-    background: rgba(255, 255, 255, 0.15);
-    color: #fff;
-    border-color: rgba(255, 255, 255, 0.25);
-    outline: none;
-}
-
-.mapes-search-wrap input::placeholder {
-    color: rgba(255, 255, 255, 0.72);
-}
-
-.mapes-search-wrap button,
-.mapes-actions button,
-.mapes-location-btn,
-.mapes-result-btn {
-    padding: 10px 12px;
-    cursor: pointer;
-    color: #fff;
-    background: #eb6f21;
-    transition: transform 0.2s ease, background-color 0.2s ease;
-}
-
-.mapes-search-wrap button:hover,
-.mapes-actions button:hover,
-.mapes-location-btn:hover,
-.mapes-result-btn:hover {
-    transform: translateY(-1px);
-    background: #d8580f;
-}
-
-.mapes-layout {
-    flex: 1;
-    min-height: 0;
-    display: grid;
-    gap: 14px;
-    padding: 14px;
-    grid-template-columns: 300px minmax(0, 1fr);
-}
-
-.mapes-panel,
-.mapes-map-shell {
-    border: 1px solid rgba(148, 163, 184, 0.3);
-    border-radius: 16px;
-    background: rgba(248, 250, 252, 0.9);
-    color: #0f172a;
-}
-
-.mapes-panel {
-    padding: 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.mapes-panel h3 {
-    margin: 0;
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: #334155;
-}
-
-.mapes-actions {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-}
-
-.mapes-actions button,
-.mapes-location-btn {
-    background: #1d4ed8;
-}
-
-.mapes-layer-btn.active,
-.mapes-result-btn.active {
-    box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.7);
-}
-
-.mapes-results {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    overflow: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    min-height: 72px;
-    max-height: 34vh;
-}
-
-.mapes-result-btn {
-    width: 100%;
-    text-align: left;
-    background: #f1f5f9;
-    color: #0f172a;
-    border-color: rgba(15, 23, 42, 0.1);
-}
-
-.mapes-status {
-    margin: 4px 0 0;
-    color: #334155;
-    font-size: 0.9rem;
-}
-
-.mapes-map-shell {
-    overflow: hidden;
-}
-
-.mapes-map {
-    width: 100%;
-    height: 100%;
-    min-height: 380px;
-}
-
-.mapes-pin-wrap {
-    background: transparent;
-    border: 0;
-}
-
-.mapes-pin {
-    width: 22px;
-    height: 22px;
-    background: radial-gradient(circle at 30% 30%, #ff8c6b 0%, #ea4335 55%, #b42318 100%);
-    border-radius: 50% 50% 50% 0;
-    transform: rotate(-45deg);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
-    position: relative;
-}
-
-.mapes-pin::after {
-    content: '';
-    width: 8px;
-    height: 8px;
-    background: #fff;
-    border-radius: 50%;
-    position: absolute;
-    top: 7px;
-    left: 7px;
-}
-
-.mapes-map .leaflet-popup-content-wrapper {
-    border-radius: 10px;
-}
-
-.mapes-map .leaflet-popup-content {
-    margin: 10px 12px;
-    color: #0f172a;
-    font-size: 0.9rem;
-    line-height: 1.35;
-}
-
-@media (max-width: 960px) {
-    .mapes-topbar {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .mapes-layout {
-        grid-template-columns: 1fr;
-        grid-template-rows: auto 1fr;
-    }
-}
-
-@media (max-width: 540px) {
-    .mapes-layout {
-        padding: 10px;
-        gap: 10px;
-    }
-
-    .mapes-actions {
-        grid-template-columns: 1fr;
-    }
-
-    .mapes-results {
-        max-height: 22vh;
-    }
 }
 
 /* ===== VIBE SOCIAL MEDIA ===== */
