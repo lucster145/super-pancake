@@ -1,4 +1,3 @@
-// App definitions with Play Store info
 const APPS = {
     playstore: {
         name: 'Play Store',
@@ -78,18 +77,7 @@ const installedApps = new Set(['playstore', 'notes', 'game2048', 'calculator', '
 // Global error handler for better debugging
 window.addEventListener('error', (e) => {
     console.error('Application error:', e.error);
-    // Could show user-friendly error message here
 });
-
-// Performance: Use requestAnimationFrame for smooth animations
-let animationFrameId = null;
-
-function requestAnimationFrame(callback) {
-    if (animationFrameId) {
-        cancelAnimationFrame(animationFrameId);
-    }
-    animationFrameId = window.requestAnimationFrame(callback);
-}
 
 // Window management
 class WindowManager {
@@ -915,13 +903,27 @@ document.getElementById('start-btn').addEventListener('click', toggleStartMenu);
 // Clock update
 function updateClock() {
     const now = new Date();
-    const hours = String(now.getHours()).padStart(2, '0');
+    const rawHours = now.getHours();
+    const hours = rawHours % 12 || 12;
+    const period = rawHours >= 12 ? 'PM' : 'AM';
     const minutes = String(now.getMinutes()).padStart(2, '0');
-    document.getElementById('clock').textContent = `${hours}:${minutes}`;
+    document.getElementById('clock').textContent = `${hours}:${minutes} ${period}`;
+}
+
+function updateInternetStatus() {
+    const internetStatus = document.getElementById('internet-status');
+    if (!internetStatus) return;
+
+    const online = navigator.onLine;
+    internetStatus.textContent = online ? '📶 Online' : '📶 Offline';
+    internetStatus.classList.toggle('offline', !online);
 }
 
 setInterval(updateClock, 1000);
 updateClock();
+updateInternetStatus();
+window.addEventListener('online', updateInternetStatus);
+window.addEventListener('offline', updateInternetStatus);
 
 // ===== NOTES APP =====
 function initNotesApp(contentEl) {
