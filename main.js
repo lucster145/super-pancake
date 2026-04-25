@@ -103,13 +103,6 @@ const APPS = {
         color: '#30d158',
         minWidth: 500,
         minHeight: 520
-    },
-    highscore: {
-        name: 'High Score',
-        icon: '🏆',
-        color: '#ffd60a',
-        minWidth: 420,
-        minHeight: 420
     }
 };
 
@@ -387,8 +380,6 @@ class WindowManager {
                 return this.getClickerContent();
             case 'blockbomb':
                 return this.getBlockBombContent();
-            case 'highscore':
-                return this.getHighScoreContent();
             default:
                 return '<p>App not implemented</p>';
         }
@@ -918,9 +909,6 @@ class WindowManager {
                 break;
             case 'blockbomb':
                 initBlockBomb();
-                break;
-            case 'highscore':
-                initHighScore();
                 break;
         }
     }
@@ -5647,8 +5635,7 @@ function initVibe() {
 WindowManager.prototype.getCloudGamingContent = function() {
     const cloudApps = [
         { id: 'clicker', icon: '👆', name: 'Clicker', desc: 'Click the number to grow your score!', color: '#ff9f0a' },
-        { id: 'blockbomb', icon: '💣', name: 'Block Bomb', desc: 'Sort coloured blocks before they overflow!', color: '#30d158' },
-        { id: 'highscore', icon: '🏆', name: 'High Score', desc: 'Beat your best score — saved locally!', color: '#ffd60a' }
+        { id: 'blockbomb', icon: '💣', name: 'Block Bomb', desc: 'Sort coloured blocks before they overflow!', color: '#30d158' }
     ];
     let html = `
         <div style="background:#0d1117;height:100%;overflow-y:auto;box-sizing:border-box;padding:20px;font-family:sans-serif;">
@@ -5668,7 +5655,7 @@ WindowManager.prototype.getCloudGamingContent = function() {
                 <div style="font-size:44px;">${app.icon}</div>
                 <div style="color:white;font-weight:bold;font-size:15px;">${app.name}</div>
                 <div style="color:#8b949e;font-size:12px;text-align:center;">${app.desc}</div>
-                <button onclick="installOrOpenCloudApp('${app.id}')" style="margin-top:6px;background:${installed ? '#238636' : app.color};color:${app.color === '#ffd60a' ? '#000' : 'white'};border:none;border-radius:20px;padding:7px 22px;cursor:pointer;font-size:13px;font-weight:bold;">
+                <button onclick="installOrOpenCloudApp('${app.id}')" style="margin-top:6px;background:${installed ? '#238636' : app.color};color:white;border:none;border-radius:20px;padding:7px 22px;cursor:pointer;font-size:13px;font-weight:bold;">
                     ${installed ? 'OPEN' : 'INSTALL'}
                 </button>
             </div>
@@ -5788,59 +5775,6 @@ function bbSelect(r, c) {
     }
     _bbSelected = null;
     bbRender();
-}
-
-// ===== HIGH SCORE =====
-WindowManager.prototype.getHighScoreContent = function() {
-    return `
-        <div style="background:#1c1c1e;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;font-family:sans-serif;padding:20px;box-sizing:border-box;">
-            <div style="color:#ffd60a;font-size:18px;font-weight:bold;letter-spacing:2px;">🏆 HIGH SCORE</div>
-            <div style="color:#8e8e93;font-size:13px;">Best: <span id="hs-best" style="color:#ffd60a;font-weight:bold;font-size:18px;">0</span></div>
-            <div style="color:white;font-size:40px;font-weight:bold;" id="hs-current">0</div>
-            <div style="display:flex;gap:12px;">
-                <button onclick="hsAdd(1)" style="background:#ffd60a;color:#000;border:none;border-radius:16px;padding:10px 20px;cursor:pointer;font-size:16px;font-weight:bold;">+1</button>
-                <button onclick="hsAdd(5)" style="background:#ff9f0a;color:white;border:none;border-radius:16px;padding:10px 20px;cursor:pointer;font-size:16px;font-weight:bold;">+5</button>
-                <button onclick="hsAdd(10)" style="background:#ff453a;color:white;border:none;border-radius:16px;padding:10px 20px;cursor:pointer;font-size:16px;font-weight:bold;">+10</button>
-            </div>
-            <button onclick="hsSave()" style="background:#30d158;color:white;border:none;border-radius:16px;padding:8px 24px;cursor:pointer;font-size:14px;font-weight:bold;">Save Score</button>
-            <button onclick="hsReset()" style="background:#3a3a3c;color:#8e8e93;border:none;border-radius:16px;padding:6px 18px;cursor:pointer;font-size:12px;">Reset</button>
-            <div id="hs-status" style="color:#30d158;font-size:13px;min-height:18px;"></div>
-        </div>
-    `;
-};
-
-function initHighScore() {
-    window._hsCurrent = 0;
-    const best = parseInt(localStorage.getItem('highscore_best') || '0');
-    const bestEl = document.getElementById('hs-best');
-    if (bestEl) bestEl.textContent = best;
-}
-
-function hsAdd(n) {
-    window._hsCurrent = (window._hsCurrent || 0) + n;
-    const el = document.getElementById('hs-current');
-    if (el) el.textContent = window._hsCurrent;
-}
-
-function hsSave() {
-    const current = window._hsCurrent || 0;
-    const best = parseInt(localStorage.getItem('highscore_best') || '0');
-    if (current > best) {
-        localStorage.setItem('highscore_best', current);
-        const bestEl = document.getElementById('hs-best');
-        if (bestEl) bestEl.textContent = current;
-        const status = document.getElementById('hs-status');
-        if (status) { status.textContent = '🎉 New best saved!'; setTimeout(() => { if (status) status.textContent = ''; }, 2000); }
-    } else {
-        const status = document.getElementById('hs-status');
-        if (status) { status.textContent = 'Score saved (not a new best).'; setTimeout(() => { if (status) status.textContent = ''; }, 2000); }
-    }
-}
-
-function hsReset() {
-    window._hsCurrent = 0;
-    const el = document.getElementById('hs-current');
-    if (el) el.textContent = 0;
 }
 
 // Initialize

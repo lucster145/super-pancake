@@ -33,7 +33,6 @@ Stream animated shows — each episode plays a unique cinematic canvas animation
 
 ### QuickPick
 A social media feed with stories, reels, notifications, explore grid, and a profile page.
-- **High Score**: Your best score is automatically saved!
 
 ## Live Demo
 
@@ -44,7 +43,7 @@ Play the game online at: [https://lucster145.github.io/super-pancake/](https://l
 - HTML5
 - CSS3
 - Vanilla JavaScript
-- localStorage for persistent high scores
+- localStorage for persistent app data
 
 ## Local Development
 
