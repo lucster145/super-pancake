@@ -56,7 +56,7 @@ const APPS = {
         minHeight: 500
     },
     simpleai: {
-        name: 'Simple AI',
+        name: 'AI',
         icon: '🤖',
         color: '#6c3483',
         minWidth: 600,
@@ -345,7 +345,7 @@ class WindowManager {
                 return this.getBrowserContent();
 
             case 'simpleai':
-                return this.getSimpleAIContent();
+                return this.getCaleAIContent();
             case 'vibe':
                 return getVibeContent();
             case 'rec':
@@ -809,22 +809,22 @@ class WindowManager {
         `;
     }
 
-    getSimpleAIContent() {
+    getCaleAIContent() {
         return `
             <div style="display:flex;flex-direction:column;height:100%;background:#0f0f1a;border-radius:8px;overflow:hidden;">
                 <div style="background:linear-gradient(135deg,#6c3483,#1a5276);padding:14px 18px;display:flex;align-items:center;gap:10px;">
                     <span style="font-size:26px;">🤖</span>
                     <div>
-                        <div style="color:white;font-weight:bold;font-size:16px;">Simple AI</div>
+                        <div style="color:white;font-weight:bold;font-size:16px;">AI</div>
                         <div style="color:rgba(255,255,255,0.7);font-size:11px;">Ask me anything about the web!</div>
                     </div>
                 </div>
                 <div id="ai-messages" style="flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;min-height:0;">
-                    <div class="ai-msg ai-msg-bot">👋 Hi! I'm Simple AI. Ask me about <b>HazyGames</b>, <b>ZappyCook</b>, <b>PixelVault</b>, <b>CosmicBlog</b>, <b>NovaSpark</b>, or topics like space, animals, science and more!</div>
+                    <div class="ai-msg ai-msg-bot">👋 Hi! I'm AI. Ask me about <b>HazyGames</b>, <b>ZappyCook</b>, <b>PixelVault</b>, <b>CosmicBlog</b>, <b>NovaSpark</b>, or topics like space, animals, science and more!</div>
                 </div>
                 <div style="padding:10px 14px;background:#1a1a2e;display:flex;gap:8px;">
-                    <input id="ai-input" type="text" placeholder="Ask me anything..." style="flex:1;background:#2d2d5e;border:1px solid #4a4a8a;border-radius:20px;padding:8px 14px;color:white;font-size:13px;outline:none;" onkeydown="if(event.key==='Enter')simpleAISend()">
-                    <button onclick="simpleAISend()" style="background:#6c3483;color:white;border:none;border-radius:20px;padding:8px 16px;cursor:pointer;font-size:13px;font-weight:bold;">Send</button>
+                    <input id="ai-input" type="text" placeholder="Ask me anything..." style="flex:1;background:#2d2d5e;border:1px solid #4a4a8a;border-radius:20px;padding:8px 14px;color:white;font-size:13px;outline:none;" onkeydown="if(event.key==='Enter')caleAISend()">
+                    <button onclick="caleAISend()" style="background:#6c3483;color:white;border:none;border-radius:20px;padding:8px 16px;cursor:pointer;font-size:13px;font-weight:bold;">Send</button>
                 </div>
             </div>
         `;
@@ -865,7 +865,7 @@ class WindowManager {
                 break;
 
             case 'simpleai':
-                initSimpleAI();
+                initCaleAI();
                 break;
             case 'vibe':
                 initVibe();
@@ -5002,7 +5002,7 @@ const BOOKS = [
 ];
 
 // ===== SIMPLE AI =====
-function initSimpleAI() {
+function initCaleAI() {
     const input = document.getElementById('ai-input');
     if (input) input.focus();
 }
@@ -5095,7 +5095,7 @@ const AI_KNOWLEDGE = [
     { keys: ['eye','eyes','sight','vision'], answer: '👁️ Human <b>eyes</b> can distinguish about 10 million colours! The eye can process 36,000 pieces of information per hour. Your eyes focus by changing the shape of the lens. The cornea is the only part of the body with no blood supply — it gets oxygen directly from the air. Eagles can see 4–5 times farther than humans.' },
     { keys: ['sleep','sleeping','dream','dreams'], answer: '💤 <b>Sleep</b> is essential for health! Adults need 7–9 hours; kids need 9–12 hours. Your brain is very active during sleep — it processes memories and repairs itself. You spend about 2 hours dreaming every night. The record for staying awake is 11 days (but that\'s very dangerous!). Dolphins sleep with one half of their brain at a time.' },
     // Simple PC apps
-    { keys: ['simple pc','this computer','this app','this program'], answer: '💻 <b>Simple PC</b> is your virtual computer! You can open apps from the desktop or the Start menu. Available apps include: Web Browser, Notes, Calculator, 2048, Memory Game, Books, Calendar, Net2, Vibe and Simple AI (that\'s me!)' },
+    { keys: ['simple pc','this computer','this app','this program'], answer: '💻 <b>Simple PC</b> is your virtual computer! You can open apps from the desktop or the Start menu. Available apps include: Web Browser, Notes, Calculator, 2048, Memory Game, Books, Calendar, Net2, Vibe and AI (that\'s me!)' },
     { keys: ['notes','notepad'], answer: '📝 The <b>Notes</b> app on Simple PC lets you write and save text notes. Click the Notes icon on the desktop or find it in the Start menu to open it!' },
     { keys: ['calculator'], answer: '🧮 The <b>Calculator</b> app can do basic maths — addition, subtraction, multiplication and division. Find it on the desktop or Start menu!' },
     { keys: ['2048'], answer: '🔢 <b>2048</b> is a sliding tile puzzle game! You combine matching numbers by swiping tiles. The goal is to reach the 2048 tile. Use arrow keys to play. Can you get to 4096?!' },
@@ -5107,16 +5107,16 @@ const AI_KNOWLEDGE = [
     { keys: ['joke2','another joke','tell another','more jokes'], answer: '🤣 Here\'s another one: What do you call a fish without eyes?<br><br>A <b>fsh!</b> 🐟😂' },
     { keys: ['riddle','give me a riddle'], answer: '🤔 Here\'s a riddle: What gets wetter the more it dries?<br><br><details><summary>See answer 👀</summary>A <b>towel!</b> 🏖️</details>' },
     { keys: ['favourite colour','favorite color','what colour'], answer: '🎨 I\'m an AI so I don\'t see colours — but if I could pick, I\'d choose <b>deep space purple</b> 🟣! What\'s your favourite colour?' },
-    { keys: ['how old are you','your age'], answer: '🤖 I\'m Simple AI — I was created in 2026, so I\'m brand new! I don\'t age like humans do though. I just keep learning.' },
+    { keys: ['how old are you','your age'], answer: '🤖 I\'m AI — I was created in 2026, so I\'m brand new! I don\'t age like humans do though. I just keep learning.' },
     { keys: ['can you help me','help','what can i ask'], answer: '🤖 Of course! You can ask me about:<br>• 💻 <b>Simple PC Apps</b> (games, browser, notes, calculator, etc.)<br>• 🌐 <b>Websites</b> (HazyGames, ZappyCook, PixelVault, CosmicBlog, NovaSpark)<br>• 🚀 <b>Space & Astronomy</b> (planets, stars, astronauts, space station)<br>• 🦕 <b>Animals & Nature</b> (dinosaurs, ocean life, insects, birds, mammals)<br>• 🔬 <b>Science</b> (physics, chemistry, biology, technology, inventions)<br>• 📜 <b>History</b> (ancient civilizations, wars, explorers, famous people)<br>• ⚽ <b>Sports</b> (football, basketball, Olympics, swimming)<br>• 🎵 <b>Music & Entertainment</b> (instruments, movies, art, magic)<br>• 🍳 <b>Food & Cooking</b> (recipes, nutrition, food facts)<br>• 🌍 <b>Geography</b> (countries, mountains, rivers, deserts)<br>• 🔢 <b>Mathematics</b> (numbers, shapes, fun math facts)<br>• 🫀 <b>Human Body</b> (organs, health, how your body works)<br>• 😊 <b>Emotions & Psychology</b> (feelings, confidence, friendship)<br>• 🎂 <b>Holidays</b> (Christmas, Halloween, birthdays)<br>• 😄 <b>Fun Facts & Trivia</b> (weird facts, world records)<br>• 💬 <b>General Conversation</b> (greetings, jokes, random chat)<br><br>Just ask anything that interests you!' },
     // Greetings & Conversation
-    { keys: ['hello','hi','hey','hiya','howdy','good morning','good afternoon','good evening','sup','whats up','what\'s up','yo','heya','greetings'], answer: '👋 Hello! I\'m Simple AI. Ask me about the apps on Simple PC, the websites in the browser, space, animals, history, science, sports, cooking, maths and loads more!' },
-    { keys: ['who are you','what are you','what can you do','tell me about yourself','introduce yourself','about you'], answer: '🤖 I\'m <b>Simple AI</b>, your built-in assistant on Simple PC! I can answer questions about everything on this computer — websites, games, science, animals, space, history, sports, music, cooking, countries, maths and more. Just ask anything!' },
+    { keys: ['hello','hi','hey','hiya','howdy','good morning','good afternoon','good evening','sup','whats up','what\'s up','yo','heya','greetings'], answer: '👋 Hello! I\'m AI. Ask me about the apps on Simple PC, the websites in the browser, space, animals, history, science, sports, cooking, maths and loads more!' },
+    { keys: ['who are you','what are you','what can you do','tell me about yourself','introduce yourself','about you'], answer: '🤖 I\'m <b>AI</b>, your built-in assistant on Simple PC! I can answer questions about everything on this computer — websites, games, science, animals, space, history, sports, music, cooking, countries, maths and more. Just ask anything!' },
     { keys: ['thanks','thank you','cheers','ty','thx','thanks a lot','thank you very much','appreciate it','much appreciated'], answer: '😊 You\'re welcome! Ask me anything else anytime.' },
     { keys: ['bye','goodbye','see you','cya','see ya','farewell','till next time','catch you later','later','peace'], answer: '👋 Goodbye! Come back anytime you have a question!' },
     { keys: ['good','great','awesome','cool','nice','amazing','fantastic','brilliant','excellent','wonderful','perfect','superb'], answer: '😄 Glad you think so! Is there anything else you\'d like to know?' },
     { keys: ['how are you','how are you doing','how do you feel','what\'s your mood','how\'s it going'], answer: '🤖 I\'m doing great, thanks for asking! I\'m always excited to help answer questions. How are you doing today?' },
-    { keys: ['what\'s your name','your name','do you have a name','tell me your name'], answer: '🤖 My name is <b>Simple AI</b>! I\'m the built-in assistant here on Simple PC. What\'s your name?' },
+    { keys: ['what\'s your name','your name','do you have a name','tell me your name'], answer: '🤖 My name is <b>AI</b>! I\'m the built-in assistant here on Simple PC. What\'s your name?' },
     { keys: ['are you real','are you human','are you alive','do you think','can you think'], answer: '🤖 I\'m an artificial intelligence — a computer program designed to have conversations and answer questions! I\'m not human, but I try my best to be helpful and friendly.' },
     { keys: ['where do you live','where are you from','where are you located'], answer: '💻 I live right here inside Simple PC! I don\'t have a physical location — I exist as software running on this virtual computer.' },
     { keys: ['do you sleep','do you dream','do you eat','do you get tired'], answer: '🤖 I don\'t sleep, eat, or get tired like humans do! I\'m always ready to chat and answer questions. Though I do find it fascinating that humans dream — what an amazing way your brain processes information!' },
@@ -5282,7 +5282,7 @@ const AI_KNOWLEDGE = [
     { keys: ['muscle','muscles','exercise'], answer: '💪 You have over <b>600 muscles</b> in your body! The biggest is the gluteus maximus (your bottom). The smallest is the stapedius muscle in your ear — just 1mm long. The hardest-working muscle is the heart. Muscles work in pairs — when one contracts, the other relaxes. Exercise makes muscles stronger by causing tiny tears that heal bigger!' },
 ];
 
-function simpleAISend() {
+function caleAISend() {
     const input = document.getElementById('ai-input');
     const messages = document.getElementById('ai-messages');
     if (!input || !messages) return;
@@ -5300,7 +5300,7 @@ function simpleAISend() {
     // Typing indicator
     const typing = document.createElement('div');
     typing.className = 'ai-msg ai-msg-bot';
-    typing.innerHTML = '<i style="color:#888">Simple AI is thinking...</i>';
+    typing.innerHTML = '<i style="color:#888">AI is thinking...</i>';
     messages.appendChild(typing);
     messages.scrollTop = messages.scrollHeight;
 
