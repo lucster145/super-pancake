@@ -964,8 +964,33 @@ const recState = {
     targetId: null,
     keyHandler: null,
     playerX: 0,
-    cards: []
+    cards: [],
+    catalog: [],
+    page: 0,
+    perPage: 20,
+    activeGame: null
 };
+
+const REC_GAME_ICONS = ['🫧', '🔶', '🟣', '🧿', '🧲', '🧪', '⚙️', '🛰️', '🧱', '🧬', '🌀', '💠', '♦️', '🔺', '🔷', '🧊', '⚡', '🌟', '🛸', '🌈'];
+
+function buildRecCatalog() {
+    const games = [];
+    for (let i = 1; i <= 100; i += 1) {
+        const typeIndex = i % 3;
+        const type = typeIndex === 0 ? 'dot' : (typeIndex === 1 ? 'dodge' : 'pairs');
+        games.push({
+            id: `g${i}`,
+            icon: REC_GAME_ICONS[i % REC_GAME_ICONS.length],
+            type,
+            time: 20 + (i % 26),
+            speed: 450 + ((i * 37) % 650),
+            step: 3 + (i % 5),
+            size: 28 + ((i * 3) % 34),
+            pairs: 4 + (i % 4)
+        });
+    }
+    return games;
+}
 
 function clearRecTimers() {
     clearInterval(recState.timerId);
@@ -976,6 +1001,13 @@ function clearRecTimers() {
     recState.spawnId = null;
     recState.animationId = null;
     recState.targetId = null;
+}
+
+function clearRecInputHandlers() {
+    if (recState.keyHandler) {
+        document.removeEventListener('keydown', recState.keyHandler);
+        recState.keyHandler = null;
+    }
 }
 
 function getRecStage() {
@@ -1015,6 +1047,7 @@ function recRenderFrame(content) {
 
 function recShowMenu() {
     clearRecTimers();
+    clearRecInputHandlers();
     recState.mode = 'menu';
     recState.score = 0;
     recState.timeLeft = 0;
@@ -1022,35 +1055,99 @@ function recShowMenu() {
     const stage = getRecStage();
     if (!stage) return;
 
+    const start = recState.page * recState.perPage;
+    const end = start + recState.perPage;
+    const items = recState.catalog.slice(start, end);
+    const canPrev = recState.page > 0;
+    const canNext = end < recState.catalog.length;
+
+    const itemHtml = items.map((item) => (
+        `<button class="rec-mode-btn" onclick="startRecGame('${item.id}')">${item.icon}</button>`
+    )).join('');
+
     stage.innerHTML = `
+        <div class="rec-menu-nav">
+            <button class="rec-nav-btn" onclick="recChangePage(-1)" ${canPrev ? '' : 'disabled'}>◀</button>
+            <button class="rec-nav-btn" onclick="startRecGame('red-dot')">🔴</button>
+            <button class="rec-nav-btn" onclick="recChangePage(1)" ${canNext ? '' : 'disabled'}>▶</button>
+        </div>
         <div class="rec-menu-grid">
-            <button class="rec-mode-btn" onclick="startRecGame('target')">🎯</button>
-            <button class="rec-mode-btn" onclick="startRecGame('dodge')">🧱</button>
-            <button class="rec-mode-btn" onclick="startRecGame('pairs')">🧠</button>
-            <div class="rec-offline-chip">🔴</div>
+            ${itemHtml}
         </div>
     `;
 }
 
 window.startRecGame = function(mode) {
-    if (mode === 'target') {
-        startRecTargetGame();
-    } else if (mode === 'dodge') {
-        startRecDodgeGame();
-    } else if (mode === 'pairs') {
-        startRecPairsGame();
+    if (mode === 'red-dot' || mode === 'target') {
+        startRecTargetGame({
+            id: 'red-dot',
+            time: 30,
+            speed: 650,
+            size: 56,
+            color: '#ff2e2e',
+            glyph: '●'
+        });
+        return;
     }
+
+    if (mode === 'dodge') {
+        startRecDodgeGame({ id: 'dodge', time: 30, speed: 500, step: 4 });
+        return;
+    }
+
+    if (mode === 'pairs') {
+        startRecPairsGame({ id: 'pairs', time: 60, pairs: 6 });
+        return;
+    }
+
+    const game = recState.catalog.find((item) => item.id === mode);
+    if (!game) {
+        recShowMenu();
+        return;
+    }
+
+    if (game.type === 'dot') {
+        startRecTargetGame({
+            id: game.id,
+            time: game.time,
+            speed: game.speed,
+            size: game.size,
+            color: '#ff5a5a',
+            glyph: game.icon
+        });
+    } else if (game.type === 'dodge') {
+        startRecDodgeGame({
+            id: game.id,
+            time: game.time,
+            speed: game.speed,
+            step: game.step
+        });
+    } else {
+        startRecPairsGame({
+            id: game.id,
+            time: game.time,
+            pairs: game.pairs
+        });
+    }
+};
+
+window.recChangePage = function(delta) {
+    const maxPage = Math.max(0, Math.ceil(recState.catalog.length / recState.perPage) - 1);
+    recState.page = Math.min(maxPage, Math.max(0, recState.page + delta));
+    recShowMenu();
 };
 
 window.recShowMenu = recShowMenu;
 
-function startRecTargetGame() {
+function startRecTargetGame(config) {
     clearRecTimers();
-    recState.mode = 'target';
+    clearRecInputHandlers();
+    recState.mode = config.id;
+    recState.activeGame = config.id;
     recState.score = 0;
-    recState.timeLeft = 25;
+    recState.timeLeft = config.time;
 
-    recRenderFrame('<button id="rec-target" class="rec-target">●</button>');
+    recRenderFrame(`<button id="rec-target" class="rec-target" style="background:${config.color};width:${config.size}px;height:${config.size}px;">${config.glyph}</button>`);
 
     const stage = getRecStage();
     const target = document.getElementById('rec-target');
@@ -1058,20 +1155,21 @@ function startRecTargetGame() {
     if (!target || !playfield) return;
 
     const moveTarget = () => {
-        const maxX = Math.max(20, playfield.clientWidth - 56);
-        const maxY = Math.max(20, playfield.clientHeight - 56);
+        const size = target.offsetWidth || config.size;
+        const maxX = Math.max(8, playfield.clientWidth - size - 8);
+        const maxY = Math.max(8, playfield.clientHeight - size - 8);
         target.style.left = `${Math.floor(Math.random() * maxX)}px`;
         target.style.top = `${Math.floor(Math.random() * maxY)}px`;
     };
 
-    target.addEventListener('click', () => {
+    target.addEventListener('pointerdown', () => {
         recState.score += 1;
         updateRecHud();
         moveTarget();
     });
 
     moveTarget();
-    recState.targetId = setInterval(moveTarget, 900);
+    recState.targetId = setInterval(moveTarget, config.speed);
     recState.timerId = setInterval(() => {
         recState.timeLeft -= 1;
         updateRecHud();
@@ -1081,11 +1179,13 @@ function startRecTargetGame() {
     }, 1000);
 }
 
-function startRecDodgeGame() {
+function startRecDodgeGame(config) {
     clearRecTimers();
-    recState.mode = 'dodge';
+    clearRecInputHandlers();
+    recState.mode = config.id;
+    recState.activeGame = config.id;
     recState.score = 0;
-    recState.timeLeft = 30;
+    recState.timeLeft = config.time;
     recState.playerX = 45;
 
     recRenderFrame('<div id="rec-player" class="rec-player"></div>');
@@ -1101,9 +1201,9 @@ function startRecDodgeGame() {
     movePlayer();
 
     recState.keyHandler = (e) => {
-        if (recState.mode !== 'dodge') return;
-        if (e.key === 'ArrowLeft') recState.playerX = Math.max(4, recState.playerX - 4);
-        if (e.key === 'ArrowRight') recState.playerX = Math.min(90, recState.playerX + 4);
+        if (recState.activeGame !== config.id) return;
+        if (e.key === 'ArrowLeft') recState.playerX = Math.max(4, recState.playerX - config.step);
+        if (e.key === 'ArrowRight') recState.playerX = Math.min(90, recState.playerX + config.step);
         movePlayer();
     };
     document.addEventListener('keydown', recState.keyHandler);
@@ -1115,7 +1215,7 @@ function startRecDodgeGame() {
         obstacle.style.top = '-20px';
         playfield.appendChild(obstacle);
         obstacles.push(obstacle);
-    }, 500);
+    }, config.speed);
 
     recState.animationId = setInterval(() => {
         const playerRect = player.getBoundingClientRect();
@@ -1154,13 +1254,16 @@ function startRecDodgeGame() {
     }, 1000);
 }
 
-function startRecPairsGame() {
+function startRecPairsGame(config) {
     clearRecTimers();
-    recState.mode = 'pairs';
+    clearRecInputHandlers();
+    recState.mode = config.id;
+    recState.activeGame = config.id;
     recState.score = 0;
-    recState.timeLeft = 60;
+    recState.timeLeft = config.time;
 
-    const emojis = ['⚽', '🎮', '🧩', '🚗', '🎯', '🛹'];
+    const emojiPool = ['⚽', '🎮', '🧩', '🚗', '🎯', '🛹', '🌌', '🧪', '⚡', '🫧', '🔷', '🛰️'];
+    const emojis = emojiPool.slice(0, config.pairs);
     const cards = [...emojis, ...emojis]
         .map((emoji) => ({ emoji, id: Math.random().toString(36).slice(2) }))
         .sort(() => Math.random() - 0.5);
@@ -1228,11 +1331,7 @@ function startRecPairsGame() {
 
 function recEndGame() {
     clearRecTimers();
-
-    if (recState.keyHandler) {
-        document.removeEventListener('keydown', recState.keyHandler);
-        recState.keyHandler = null;
-    }
+    clearRecInputHandlers();
 
     const stage = getRecStage();
     if (!stage) return;
@@ -1243,23 +1342,23 @@ function recEndGame() {
             <div class="rec-result-score">${recState.score}</div>
             <div class="rec-result-actions">
                 <button class="rec-mode-btn" onclick="recShowMenu()">🏠</button>
-                <button class="rec-mode-btn" onclick="startRecGame('${recState.mode}')">🔁</button>
+                <button class="rec-mode-btn" onclick="startRecGame('${recState.activeGame || recState.mode}')">🔁</button>
             </div>
         </div>
     `;
 }
 
 function initRec() {
+    if (!recState.catalog.length) {
+        recState.catalog = buildRecCatalog();
+    }
     recShowMenu();
     updateRecLiveStatus();
 }
 
 function cleanupRec() {
     clearRecTimers();
-    if (recState.keyHandler) {
-        document.removeEventListener('keydown', recState.keyHandler);
-        recState.keyHandler = null;
-    }
+    clearRecInputHandlers();
 }
 
 // ===== NOTES APP =====

@@ -577,23 +577,46 @@ body, html {
 }
 
 .rec-menu-grid {
-    height: 100%;
+    height: calc(100% - 46px);
     display: grid;
-    grid-template-columns: repeat(2, minmax(120px, 1fr));
-    gap: 12px;
+    grid-template-columns: repeat(5, minmax(70px, 1fr));
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.rec-menu-nav {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+}
+
+.rec-nav-btn {
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    border-radius: 10px;
+    height: 36px;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.rec-nav-btn:disabled {
+    opacity: 0.35;
+    cursor: default;
 }
 
 .rec-mode-btn,
 .rec-offline-chip {
     border: 1px solid rgba(255, 255, 255, 0.16);
     background: rgba(255, 255, 255, 0.06);
-    border-radius: 14px;
+    border-radius: 10px;
     color: white;
-    font-size: 36px;
+    font-size: 28px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    min-height: 62px;
 }
 
 .rec-mode-btn:hover {
