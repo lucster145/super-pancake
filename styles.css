@@ -731,6 +731,188 @@ body, html {
     gap: 10px;
 }
 
+/* Run Tuch Victory */
+.rtv-app {
+    height: 100%;
+    display: grid;
+    grid-template-rows: auto auto 1fr auto auto;
+    gap: 10px;
+    background: linear-gradient(180deg, #0c1a0c 0%, #0a130a 100%);
+    color: #f3f8f3;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.rtv-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.rtv-title {
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: 0.4px;
+}
+
+.rtv-subtitle {
+    font-size: 12px;
+    color: #b7d1b7;
+}
+
+.rtv-scoreboard {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+}
+
+.rtv-stat {
+    border: 1px solid rgba(187, 247, 208, 0.25);
+    background: rgba(16, 40, 16, 0.9);
+    border-radius: 8px;
+    padding: 7px 9px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.rtv-stat span {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    color: #9cc79c;
+}
+
+.rtv-stat strong {
+    font-size: 16px;
+    color: #ecfdf5;
+}
+
+.rtv-field {
+    position: relative;
+    overflow: hidden;
+    border: 2px solid rgba(134, 239, 172, 0.55);
+    border-radius: 12px;
+    background:
+        repeating-linear-gradient(
+            180deg,
+            rgba(46, 125, 50, 0.97) 0px,
+            rgba(46, 125, 50, 0.97) 26px,
+            rgba(34, 106, 39, 0.97) 26px,
+            rgba(34, 106, 39, 0.97) 52px
+        );
+}
+
+.rtv-field::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+        90deg,
+        transparent 0,
+        transparent 58px,
+        rgba(255, 255, 255, 0.22) 59px,
+        transparent 60px
+    );
+    pointer-events: none;
+}
+
+.rtv-endzone {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 14%;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-align: center;
+    line-height: 30px;
+    color: rgba(255, 255, 255, 0.85);
+    background: rgba(15, 23, 15, 0.5);
+}
+
+.rtv-endzone.top {
+    top: 0;
+}
+
+.rtv-endzone.bottom {
+    bottom: 0;
+}
+
+.rtv-player,
+.rtv-defender {
+    position: absolute;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    transform: translateY(-50%);
+}
+
+.rtv-player {
+    left: 12%;
+    background: rgba(12, 34, 12, 0.9);
+    border: 1px solid rgba(187, 247, 208, 0.7);
+    box-shadow: 0 0 10px rgba(134, 239, 172, 0.35);
+    z-index: 3;
+}
+
+.rtv-defender {
+    background: rgba(68, 16, 16, 0.9);
+    border: 1px solid rgba(252, 165, 165, 0.7);
+    z-index: 2;
+}
+
+.rtv-controls {
+    display: grid;
+    grid-template-columns: auto auto 1fr;
+    gap: 8px;
+    align-items: center;
+}
+
+.rtv-btn {
+    border: 1px solid rgba(187, 247, 208, 0.4);
+    background: linear-gradient(180deg, #1f7a1f 0%, #165e16 100%);
+    color: #f0fdf4;
+    border-radius: 8px;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 13px;
+}
+
+.rtv-btn:hover {
+    filter: brightness(1.08);
+}
+
+.rtv-help {
+    color: #b7d1b7;
+    font-size: 12px;
+}
+
+.rtv-message {
+    border: 1px solid rgba(187, 247, 208, 0.2);
+    background: rgba(8, 18, 8, 0.88);
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 13px;
+    color: #ecfdf5;
+}
+
+@media (max-width: 800px) {
+    .rtv-scoreboard {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .rtv-controls {
+        grid-template-columns: 1fr;
+    }
+}
+
 /* Calculator */
 .calculator {
     max-width: 300px;
