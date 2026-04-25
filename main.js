@@ -75,11 +75,18 @@ const APPS = {
         color: '#ff6a00',
         minWidth: 760,
         minHeight: 540
+    },
+    runtuchvictory: {
+        name: 'Run Tuch Victory',
+        icon: '🏈',
+        color: '#1f7a1f',
+        minWidth: 760,
+        minHeight: 540
     }
 };
 
 // Store app installation state
-const installedApps = new Set(['playstore', 'notes', 'game2048', 'calculator', 'memory', 'calendar', 'net2', 'browser', 'simpleai', 'vibe', 'rec']);
+const installedApps = new Set(['playstore', 'notes', 'game2048', 'calculator', 'memory', 'calendar', 'net2', 'browser', 'simpleai', 'vibe', 'rec', 'runtuchvictory']);
 
 // Global error handler for better debugging
 window.addEventListener('error', (e) => {
@@ -308,6 +315,9 @@ class WindowManager {
             case 'rec':
                 cleanupRec();
                 break;
+            case 'runtuchvictory':
+                cleanupRunTuchVictory();
+                break;
 
             // Add cleanup for other apps if needed
         }
@@ -340,6 +350,8 @@ class WindowManager {
                 return getVibeContent();
             case 'rec':
                 return this.getRecContent();
+            case 'runtuchvictory':
+                return this.getRunTuchVictoryContent();
             default:
                 return '<p>App not implemented</p>';
         }
@@ -455,6 +467,42 @@ class WindowManager {
                     <span class="rec-dot"></span>
                 </div>
                 <div id="rec-stage" class="rec-stage"></div>
+            </div>
+        `;
+    }
+
+    getRunTuchVictoryContent() {
+        return `
+            <div class="rtv-app">
+                <div class="rtv-header">
+                    <div class="rtv-title-wrap">
+                        <div class="rtv-title">Run Tuch Victory</div>
+                        <div class="rtv-subtitle">Retro-style football drive challenge</div>
+                    </div>
+                    <button class="rtv-btn" onclick="runTuchVictoryReset()">New Match</button>
+                </div>
+
+                <div class="rtv-scoreboard">
+                    <div class="rtv-stat"><span>Score</span><strong id="rtv-score">0</strong></div>
+                    <div class="rtv-stat"><span>Clock</span><strong id="rtv-clock">02:00</strong></div>
+                    <div class="rtv-stat"><span>Down</span><strong id="rtv-down">1st &amp; 10</strong></div>
+                    <div class="rtv-stat"><span>Ball</span><strong id="rtv-ball">Own 25</strong></div>
+                </div>
+
+                <div id="rtv-field" class="rtv-field">
+                    <div class="rtv-endzone top">END ZONE</div>
+                    <div class="rtv-endzone bottom">END ZONE</div>
+                    <div id="rtv-player" class="rtv-player">🏃</div>
+                    <div id="rtv-defenders" class="rtv-defenders"></div>
+                </div>
+
+                <div class="rtv-controls">
+                    <button class="rtv-btn" onclick="runTuchVictoryCallPlay('run')">Run Play</button>
+                    <button class="rtv-btn" onclick="runTuchVictoryCallPlay('pass')">Pass Play</button>
+                    <div class="rtv-help">Use ↑ and ↓ to switch lanes during a play. Press SPACE for quick snap.</div>
+                </div>
+
+                <div id="rtv-message" class="rtv-message">Pick a play to start your drive.</div>
             </div>
         `;
     }
@@ -824,6 +872,9 @@ class WindowManager {
                 break;
             case 'rec':
                 initRec();
+                break;
+            case 'runtuchvictory':
+                initRunTuchVictory();
                 break;
         }
     }
@@ -1861,6 +1912,266 @@ function endFootballRound() {
 function restartFootballGame() {
     footballGameState.round++;
     initFootballGame();
+}
+
+// ===== RUN TUCH VICTORY =====
+const runTuchVictoryState = {
+    score: 0,
+    clock: 120,
+    yardLine: 25,
+    down: 1,
+    toGo: 10,
+    playActive: false,
+    lastPlayType: 'run',
+    playerLane: 2,
+    defenderId: 0,
+    avoided: 0,
+    playMs: 0,
+    defenderSpawnMs: 0,
+    defenders: [],
+    gameLoop: null,
+    clockLoop: null,
+    keyHandler: null,
+    gameOver: false
+};
+
+function getRunTuchVictoryElements() {
+    return {
+        score: document.getElementById('rtv-score'),
+        clock: document.getElementById('rtv-clock'),
+        down: document.getElementById('rtv-down'),
+        ball: document.getElementById('rtv-ball'),
+        field: document.getElementById('rtv-field'),
+        player: document.getElementById('rtv-player'),
+        defenders: document.getElementById('rtv-defenders'),
+        message: document.getElementById('rtv-message')
+    };
+}
+
+function formatGameClock(seconds) {
+    const mm = String(Math.max(0, Math.floor(seconds / 60))).padStart(2, '0');
+    const ss = String(Math.max(0, seconds % 60)).padStart(2, '0');
+    return `${mm}:${ss}`;
+}
+
+function downLabel(down) {
+    if (down === 1) return '1st';
+    if (down === 2) return '2nd';
+    if (down === 3) return '3rd';
+    return '4th';
+}
+
+function setRunTuchVictoryMessage(text) {
+    const { message } = getRunTuchVictoryElements();
+    if (message) message.textContent = text;
+}
+
+function updateRunTuchVictoryHud() {
+    const { score, clock, down, ball, player } = getRunTuchVictoryElements();
+    if (score) score.textContent = String(runTuchVictoryState.score);
+    if (clock) clock.textContent = formatGameClock(runTuchVictoryState.clock);
+    if (down) down.textContent = `${downLabel(runTuchVictoryState.down)} & ${Math.max(1, runTuchVictoryState.toGo)}`;
+    if (ball) {
+        if (runTuchVictoryState.yardLine >= 50) {
+            ball.textContent = `Opp ${100 - runTuchVictoryState.yardLine}`;
+        } else {
+            ball.textContent = `Own ${runTuchVictoryState.yardLine}`;
+        }
+    }
+    if (player) {
+        player.style.top = `${22 + (runTuchVictoryState.playerLane * 18)}%`;
+    }
+}
+
+function clearRunTuchVictoryPlays() {
+    const { defenders } = getRunTuchVictoryElements();
+    runTuchVictoryState.defenders = [];
+    runTuchVictoryState.defenderId = 0;
+    if (defenders) defenders.innerHTML = '';
+}
+
+function spawnRunTuchVictoryDefender() {
+    const { defenders } = getRunTuchVictoryElements();
+    if (!defenders) return;
+
+    const lane = Math.floor(Math.random() * 5);
+    const speed = 1.6 + Math.random() * 1.4;
+    const id = `d-${runTuchVictoryState.defenderId++}`;
+
+    const node = document.createElement('div');
+    node.className = 'rtv-defender';
+    node.dataset.id = id;
+    node.style.top = `${22 + (lane * 18)}%`;
+    node.style.left = '94%';
+    node.textContent = '🛡️';
+    defenders.appendChild(node);
+
+    runTuchVictoryState.defenders.push({ id, lane, x: 94, speed, node });
+}
+
+function endRunTuchVictoryPlay(tackled) {
+    runTuchVictoryState.playActive = false;
+
+    let gain = 0;
+    if (tackled) {
+        gain = Math.floor(Math.random() * 6) - 2;
+        setRunTuchVictoryMessage('Tackled! Tough stop by the defense.');
+    } else if (runTuchVictoryState.lastPlayType === 'pass') {
+        const complete = Math.random() < 0.7;
+        gain = complete ? (6 + Math.floor(Math.random() * 17)) : 0;
+        setRunTuchVictoryMessage(complete ? 'Big completion downfield.' : 'Incomplete pass.');
+    } else {
+        gain = 3 + Math.floor(Math.random() * 10) + Math.min(4, Math.floor(runTuchVictoryState.avoided / 2));
+        setRunTuchVictoryMessage('Nice run through traffic.');
+    }
+
+    runTuchVictoryState.yardLine = Math.max(1, Math.min(100, runTuchVictoryState.yardLine + gain));
+
+    if (runTuchVictoryState.yardLine >= 100) {
+        runTuchVictoryState.score += 7;
+        runTuchVictoryState.yardLine = 25;
+        runTuchVictoryState.down = 1;
+        runTuchVictoryState.toGo = 10;
+        setRunTuchVictoryMessage('TOUCHDOWN! +7 points. New drive at own 25.');
+    } else if (gain >= runTuchVictoryState.toGo) {
+        runTuchVictoryState.down = 1;
+        runTuchVictoryState.toGo = Math.min(10, 100 - runTuchVictoryState.yardLine);
+        setRunTuchVictoryMessage('First down. Keep the drive alive.');
+    } else {
+        runTuchVictoryState.down += 1;
+        runTuchVictoryState.toGo = Math.max(1, runTuchVictoryState.toGo - gain);
+        if (runTuchVictoryState.down > 4) {
+            runTuchVictoryState.down = 1;
+            runTuchVictoryState.toGo = 10;
+            runTuchVictoryState.yardLine = 25;
+            setRunTuchVictoryMessage('Turnover on downs. Defense takes over.');
+        }
+    }
+
+    clearRunTuchVictoryPlays();
+    updateRunTuchVictoryHud();
+}
+
+function updateRunTuchVictoryPlayFrame() {
+    if (!runTuchVictoryState.playActive || runTuchVictoryState.gameOver) return;
+
+    runTuchVictoryState.playMs += 80;
+    runTuchVictoryState.defenderSpawnMs += 80;
+
+    if (runTuchVictoryState.defenderSpawnMs >= 480) {
+        runTuchVictoryState.defenderSpawnMs = 0;
+        spawnRunTuchVictoryDefender();
+    }
+
+    const playerX = 12;
+    for (let i = runTuchVictoryState.defenders.length - 1; i >= 0; i -= 1) {
+        const defender = runTuchVictoryState.defenders[i];
+        defender.x -= defender.speed;
+        defender.node.style.left = `${defender.x}%`;
+
+        if (defender.lane === runTuchVictoryState.playerLane && defender.x <= playerX + 3 && defender.x >= playerX - 2) {
+            endRunTuchVictoryPlay(true);
+            return;
+        }
+
+        if (defender.x < -8) {
+            defender.node.remove();
+            runTuchVictoryState.defenders.splice(i, 1);
+            runTuchVictoryState.avoided += 1;
+        }
+    }
+
+    if (runTuchVictoryState.playMs >= 5200) {
+        endRunTuchVictoryPlay(false);
+    }
+}
+
+function runTuchVictoryCallPlay(type) {
+    if (runTuchVictoryState.gameOver) return;
+    if (runTuchVictoryState.playActive) return;
+
+    runTuchVictoryState.lastPlayType = type;
+    runTuchVictoryState.playActive = true;
+    runTuchVictoryState.playMs = 0;
+    runTuchVictoryState.defenderSpawnMs = 0;
+    runTuchVictoryState.avoided = 0;
+    clearRunTuchVictoryPlays();
+    setRunTuchVictoryMessage(type === 'pass' ? 'Pass play called. Find a lane.' : 'Run play called. Hit the gap.');
+}
+
+function runTuchVictoryReset() {
+    runTuchVictoryState.score = 0;
+    runTuchVictoryState.clock = 120;
+    runTuchVictoryState.yardLine = 25;
+    runTuchVictoryState.down = 1;
+    runTuchVictoryState.toGo = 10;
+    runTuchVictoryState.playActive = false;
+    runTuchVictoryState.lastPlayType = 'run';
+    runTuchVictoryState.playerLane = 2;
+    runTuchVictoryState.gameOver = false;
+    runTuchVictoryState.playMs = 0;
+    runTuchVictoryState.defenderSpawnMs = 0;
+    runTuchVictoryState.avoided = 0;
+    clearRunTuchVictoryPlays();
+    updateRunTuchVictoryHud();
+    setRunTuchVictoryMessage('Pick a play to start your drive.');
+}
+
+window.runTuchVictoryCallPlay = runTuchVictoryCallPlay;
+window.runTuchVictoryReset = runTuchVictoryReset;
+
+function initRunTuchVictory() {
+    if (runTuchVictoryState.clockLoop) clearInterval(runTuchVictoryState.clockLoop);
+    if (runTuchVictoryState.gameLoop) clearInterval(runTuchVictoryState.gameLoop);
+
+    if (runTuchVictoryState.keyHandler) {
+        document.removeEventListener('keydown', runTuchVictoryState.keyHandler);
+    }
+
+    runTuchVictoryState.keyHandler = (e) => {
+        if (runTuchVictoryState.gameOver) return;
+        if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            runTuchVictoryState.playerLane = Math.max(0, runTuchVictoryState.playerLane - 1);
+            updateRunTuchVictoryHud();
+        } else if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            runTuchVictoryState.playerLane = Math.min(4, runTuchVictoryState.playerLane + 1);
+            updateRunTuchVictoryHud();
+        } else if (e.code === 'Space') {
+            e.preventDefault();
+            runTuchVictoryCallPlay(runTuchVictoryState.lastPlayType || 'run');
+        }
+    };
+    document.addEventListener('keydown', runTuchVictoryState.keyHandler);
+
+    runTuchVictoryReset();
+
+    runTuchVictoryState.clockLoop = setInterval(() => {
+        if (runTuchVictoryState.gameOver) return;
+        runTuchVictoryState.clock = Math.max(0, runTuchVictoryState.clock - 1);
+        updateRunTuchVictoryHud();
+        if (runTuchVictoryState.clock === 0) {
+            runTuchVictoryState.gameOver = true;
+            runTuchVictoryState.playActive = false;
+            clearRunTuchVictoryPlays();
+            setRunTuchVictoryMessage(`Final whistle! You scored ${runTuchVictoryState.score} points.`);
+        }
+    }, 1000);
+
+    runTuchVictoryState.gameLoop = setInterval(updateRunTuchVictoryPlayFrame, 80);
+}
+
+function cleanupRunTuchVictory() {
+    if (runTuchVictoryState.clockLoop) clearInterval(runTuchVictoryState.clockLoop);
+    if (runTuchVictoryState.gameLoop) clearInterval(runTuchVictoryState.gameLoop);
+    runTuchVictoryState.clockLoop = null;
+    runTuchVictoryState.gameLoop = null;
+    if (runTuchVictoryState.keyHandler) {
+        document.removeEventListener('keydown', runTuchVictoryState.keyHandler);
+        runTuchVictoryState.keyHandler = null;
+    }
+    clearRunTuchVictoryPlays();
 }
 
 // ===== CALENDAR APP =====
@@ -3040,6 +3351,50 @@ function net2Fullscreen() {
 }
 
 // ===== BROWSER APP =====
+const browserNavState = {
+    history: [],
+    index: -1
+};
+
+function normalizeBrowserQuery(query) {
+    return String(query || '').trim();
+}
+
+function isBrowserHomeQuery(query) {
+    const q = normalizeBrowserQuery(query).toLowerCase();
+    return q === '' || q === 'home' || q === 'https://www.example.com' || q === 'www.example.com' || q === 'example.com';
+}
+
+function getBrowserHomepageMarkup() {
+    const wrapper = document.createElement('div');
+    wrapper.innerHTML = windowManager.getBrowserContent();
+    const home = wrapper.querySelector('.browser-homepage');
+    if (home) return home.outerHTML;
+    return '<div class="browser-homepage"><h1>Welcome to Web Browser</h1><p>Search for anything or enter a website address.</p></div>';
+}
+
+function renderBrowserHomepage() {
+    const resultsDiv = document.getElementById('browser-results');
+    if (!resultsDiv) return;
+    resultsDiv.innerHTML = getBrowserHomepageMarkup();
+}
+
+function pushBrowserHistory(query) {
+    const next = normalizeBrowserQuery(query);
+    if (!next) return;
+
+    if (browserNavState.index >= 0 && browserNavState.history[browserNavState.index] === next) {
+        return;
+    }
+
+    if (browserNavState.index < browserNavState.history.length - 1) {
+        browserNavState.history = browserNavState.history.slice(0, browserNavState.index + 1);
+    }
+
+    browserNavState.history.push(next);
+    browserNavState.index = browserNavState.history.length - 1;
+}
+
 function escapeBrowserHtml(str) {
     return String(str)
         .replace(/&/g, '&amp;')
@@ -3077,6 +3432,27 @@ function toDisplayName(domain) {
 function getGenericWebsite(domain) {
     const safeDomain = escapeBrowserHtml(domain);
     const safeName = escapeBrowserHtml(toDisplayName(domain));
+    const cleanDomain = String(domain || '').replace(/^www\./, '');
+    const tld = cleanDomain.includes('.') ? cleanDomain.split('.').pop() : 'site';
+
+    const focusByTld = {
+        io: 'Technology and developer projects',
+        tech: 'Product launches, innovation and tutorials',
+        org: 'Community knowledge and long-form guides',
+        fun: 'Entertainment, games and creator content',
+        net: 'Collections, directories and resources',
+        com: 'General business and consumer content',
+        space: 'Science, exploration and astronomy',
+        games: 'Game news, reviews and walkthroughs',
+        tv: 'Streaming and video highlights',
+        social: 'Community posts and social updates',
+        garden: 'Plants, landscaping and outdoor tips',
+        weather: 'Forecasts, storm tracking and climate notes',
+        adventure: 'Travel stories and activity guides',
+        fantasy: 'Fictional worlds and lore write-ups'
+    };
+
+    const focus = focusByTld[tld] || 'Mixed articles, updates and practical resources';
 
     return `
         <div class="fake-website">
@@ -3086,8 +3462,9 @@ function getGenericWebsite(domain) {
             </div>
             <div class="fake-site-body" style="background:#f8fafc;padding:20px;border-radius:0 0 8px 8px;border:1px solid #dbeafe;">
                 <h2 style="margin:0 0 12px;color:#1e40af;">${safeName}</h2>
-                <p style="margin:0 0 16px;color:#334155;line-height:1.6;">This domain now opens correctly in the Web Browser app. It does not have custom content yet, but the site route is active.</p>
-                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;">
+                <p style="margin:0 0 10px;color:#334155;line-height:1.7;">This site is now fully routed and stable inside the Web Browser app. It uses an enhanced auto-generated profile so content does not disappear and each domain still has useful information.</p>
+                <p style="margin:0 0 16px;color:#334155;line-height:1.7;"><strong>Primary focus:</strong> ${escapeBrowserHtml(focus)}</p>
+                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px;">
                     <div style="background:white;border:1px solid #e2e8f0;border-radius:8px;padding:10px;">
                         <strong style="display:block;color:#0f172a;">Status</strong>
                         <span style="color:#16a34a;">Online</span>
@@ -3098,12 +3475,218 @@ function getGenericWebsite(domain) {
                     </div>
                     <div style="background:white;border:1px solid #e2e8f0;border-radius:8px;padding:10px;">
                         <strong style="display:block;color:#0f172a;">Mode</strong>
-                        <span style="color:#334155;">Generated page</span>
+                        <span style="color:#334155;">Expanded generated page</span>
                     </div>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                    <div style="background:white;border:1px solid #e2e8f0;border-radius:8px;padding:12px;">
+                        <h3 style="margin:0 0 6px;color:#0f172a;font-size:14px;">Latest Highlights</h3>
+                        <ul style="margin:0;padding-left:18px;color:#334155;font-size:13px;line-height:1.6;">
+                            <li>Weekly feature article published</li>
+                            <li>Community recommendations updated</li>
+                            <li>Beginner guide section refreshed</li>
+                            <li>Top resources list expanded</li>
+                        </ul>
+                    </div>
+                    <div style="background:white;border:1px solid #e2e8f0;border-radius:8px;padding:12px;">
+                        <h3 style="margin:0 0 6px;color:#0f172a;font-size:14px;">Quick Stats</h3>
+                        <ul style="margin:0;padding-left:18px;color:#334155;font-size:13px;line-height:1.6;">
+                            <li>Articles: 120+</li>
+                            <li>Guides: 34</li>
+                            <li>Updated: Daily</li>
+                            <li>Read time: 4-10 min each</li>
+                        </ul>
+                    </div>
+                </div>
+                <div style="margin-top:12px;background:white;border:1px solid #e2e8f0;border-radius:8px;padding:12px;">
+                    <h3 style="margin:0 0 6px;color:#0f172a;font-size:14px;">Suggested Searches</h3>
+                    <p style="margin:0;color:#334155;font-size:13px;line-height:1.6;">Try topics like "beginner guide", "top picks", "weekly roundup", "how-to", and "best tools" to find deeper pages quickly.</p>
                 </div>
             </div>
         </div>
     `;
+}
+
+function initQuizMasterWebsite() {
+    const container = document.getElementById('qm-quiz');
+    if (!container) return;
+
+    const questions = [
+        { q: 'What is the capital of Australia?', a: ['Sydney', 'Canberra', 'Melbourne', 'Brisbane'], c: 1 },
+        { q: 'How many sides does a hexagon have?', a: ['5', '6', '7', '8'], c: 1 },
+        { q: 'Which planet is the largest in our Solar System?', a: ['Saturn', 'Neptune', 'Jupiter', 'Uranus'], c: 2 }
+    ];
+
+    let idx = 0;
+    let score = 0;
+
+    const render = () => {
+        if (idx >= questions.length) {
+            container.innerHTML = `
+                <div style="text-align:center;padding:20px;">
+                    <div style="font-size:48px;">🏅</div>
+                    <h3 style="color:#00b894;">You scored ${score} / ${questions.length}!</h3>
+                    <button id="qm-restart" style="background:#00b894;color:white;border:none;padding:8px 24px;border-radius:20px;cursor:pointer;font-size:14px;">Play Again</button>
+                </div>
+            `;
+            const restart = document.getElementById('qm-restart');
+            if (restart) {
+                restart.addEventListener('click', () => {
+                    idx = 0;
+                    score = 0;
+                    render();
+                });
+            }
+            return;
+        }
+
+        const question = questions[idx];
+        container.innerHTML = `
+            <div style="background:white;border-radius:10px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.07);">
+                <p style="font-weight:bold;margin:0 0 12px;font-size:15px;">Q${idx + 1}: ${escapeBrowserHtml(question.q)}</p>
+                <div id="qm-answers"></div>
+            </div>
+        `;
+
+        const answersEl = document.getElementById('qm-answers');
+        if (!answersEl) return;
+        question.a.forEach((answer, i) => {
+            const btn = document.createElement('button');
+            btn.style.cssText = 'display:block;width:100%;margin-bottom:8px;background:#e8fdf5;border:1px solid #00b894;border-radius:8px;padding:10px;cursor:pointer;text-align:left;font-size:14px;';
+            btn.textContent = answer;
+            btn.addEventListener('click', () => {
+                if (i === question.c) score += 1;
+                idx += 1;
+                render();
+            });
+            answersEl.appendChild(btn);
+        });
+    };
+
+    render();
+}
+
+function getWebsiteKnowledgePack(domain) {
+    const cleanDomain = String(domain || '').replace(/^www\./, '').toLowerCase();
+    const focusMap = {
+        'hazygames.fun': 'Game discovery, walkthroughs and challenge modes',
+        'zappycook.net': 'Fast recipes, meal prep and ingredient swaps',
+        'pixelvault.io': 'Digital art collections, creative tools and prompts',
+        'cosmicblog.org': 'Astronomy explainers, observations and space news',
+        'novaspark.tech': 'Tech trends, device comparisons and AI updates',
+        'dailypets.fun': 'Pet care guides, breed profiles and training basics',
+        'quizmaster.io': 'Trivia sets, learning drills and score challenges',
+        'buildcraft.tech': 'DIY builds, maker workflows and tool safety',
+        'stargazer.space': 'Night-sky calendars and telescope recommendations',
+        'munchbox.net': 'Lunchbox planning, snacks and nutrition balance',
+        'codecubs.io': 'Beginner programming paths and coding exercises',
+        'sketchwild.org': 'Drawing techniques and visual storytelling practice',
+        'factblast.fun': 'Curated facts with references and learning context',
+        'frostbite.net': 'Frozen recipes, texture tips and serving ideas',
+        'neonpulse.fun': 'Music discovery, artist deep dives and playlists',
+        'plantpedia.net': 'Plant encyclopedia, care cycles and troubleshooting',
+        'brickyard.io': 'Brick build plans, parts lists and design patterns',
+        'funnybones.fun': 'Clean humor, joke formats and writing prompts',
+        'cloudjournal.org': 'Weather logs, cloud analysis and forecast notes'
+    };
+
+    const focus = focusMap[cleanDomain] || 'Reference articles, guides, and curated updates';
+
+    return {
+        focus,
+        timeline: [
+            '2024: Core content library launched',
+            '2025: Contributor tools and community updates added',
+            '2026: Deep-dive guides and weekly digest introduced'
+        ],
+        quickFacts: [
+            'New entries are published every week',
+            'Beginner and advanced guides are both included',
+            'Most pages include practical examples and checklists',
+            'Collections are grouped by topic for fast browsing',
+            'Search suggestions update based on recent trends'
+        ],
+        faq: [
+            'How often is content updated? Usually every 1 to 3 days.',
+            'Can beginners use this site? Yes, beginner tracks are marked clearly.',
+            'Are there long-form guides? Yes, each topic has deep-dive pages.',
+            'Is there a quick-start path? Yes, use Featured and Top Picks first.'
+        ],
+        resources: [
+            'Top picks and editor recommendations',
+            'Step-by-step starter roadmap',
+            'Troubleshooting and common mistakes',
+            'Advanced techniques and optimization notes',
+            'Reference list for further reading'
+        ]
+    };
+}
+
+function injectWebsiteMegaInfo(domain) {
+    const results = document.getElementById('browser-results');
+    if (!results) return;
+
+    const body = results.querySelector('.fake-site-body');
+    if (!body) return;
+    if (body.querySelector('#website-mega-info')) return;
+
+    const info = getWebsiteKnowledgePack(domain);
+    const safeDomain = escapeBrowserHtml(domain || 'website');
+    const safeFocus = escapeBrowserHtml(info.focus);
+
+    const section = document.createElement('div');
+    section.id = 'website-mega-info';
+    section.style.cssText = 'margin-top:16px;border:1px solid rgba(30,64,175,0.2);border-radius:10px;padding:14px;background:rgba(255,255,255,0.85);';
+
+    section.innerHTML = `
+        <h2 style="margin:0 0 10px;color:#1e3a8a;">Extended Info Center</h2>
+        <p style="margin:0 0 12px;color:#334155;line-height:1.7;"><strong>${safeDomain}</strong> focus: ${safeFocus}. This section adds deeper context, practical guidance, and ongoing update summaries.</p>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+            <div style="background:white;border:1px solid #dbeafe;border-radius:8px;padding:10px;">
+                <h3 style="margin:0 0 6px;color:#0f172a;font-size:14px;">Roadmap Timeline</h3>
+                <ul style="margin:0;padding-left:18px;color:#334155;font-size:13px;line-height:1.65;">
+                    ${info.timeline.map(item => `<li>${escapeBrowserHtml(item)}</li>`).join('')}
+                </ul>
+            </div>
+            <div style="background:white;border:1px solid #dbeafe;border-radius:8px;padding:10px;">
+                <h3 style="margin:0 0 6px;color:#0f172a;font-size:14px;">Quick Facts</h3>
+                <ul style="margin:0;padding-left:18px;color:#334155;font-size:13px;line-height:1.65;">
+                    ${info.quickFacts.map(item => `<li>${escapeBrowserHtml(item)}</li>`).join('')}
+                </ul>
+            </div>
+        </div>
+
+        <div style="margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+            <div style="background:white;border:1px solid #dbeafe;border-radius:8px;padding:10px;">
+                <h3 style="margin:0 0 6px;color:#0f172a;font-size:14px;">Frequently Asked Questions</h3>
+                <ul style="margin:0;padding-left:18px;color:#334155;font-size:13px;line-height:1.65;">
+                    ${info.faq.map(item => `<li>${escapeBrowserHtml(item)}</li>`).join('')}
+                </ul>
+            </div>
+            <div style="background:white;border:1px solid #dbeafe;border-radius:8px;padding:10px;">
+                <h3 style="margin:0 0 6px;color:#0f172a;font-size:14px;">Resource Index</h3>
+                <ul style="margin:0;padding-left:18px;color:#334155;font-size:13px;line-height:1.65;">
+                    ${info.resources.map(item => `<li>${escapeBrowserHtml(item)}</li>`).join('')}
+                </ul>
+            </div>
+        </div>
+
+        <div style="margin-top:10px;background:white;border:1px solid #dbeafe;border-radius:8px;padding:10px;">
+            <h3 style="margin:0 0 6px;color:#0f172a;font-size:14px;">Suggested Deep Searches</h3>
+            <p style="margin:0;color:#334155;font-size:13px;line-height:1.7;">Try: "beginner guide", "advanced tips", "best practices", "weekly update", "comparison", "troubleshooting", and "reference".</p>
+        </div>
+    `;
+
+    body.appendChild(section);
+}
+
+function runBrowserPostRenderHooks(domain) {
+    injectWebsiteMegaInfo(domain);
+
+    if (domain === 'quizmaster.io') {
+        initQuizMasterWebsite();
+    }
 }
 
 function browserSearch() {
@@ -3114,12 +3697,24 @@ function browserSearch() {
     }
 }
 
-function browserNavigate(query) {
+function browserNavigate(query, options = {}) {
     const resultsDiv = document.getElementById('browser-results');
     const addressInput = document.getElementById('browser-address');
-    const normalizedQuery = String(query || '').trim().toLowerCase();
+    const normalizedInput = normalizeBrowserQuery(query);
+    const normalizedQuery = normalizedInput.toLowerCase();
     const domain = extractDomain(query);
     const domainNoWww = domain.replace(/^www\./, '');
+
+    if (!resultsDiv || !addressInput) return;
+
+    if (isBrowserHomeQuery(normalizedInput)) {
+        addressInput.value = 'https://www.example.com';
+        renderBrowserHomepage();
+        if (!options.fromHistory) {
+            pushBrowserHistory('https://www.example.com');
+        }
+        return;
+    }
     
     addressInput.value = query;
     
@@ -3201,6 +3796,17 @@ function browserNavigate(query) {
                 ${content}
             </div>
         `;
+    }
+
+    if (!options.fromHistory) {
+        pushBrowserHistory(normalizedInput);
+    }
+
+    const activeDomain = siteKey
+        ? siteKey.replace(/^www\./, '')
+        : (isLikelyWebsite ? domainNoWww : '');
+    if (activeDomain) {
+        runBrowserPostRenderHooks(activeDomain);
     }
 }
 
@@ -4326,61 +4932,26 @@ function getCloudJournalWebsite() {
 }
 
 function browserGoBack() {
-    // Simple back - just go to homepage
-    const resultsDiv = document.getElementById('browser-results');
-    const addressInput = document.getElementById('browser-address');
-    
-    addressInput.value = 'https://www.example.com';
-    resultsDiv.innerHTML = `
-        <div class="browser-homepage">
-            <h1>Welcome to Web Browser</h1>
-            <p>Search for anything or enter a website address.</p>
-                <div class="browser-shortcuts">
-                <div class="shortcut website-shortcut" onclick="browserNavigate('www.hazygames.fun')">🎮 HazyGames.fun</div>
-                <div class="shortcut" onclick="browserNavigate('space')">🚀 Space</div>
-                <div class="shortcut" onclick="browserNavigate('dinosaurs')">🦕 Dinosaurs</div>
-                <div class="shortcut website-shortcut" onclick="browserNavigate('www.novaspark.tech')">⚡ NovaSpark.tech</div>
-                <div class="shortcut" onclick="browserNavigate('animals')">🐘 Animals</div>
-                <div class="shortcut" onclick="browserNavigate('ocean')">🌊 Ocean</div>
-                <div class="shortcut" onclick="browserNavigate('science')">🔬 Science</div>
-                <div class="shortcut" onclick="browserNavigate('robots')">🤖 Robots</div>
-                <div class="shortcut" onclick="browserNavigate('football')">⚽ Football</div>
-                <div class="shortcut" onclick="browserNavigate('history')">📜 History</div>
-                <div class="shortcut website-shortcut" onclick="browserNavigate('www.zappycook.net')">🍳 ZappyCook.net</div>
-                <div class="shortcut website-shortcut" onclick="browserNavigate('www.pixelvault.io')">🖼️ PixelVault.io</div>
-                <div class="shortcut website-shortcut" onclick="browserNavigate('www.cosmicblog.org')">🌌 CosmicBlog.org</div>
-                <div class="shortcut website-shortcut" onclick="browserNavigate('www.dailypets.fun')">🐾 DailyPets.fun</div>
-                <div class="shortcut website-shortcut" onclick="browserNavigate('www.quizmaster.io')">🧩 QuizMaster.io</div>
-                <div class="shortcut website-shortcut" onclick="browserNavigate('www.buildcraft.tech')">🔧 BuildCraft.tech</div>
-                <div class="shortcut website-shortcut" onclick="browserNavigate('www.stargazer.space')">🔭 Stargazer.space</div>
-                <div class="shortcut website-shortcut" onclick="browserNavigate('www.munchbox.net')">🍱 MunchBox.net</div>
-                <div class="shortcut website-shortcut" onclick="browserNavigate('www.codecubs.io')">💻 CodeCubs.io</div>
-                <div class="shortcut website-shortcut" onclick="browserNavigate('www.sketchwild.org')">🎨 SketchWild.org</div>
-                <div class="shortcut website-shortcut" onclick="browserNavigate('www.factblast.fun')">💥 FactBlast.fun</div>
-                <div class="shortcut website-shortcut" onclick="browserNavigate('www.frostbite.net')">❄️ FrostBite.net</div>
-                <div class="shortcut website-shortcut" onclick="browserNavigate('www.neonpulse.fun')">🎵 NeonPulse.fun</div>
-                <div class="shortcut website-shortcut" onclick="browserNavigate('www.plantpedia.net')">🌿 PlantPedia.net</div>
-                <div class="shortcut website-shortcut" onclick="browserNavigate('www.brickyard.io')">🧱 Brickyard.io</div>
-                <div class="shortcut website-shortcut" onclick="browserNavigate('www.funnybones.fun')">😂 FunnyBones.fun</div>
-                <div class="shortcut website-shortcut" onclick="browserNavigate('www.cloudjournal.org')">☁️ CloudJournal.org</div>
-            </div>
-        </div>
-    `;
+    if (browserNavState.index > 0) {
+        browserNavState.index -= 1;
+        browserNavigate(browserNavState.history[browserNavState.index], { fromHistory: true });
+        return;
+    }
+
+    browserNavigate('https://www.example.com', { fromHistory: true });
 }
 
 function browserGoForward() {
-    // Not implemented - just refresh
-    browserRefresh();
+    if (browserNavState.index < browserNavState.history.length - 1) {
+        browserNavState.index += 1;
+        browserNavigate(browserNavState.history[browserNavState.index], { fromHistory: true });
+    }
 }
 
 function browserRefresh() {
     const addressInput = document.getElementById('browser-address');
-    const query = addressInput.value;
-    if (query && query !== 'https://www.example.com') {
-        browserNavigate(query);
-    } else {
-        browserGoBack();
-    }
+    const query = addressInput ? addressInput.value : 'https://www.example.com';
+    browserNavigate(query, { fromHistory: true });
 }
 
 
