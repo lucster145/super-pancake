@@ -68,11 +68,18 @@ const APPS = {
         color: '#6c47ff',
         minWidth: 440,
         minHeight: 680
+    },
+    rec: {
+        name: 'Rec',
+        icon: '🕹️',
+        color: '#ff6a00',
+        minWidth: 760,
+        minHeight: 540
     }
 };
 
 // Store app installation state
-const installedApps = new Set(['playstore', 'notes', 'game2048', 'calculator', 'memory', 'calendar', 'net2', 'browser', 'simpleai', 'vibe']);
+const installedApps = new Set(['playstore', 'notes', 'game2048', 'calculator', 'memory', 'calendar', 'net2', 'browser', 'simpleai', 'vibe', 'rec']);
 
 // Global error handler for better debugging
 window.addEventListener('error', (e) => {
@@ -298,6 +305,9 @@ class WindowManager {
 
     cleanupApp(appId) {
         switch(appId) {
+            case 'rec':
+                cleanupRec();
+                break;
 
             // Add cleanup for other apps if needed
         }
@@ -328,6 +338,8 @@ class WindowManager {
                 return this.getSimpleAIContent();
             case 'vibe':
                 return getVibeContent();
+            case 'rec':
+                return this.getRecContent();
             default:
                 return '<p>App not implemented</p>';
         }
@@ -431,6 +443,18 @@ class WindowManager {
                 <div style="margin-top: 20px; font-size: 18px; font-weight: 600;">
                     Matches: <span id="memory-score">0</span> / 8
                 </div>
+            </div>
+        `;
+    }
+
+    getRecContent() {
+        return `
+            <div class="rec-app">
+                <div class="rec-topbar">
+                    <span id="rec-live-badge" class="rec-offline-badge">LIVE</span>
+                    <span class="rec-dot"></span>
+                </div>
+                <div id="rec-stage" class="rec-stage"></div>
             </div>
         `;
     }
@@ -798,6 +822,9 @@ class WindowManager {
             case 'vibe':
                 initVibe();
                 break;
+            case 'rec':
+                initRec();
+                break;
         }
     }
 }
@@ -917,6 +944,7 @@ function updateInternetStatus() {
     const online = navigator.onLine;
     internetStatus.textContent = online ? '📶 Online' : '📶 Offline';
     internetStatus.classList.toggle('offline', !online);
+    updateRecLiveStatus();
 }
 
 setInterval(updateClock, 1000);
@@ -924,6 +952,315 @@ updateClock();
 updateInternetStatus();
 window.addEventListener('online', updateInternetStatus);
 window.addEventListener('offline', updateInternetStatus);
+
+// ===== REC APP =====
+const recState = {
+    mode: 'menu',
+    score: 0,
+    timeLeft: 0,
+    timerId: null,
+    spawnId: null,
+    animationId: null,
+    targetId: null,
+    keyHandler: null,
+    playerX: 0,
+    cards: []
+};
+
+function clearRecTimers() {
+    clearInterval(recState.timerId);
+    clearInterval(recState.spawnId);
+    clearInterval(recState.animationId);
+    clearInterval(recState.targetId);
+    recState.timerId = null;
+    recState.spawnId = null;
+    recState.animationId = null;
+    recState.targetId = null;
+}
+
+function getRecStage() {
+    return document.getElementById('rec-stage');
+}
+
+function updateRecHud() {
+    const scoreEl = document.getElementById('rec-score-value');
+    const timeEl = document.getElementById('rec-time-value');
+    if (scoreEl) scoreEl.textContent = String(recState.score);
+    if (timeEl) timeEl.textContent = String(recState.timeLeft);
+}
+
+function updateRecLiveStatus() {
+    const badge = document.getElementById('rec-live-badge');
+    if (!badge) return;
+
+    const isOnline = navigator.onLine;
+    badge.textContent = isOnline ? 'LIVE' : 'LOCAL';
+    badge.classList.toggle('is-local', !isOnline);
+}
+
+function recRenderFrame(content) {
+    const stage = getRecStage();
+    if (!stage) return;
+
+    stage.innerHTML = `
+        <div class="rec-hud">
+            <button class="rec-back-btn" onclick="recShowMenu()">◀</button>
+            <div class="rec-stat">⭐ <span id="rec-score-value">0</span></div>
+            <div class="rec-stat">⏱ <span id="rec-time-value">0</span></div>
+        </div>
+        <div class="rec-playfield">${content}</div>
+    `;
+    updateRecHud();
+}
+
+function recShowMenu() {
+    clearRecTimers();
+    recState.mode = 'menu';
+    recState.score = 0;
+    recState.timeLeft = 0;
+
+    const stage = getRecStage();
+    if (!stage) return;
+
+    stage.innerHTML = `
+        <div class="rec-menu-grid">
+            <button class="rec-mode-btn" onclick="startRecGame('target')">🎯</button>
+            <button class="rec-mode-btn" onclick="startRecGame('dodge')">🧱</button>
+            <button class="rec-mode-btn" onclick="startRecGame('pairs')">🧠</button>
+            <div class="rec-offline-chip">🔴</div>
+        </div>
+    `;
+}
+
+window.startRecGame = function(mode) {
+    if (mode === 'target') {
+        startRecTargetGame();
+    } else if (mode === 'dodge') {
+        startRecDodgeGame();
+    } else if (mode === 'pairs') {
+        startRecPairsGame();
+    }
+};
+
+window.recShowMenu = recShowMenu;
+
+function startRecTargetGame() {
+    clearRecTimers();
+    recState.mode = 'target';
+    recState.score = 0;
+    recState.timeLeft = 25;
+
+    recRenderFrame('<button id="rec-target" class="rec-target">●</button>');
+
+    const stage = getRecStage();
+    const target = document.getElementById('rec-target');
+    const playfield = stage ? stage.querySelector('.rec-playfield') : null;
+    if (!target || !playfield) return;
+
+    const moveTarget = () => {
+        const maxX = Math.max(20, playfield.clientWidth - 56);
+        const maxY = Math.max(20, playfield.clientHeight - 56);
+        target.style.left = `${Math.floor(Math.random() * maxX)}px`;
+        target.style.top = `${Math.floor(Math.random() * maxY)}px`;
+    };
+
+    target.addEventListener('click', () => {
+        recState.score += 1;
+        updateRecHud();
+        moveTarget();
+    });
+
+    moveTarget();
+    recState.targetId = setInterval(moveTarget, 900);
+    recState.timerId = setInterval(() => {
+        recState.timeLeft -= 1;
+        updateRecHud();
+        if (recState.timeLeft <= 0) {
+            recEndGame();
+        }
+    }, 1000);
+}
+
+function startRecDodgeGame() {
+    clearRecTimers();
+    recState.mode = 'dodge';
+    recState.score = 0;
+    recState.timeLeft = 30;
+    recState.playerX = 45;
+
+    recRenderFrame('<div id="rec-player" class="rec-player"></div>');
+    const stage = getRecStage();
+    const playfield = stage ? stage.querySelector('.rec-playfield') : null;
+    const player = document.getElementById('rec-player');
+    if (!playfield || !player) return;
+
+    const obstacles = [];
+    const movePlayer = () => {
+        player.style.left = `${recState.playerX}%`;
+    };
+    movePlayer();
+
+    recState.keyHandler = (e) => {
+        if (recState.mode !== 'dodge') return;
+        if (e.key === 'ArrowLeft') recState.playerX = Math.max(4, recState.playerX - 4);
+        if (e.key === 'ArrowRight') recState.playerX = Math.min(90, recState.playerX + 4);
+        movePlayer();
+    };
+    document.addEventListener('keydown', recState.keyHandler);
+
+    recState.spawnId = setInterval(() => {
+        const obstacle = document.createElement('div');
+        obstacle.className = 'rec-obstacle';
+        obstacle.style.left = `${Math.floor(Math.random() * 92)}%`;
+        obstacle.style.top = '-20px';
+        playfield.appendChild(obstacle);
+        obstacles.push(obstacle);
+    }, 500);
+
+    recState.animationId = setInterval(() => {
+        const playerRect = player.getBoundingClientRect();
+
+        for (let i = obstacles.length - 1; i >= 0; i -= 1) {
+            const obstacle = obstacles[i];
+            const top = parseFloat(obstacle.style.top || '0') + 5;
+            obstacle.style.top = `${top}px`;
+
+            const obstacleRect = obstacle.getBoundingClientRect();
+            const hit = !(
+                playerRect.right < obstacleRect.left ||
+                playerRect.left > obstacleRect.right ||
+                playerRect.bottom < obstacleRect.top ||
+                playerRect.top > obstacleRect.bottom
+            );
+
+            if (hit) {
+                recEndGame();
+                return;
+            }
+
+            if (top > playfield.clientHeight + 30) {
+                obstacle.remove();
+                obstacles.splice(i, 1);
+                recState.score += 1;
+                updateRecHud();
+            }
+        }
+    }, 30);
+
+    recState.timerId = setInterval(() => {
+        recState.timeLeft -= 1;
+        updateRecHud();
+        if (recState.timeLeft <= 0) recEndGame();
+    }, 1000);
+}
+
+function startRecPairsGame() {
+    clearRecTimers();
+    recState.mode = 'pairs';
+    recState.score = 0;
+    recState.timeLeft = 60;
+
+    const emojis = ['⚽', '🎮', '🧩', '🚗', '🎯', '🛹'];
+    const cards = [...emojis, ...emojis]
+        .map((emoji) => ({ emoji, id: Math.random().toString(36).slice(2) }))
+        .sort(() => Math.random() - 0.5);
+    recState.cards = cards;
+
+    recRenderFrame('<div id="rec-pairs-grid" class="rec-pairs-grid"></div>');
+    const grid = document.getElementById('rec-pairs-grid');
+    if (!grid) return;
+
+    let first = null;
+    let second = null;
+    let lock = false;
+
+    cards.forEach((card) => {
+        const el = document.createElement('button');
+        el.className = 'rec-card';
+        el.dataset.id = card.id;
+        el.dataset.emoji = card.emoji;
+        el.textContent = '•';
+
+        el.addEventListener('click', () => {
+            if (lock || el.classList.contains('matched') || el === first) return;
+            el.textContent = card.emoji;
+            el.classList.add('open');
+
+            if (!first) {
+                first = el;
+                return;
+            }
+
+            second = el;
+            lock = true;
+
+            const match = first.dataset.emoji === second.dataset.emoji;
+            setTimeout(() => {
+                if (match) {
+                    first.classList.add('matched');
+                    second.classList.add('matched');
+                    recState.score += 1;
+                    updateRecHud();
+                    if (document.querySelectorAll('.rec-card.matched').length === cards.length) {
+                        recEndGame();
+                    }
+                } else {
+                    first.textContent = '•';
+                    second.textContent = '•';
+                    first.classList.remove('open');
+                    second.classList.remove('open');
+                }
+                first = null;
+                second = null;
+                lock = false;
+            }, 500);
+        });
+
+        grid.appendChild(el);
+    });
+
+    recState.timerId = setInterval(() => {
+        recState.timeLeft -= 1;
+        updateRecHud();
+        if (recState.timeLeft <= 0) recEndGame();
+    }, 1000);
+}
+
+function recEndGame() {
+    clearRecTimers();
+
+    if (recState.keyHandler) {
+        document.removeEventListener('keydown', recState.keyHandler);
+        recState.keyHandler = null;
+    }
+
+    const stage = getRecStage();
+    if (!stage) return;
+
+    stage.innerHTML = `
+        <div class="rec-result">
+            <div class="rec-result-icon">🏁</div>
+            <div class="rec-result-score">${recState.score}</div>
+            <div class="rec-result-actions">
+                <button class="rec-mode-btn" onclick="recShowMenu()">🏠</button>
+                <button class="rec-mode-btn" onclick="startRecGame('${recState.mode}')">🔁</button>
+            </div>
+        </div>
+    `;
+}
+
+function initRec() {
+    recShowMenu();
+    updateRecLiveStatus();
+}
+
+function cleanupRec() {
+    clearRecTimers();
+    if (recState.keyHandler) {
+        document.removeEventListener('keydown', recState.keyHandler);
+        recState.keyHandler = null;
+    }
+}
 
 // ===== NOTES APP =====
 function initNotesApp(contentEl) {
