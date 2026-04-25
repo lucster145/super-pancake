@@ -1004,21 +1004,60 @@ const recState = {
 };
 
 const REC_GAME_ICONS = ['🫧', '🔶', '🟣', '🧿', '🧲', '🧪', '⚙️', '🛰️', '🧱', '🧬', '🌀', '💠', '♦️', '🔺', '🔷', '🧊', '⚡', '🌟', '🛸', '🌈'];
+const REC_GAME_ICON_SUFFIX = ['🎈', '🧸', '🎲', '🎧', '🧡', '💫', '🍀', '🦄', '🧵', '🎴'];
 
 function buildRecCatalog() {
     const games = [];
+    let dotCount = 0;
+    let dodgeCount = 0;
+    let pairsCount = 0;
+
     for (let i = 1; i <= 100; i += 1) {
         const typeIndex = i % 3;
         const type = typeIndex === 0 ? 'dot' : (typeIndex === 1 ? 'dodge' : 'pairs');
+
+        if (type === 'dot') dotCount += 1;
+        if (type === 'dodge') dodgeCount += 1;
+        if (type === 'pairs') pairsCount += 1;
+
+        const icon = `${REC_GAME_ICONS[(i - 1) % REC_GAME_ICONS.length]}${REC_GAME_ICON_SUFFIX[Math.floor((i - 1) / REC_GAME_ICONS.length)]}`;
+
+        let time;
+        let speed;
+        let step;
+        let size;
+        let pairs;
+
+        // Keep a unique gameplay signature per generated game.
+        if (type === 'dot') {
+            time = 18 + dotCount;
+            speed = 320 + (dotCount * 11);
+            size = 24 + ((dotCount * 5) % 40);
+            step = 0;
+            pairs = 0;
+        } else if (type === 'dodge') {
+            time = 22 + dodgeCount;
+            speed = 260 + (dodgeCount * 13);
+            step = 2 + (dodgeCount % 7);
+            size = 0;
+            pairs = 0;
+        } else {
+            time = 28 + pairsCount;
+            speed = 0;
+            step = 0;
+            size = 0;
+            pairs = 4 + (pairsCount % 9);
+        }
+
         games.push({
             id: `g${i}`,
-            icon: REC_GAME_ICONS[i % REC_GAME_ICONS.length],
+            icon,
             type,
-            time: 20 + (i % 26),
-            speed: 450 + ((i * 37) % 650),
-            step: 3 + (i % 5),
-            size: 28 + ((i * 3) % 34),
-            pairs: 4 + (i % 4)
+            time,
+            speed,
+            step,
+            size,
+            pairs
         });
     }
     return games;
