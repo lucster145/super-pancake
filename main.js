@@ -75,18 +75,11 @@ const APPS = {
         color: '#ff6a00',
         minWidth: 760,
         minHeight: 540
-    },
-    relltext: {
-        name: 'Rell Text',
-        icon: '💬',
-        color: '#0f766e',
-        minWidth: 620,
-        minHeight: 520
     }
 };
 
 // Store app installation state
-const installedApps = new Set(['playstore', 'notes', 'game2048', 'calculator', 'memory', 'calendar', 'net2', 'browser', 'simpleai', 'vibe', 'rec', 'relltext']);
+const installedApps = new Set(['playstore', 'notes', 'game2048', 'calculator', 'memory', 'calendar', 'net2', 'browser', 'simpleai', 'vibe', 'rec']);
 
 // Global error handler for better debugging
 window.addEventListener('error', (e) => {
@@ -315,9 +308,6 @@ class WindowManager {
             case 'rec':
                 cleanupRec();
                 break;
-            case 'relltext':
-                cleanupRellText();
-                break;
 
             // Add cleanup for other apps if needed
         }
@@ -350,8 +340,6 @@ class WindowManager {
                 return getVibeContent();
             case 'rec':
                 return this.getRecContent();
-            case 'relltext':
-                return this.getRellTextContent();
             default:
                 return '<p>App not implemented</p>';
         }
@@ -467,23 +455,6 @@ class WindowManager {
                     <span class="rec-dot"></span>
                 </div>
                 <div id="rec-stage" class="rec-stage"></div>
-            </div>
-        `;
-    }
-
-    getRellTextContent() {
-        return `
-            <div class="relltext-app">
-                <div class="relltext-topbar">
-                    <span class="relltext-badge">PUBLIC</span>
-                    <span class="relltext-badge">ANON</span>
-                    <span id="relltext-status" class="relltext-status">Connecting...</span>
-                </div>
-                <div id="relltext-messages" class="relltext-messages"></div>
-                <div class="relltext-compose">
-                    <input id="relltext-input" class="relltext-input" maxlength="300" placeholder="Say something public..." />
-                    <button id="relltext-send" class="relltext-send">Send</button>
-                </div>
             </div>
         `;
     }
@@ -853,9 +824,6 @@ class WindowManager {
                 break;
             case 'rec':
                 initRec();
-                break;
-            case 'relltext':
-                initRellText(contentEl);
                 break;
         }
     }
@@ -1430,159 +1398,6 @@ function initRec() {
 function cleanupRec() {
     clearRecTimers();
     clearRecInputHandlers();
-}
-
-// ===== RELL TEXT APP =====
-const rellTextState = {
-    gun: null,
-    room: null,
-    listener: null,
-    seenIds: new Set(),
-    anonId: `anon-${Math.random().toString(36).slice(2, 8)}`,
-    inputHandler: null,
-    sendHandler: null,
-    roomKey: 'rell-text-public-room-v1'
-};
-
-function escapeHtml(str) {
-    return String(str)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;');
-}
-
-function getRellTextElements() {
-    return {
-        messages: document.getElementById('relltext-messages'),
-        input: document.getElementById('relltext-input'),
-        send: document.getElementById('relltext-send'),
-        status: document.getElementById('relltext-status')
-    };
-}
-
-function setRellTextStatus(text, isGood) {
-    const { status } = getRellTextElements();
-    if (!status) return;
-    status.textContent = text;
-    status.classList.toggle('good', !!isGood);
-}
-
-function appendRellTextMessage(author, message, ts) {
-    const { messages } = getRellTextElements();
-    if (!messages) return;
-
-    const item = document.createElement('div');
-    item.className = 'relltext-message';
-
-    const safeAuthor = escapeHtml(author || 'anon');
-    const safeMessage = escapeHtml(message || '');
-    const time = new Date(Number(ts) || Date.now()).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
-
-    item.innerHTML = `
-        <div class="relltext-meta">${safeAuthor} <span class="relltext-time">${time}</span></div>
-        <div class="relltext-body">${safeMessage}</div>
-    `;
-
-    messages.appendChild(item);
-    if (messages.children.length > 250) {
-        messages.removeChild(messages.firstElementChild);
-    }
-    messages.scrollTop = messages.scrollHeight;
-}
-
-function loadGunLibrary() {
-    if (window.Gun) return Promise.resolve(window.Gun);
-
-    return new Promise((resolve, reject) => {
-        const script = document.createElement('script');
-        script.src = 'https://cdn.jsdelivr.net/npm/gun/gun.js';
-        script.async = true;
-        script.onload = () => resolve(window.Gun);
-        script.onerror = () => reject(new Error('Failed to load realtime library'));
-        document.head.appendChild(script);
-    });
-}
-
-function sendRellTextMessage() {
-    const { input } = getRellTextElements();
-    if (!input || !rellTextState.room) return;
-
-    const text = input.value.trim();
-    if (!text) return;
-
-    const payload = {
-        id: `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
-        author: rellTextState.anonId,
-        text,
-        ts: Date.now()
-    };
-
-    rellTextState.room.set(payload);
-    input.value = '';
-}
-
-function initRellText(contentEl) {
-    const { messages, input, send } = getRellTextElements();
-    if (!messages || !input || !send) return;
-
-    messages.innerHTML = '';
-    appendRellTextMessage('system', 'This room is public and anonymous. No private messages.', Date.now());
-    setRellTextStatus('Connecting...', false);
-
-    rellTextState.sendHandler = () => sendRellTextMessage();
-    rellTextState.inputHandler = (e) => {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            sendRellTextMessage();
-        }
-    };
-
-    send.addEventListener('click', rellTextState.sendHandler);
-    input.addEventListener('keydown', rellTextState.inputHandler);
-
-    loadGunLibrary()
-        .then((Gun) => {
-            rellTextState.gun = Gun([
-                'https://gun-manhattan.herokuapp.com/gun',
-                'https://gun-us.herokuapp.com/gun',
-                'https://gun-eu.herokuapp.com/gun'
-            ]);
-            rellTextState.room = rellTextState.gun.get(rellTextState.roomKey).get('messages');
-
-            setRellTextStatus('Live', true);
-
-            rellTextState.listener = rellTextState.room.map().on((data, key) => {
-                if (!data || !data.text) return;
-                const messageId = data.id || key;
-                if (rellTextState.seenIds.has(messageId)) return;
-                rellTextState.seenIds.add(messageId);
-                appendRellTextMessage(data.author || 'anon', data.text, data.ts);
-            });
-        })
-        .catch(() => {
-            setRellTextStatus('Unavailable', false);
-            appendRellTextMessage('system', 'Live public chat is temporarily unavailable.', Date.now());
-        });
-}
-
-function cleanupRellText() {
-    const { input, send } = getRellTextElements();
-
-    if (send && rellTextState.sendHandler) {
-        send.removeEventListener('click', rellTextState.sendHandler);
-    }
-    if (input && rellTextState.inputHandler) {
-        input.removeEventListener('keydown', rellTextState.inputHandler);
-    }
-    if (rellTextState.listener && typeof rellTextState.listener.off === 'function') {
-        rellTextState.listener.off();
-    }
-
-    rellTextState.sendHandler = null;
-    rellTextState.inputHandler = null;
-    rellTextState.listener = null;
 }
 
 // ===== NOTES APP =====
@@ -3225,6 +3040,72 @@ function net2Fullscreen() {
 }
 
 // ===== BROWSER APP =====
+function escapeBrowserHtml(str) {
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
+function extractDomain(query) {
+    const input = String(query || '').trim().toLowerCase();
+    if (!input || /\s/.test(input)) return '';
+
+    try {
+        const candidate = /^https?:\/\//.test(input) ? input : `https://${input}`;
+        const url = new URL(candidate);
+        return (url.hostname || '').toLowerCase();
+    } catch {
+        return input
+            .replace(/^https?:\/\//, '')
+            .replace(/[/?#].*$/, '')
+            .toLowerCase();
+    }
+}
+
+function toDisplayName(domain) {
+    const core = domain.replace(/^www\./, '').split('.')[0] || 'Website';
+    return core
+        .split(/[-_]+/)
+        .filter(Boolean)
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
+}
+
+function getGenericWebsite(domain) {
+    const safeDomain = escapeBrowserHtml(domain);
+    const safeName = escapeBrowserHtml(toDisplayName(domain));
+
+    return `
+        <div class="fake-website">
+            <div class="fake-site-header" style="background:linear-gradient(135deg,#1e3a8a,#0369a1);padding:20px;border-radius:8px 8px 0 0;color:white;">
+                <h1 style="margin:0;font-size:28px;">🌐 ${safeDomain}</h1>
+                <p style="margin:4px 0 0;opacity:0.9;">Welcome to ${safeName} online</p>
+            </div>
+            <div class="fake-site-body" style="background:#f8fafc;padding:20px;border-radius:0 0 8px 8px;border:1px solid #dbeafe;">
+                <h2 style="margin:0 0 12px;color:#1e40af;">${safeName}</h2>
+                <p style="margin:0 0 16px;color:#334155;line-height:1.6;">This domain now opens correctly in the Web Browser app. It does not have custom content yet, but the site route is active.</p>
+                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;">
+                    <div style="background:white;border:1px solid #e2e8f0;border-radius:8px;padding:10px;">
+                        <strong style="display:block;color:#0f172a;">Status</strong>
+                        <span style="color:#16a34a;">Online</span>
+                    </div>
+                    <div style="background:white;border:1px solid #e2e8f0;border-radius:8px;padding:10px;">
+                        <strong style="display:block;color:#0f172a;">Domain</strong>
+                        <span style="color:#334155;">${safeDomain}</span>
+                    </div>
+                    <div style="background:white;border:1px solid #e2e8f0;border-radius:8px;padding:10px;">
+                        <strong style="display:block;color:#0f172a;">Mode</strong>
+                        <span style="color:#334155;">Generated page</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
 function browserSearch() {
     const addressInput = document.getElementById('browser-address');
     const query = addressInput.value.trim();
@@ -3236,6 +3117,9 @@ function browserSearch() {
 function browserNavigate(query) {
     const resultsDiv = document.getElementById('browser-results');
     const addressInput = document.getElementById('browser-address');
+    const normalizedQuery = String(query || '').trim().toLowerCase();
+    const domain = extractDomain(query);
+    const domainNoWww = domain.replace(/^www\./, '');
     
     addressInput.value = query;
     
@@ -3251,7 +3135,7 @@ function browserNavigate(query) {
         'history': `<div class="result-item"><h3>📜 World History</h3><p>Human history spans over 300,000 years. Major civilizations like Egypt, Rome, Greece, and China shaped the modern world we live in today.</p><p><strong>Key Events:</strong></p><ul><li>Ancient Egypt built the pyramids ~2560 BC</li><li>The Roman Empire lasted over 1,000 years</li><li>The Moon landing happened on July 20, 1969</li><li>The Internet was invented in the 1980s</li></ul></div>`,
     };
 
-    const key = Object.keys(results).find(k => query.toLowerCase().includes(k) || k.includes(query.toLowerCase()));
+    const key = Object.keys(results).find(k => normalizedQuery.includes(k) || k.includes(normalizedQuery));
 
     // Check for website URLs
     const websites = {
@@ -3294,23 +3178,26 @@ function browserNavigate(query) {
         'www.cloudjournal.org': getCloudJournalWebsite,
         'cloudjournal.org': getCloudJournalWebsite,
     };
-    const siteKey = Object.keys(websites).find(k => query.toLowerCase().includes(k));
+    const siteKey = websites[domain] ? domain : (websites[domainNoWww] ? domainNoWww : null);
+    const isLikelyWebsite = !!domain && domain.includes('.') && !/\s/.test(normalizedQuery);
 
     let content;
     if (siteKey) {
         content = websites[siteKey]();
+    } else if (isLikelyWebsite) {
+        content = getGenericWebsite(domain);
     } else if (key) {
         content = results[key];
     } else {
-        content = `<div class="result-item"><h3>🔍 No results found for "${query}"</h3><p>Try searching: space, dinosaurs, animals, ocean, science, robots, football, or history.</p><p>Or visit a website: <a onclick="browserNavigate('www.zappycook.net')" style="cursor:pointer;color:#4285f4">www.zappycook.net</a> · <a onclick="browserNavigate('www.pixelvault.io')" style="cursor:pointer;color:#4285f4">www.pixelvault.io</a> · <a onclick="browserNavigate('www.cosmicblog.org')" style="cursor:pointer;color:#4285f4">www.cosmicblog.org</a> · <a onclick="browserNavigate('www.novaspark.tech')" style="cursor:pointer;color:#4285f4">www.novaspark.tech</a> · <a onclick="browserNavigate('www.dailypets.fun')" style="cursor:pointer;color:#4285f4">www.dailypets.fun</a> · <a onclick="browserNavigate('www.quizmaster.io')" style="cursor:pointer;color:#4285f4">www.quizmaster.io</a> · <a onclick="browserNavigate('www.buildcraft.tech')" style="cursor:pointer;color:#4285f4">www.buildcraft.tech</a> · <a onclick="browserNavigate('www.stargazer.space')" style="cursor:pointer;color:#4285f4">www.stargazer.space</a> · <a onclick="browserNavigate('www.munchbox.net')" style="cursor:pointer;color:#4285f4">www.munchbox.net</a> · <a onclick="browserNavigate('www.codecubs.io')" style="cursor:pointer;color:#4285f4">www.codecubs.io</a> · <a onclick="browserNavigate('www.sketchwild.org')" style="cursor:pointer;color:#4285f4">www.sketchwild.org</a> · <a onclick="browserNavigate('www.factblast.fun')" style="cursor:pointer;color:#4285f4">www.factblast.fun</a> · <a onclick="browserNavigate('www.frostbite.net')" style="cursor:pointer;color:#4285f4">www.frostbite.net</a> · <a onclick="browserNavigate('www.neonpulse.fun')" style="cursor:pointer;color:#4285f4">www.neonpulse.fun</a> · <a onclick="browserNavigate('www.plantpedia.net')" style="cursor:pointer;color:#4285f4">www.plantpedia.net</a> · <a onclick="browserNavigate('www.brickyard.io')" style="cursor:pointer;color:#4285f4">www.brickyard.io</a> · <a onclick="browserNavigate('www.funnybones.fun')" style="cursor:pointer;color:#4285f4">www.funnybones.fun</a> · <a onclick="browserNavigate('www.cloudjournal.org')" style="cursor:pointer;color:#4285f4">www.cloudjournal.org</a></p></div>`;
+        content = `<div class="result-item"><h3>🔍 No results found for "${escapeBrowserHtml(query)}"</h3><p>Try searching: space, dinosaurs, animals, ocean, science, robots, football, or history.</p><p>Or visit a website: <a onclick="browserNavigate('www.zappycook.net')" style="cursor:pointer;color:#4285f4">www.zappycook.net</a> · <a onclick="browserNavigate('www.pixelvault.io')" style="cursor:pointer;color:#4285f4">www.pixelvault.io</a> · <a onclick="browserNavigate('www.cosmicblog.org')" style="cursor:pointer;color:#4285f4">www.cosmicblog.org</a> · <a onclick="browserNavigate('www.novaspark.tech')" style="cursor:pointer;color:#4285f4">www.novaspark.tech</a> · <a onclick="browserNavigate('www.dailypets.fun')" style="cursor:pointer;color:#4285f4">www.dailypets.fun</a> · <a onclick="browserNavigate('www.quizmaster.io')" style="cursor:pointer;color:#4285f4">www.quizmaster.io</a> · <a onclick="browserNavigate('www.buildcraft.tech')" style="cursor:pointer;color:#4285f4">www.buildcraft.tech</a> · <a onclick="browserNavigate('www.stargazer.space')" style="cursor:pointer;color:#4285f4">www.stargazer.space</a> · <a onclick="browserNavigate('www.munchbox.net')" style="cursor:pointer;color:#4285f4">www.munchbox.net</a> · <a onclick="browserNavigate('www.codecubs.io')" style="cursor:pointer;color:#4285f4">www.codecubs.io</a> · <a onclick="browserNavigate('www.sketchwild.org')" style="cursor:pointer;color:#4285f4">www.sketchwild.org</a> · <a onclick="browserNavigate('www.factblast.fun')" style="cursor:pointer;color:#4285f4">www.factblast.fun</a> · <a onclick="browserNavigate('www.frostbite.net')" style="cursor:pointer;color:#4285f4">www.frostbite.net</a> · <a onclick="browserNavigate('www.neonpulse.fun')" style="cursor:pointer;color:#4285f4">www.neonpulse.fun</a> · <a onclick="browserNavigate('www.plantpedia.net')" style="cursor:pointer;color:#4285f4">www.plantpedia.net</a> · <a onclick="browserNavigate('www.brickyard.io')" style="cursor:pointer;color:#4285f4">www.brickyard.io</a> · <a onclick="browserNavigate('www.funnybones.fun')" style="cursor:pointer;color:#4285f4">www.funnybones.fun</a> · <a onclick="browserNavigate('www.cloudjournal.org')" style="cursor:pointer;color:#4285f4">www.cloudjournal.org</a></p></div>`;
     }
 
-    if (siteKey) {
+    if (siteKey || isLikelyWebsite) {
         resultsDiv.innerHTML = content;
     } else {
         resultsDiv.innerHTML = `
             <div class="search-results">
-                <h2>Search Results for "${query}"</h2>
+                <h2>Search Results for "${escapeBrowserHtml(query)}"</h2>
                 ${content}
             </div>
         `;
