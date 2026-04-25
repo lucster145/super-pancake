@@ -82,11 +82,40 @@ const APPS = {
         color: '#1f7a1f',
         minWidth: 760,
         minHeight: 540
+    },
+    cloudgaming: {
+        name: 'Cloud Gaming',
+        icon: '☁️',
+        color: '#0a84ff',
+        minWidth: 700,
+        minHeight: 520
+    },
+    clicker: {
+        name: 'Clicker',
+        icon: '👆',
+        color: '#ff9f0a',
+        minWidth: 400,
+        minHeight: 380
+    },
+    blockbomb: {
+        name: 'Block Bomb',
+        icon: '💣',
+        color: '#30d158',
+        minWidth: 500,
+        minHeight: 520
+    },
+    highscore: {
+        name: 'High Score',
+        icon: '🏆',
+        color: '#ffd60a',
+        minWidth: 420,
+        minHeight: 420
     }
 };
 
 // Store app installation state
-const installedApps = new Set(['playstore', 'notes', 'game2048', 'calculator', 'memory', 'calendar', 'net2', 'browser', 'simpleai', 'vibe', 'rec', 'runtuchvictory']);
+const installedApps = new Set(['playstore', 'notes', 'game2048', 'calculator', 'memory', 'calendar', 'net2', 'browser', 'simpleai', 'vibe', 'rec', 'runtuchvictory', 'cloudgaming']);
+const cloudInstalledApps = new Set(); // apps installed from Cloud Gaming
 
 // Global error handler for better debugging
 window.addEventListener('error', (e) => {
@@ -352,6 +381,14 @@ class WindowManager {
                 return this.getRecContent();
             case 'runtuchvictory':
                 return this.getRunTuchVictoryContent();
+            case 'cloudgaming':
+                return this.getCloudGamingContent();
+            case 'clicker':
+                return this.getClickerContent();
+            case 'blockbomb':
+                return this.getBlockBombContent();
+            case 'highscore':
+                return this.getHighScoreContent();
             default:
                 return '<p>App not implemented</p>';
         }
@@ -875,6 +912,15 @@ class WindowManager {
                 break;
             case 'runtuchvictory':
                 initRunTuchVictory();
+                break;
+            case 'clicker':
+                initClicker();
+                break;
+            case 'blockbomb':
+                initBlockBomb();
+                break;
+            case 'highscore':
+                initHighScore();
                 break;
         }
     }
@@ -5595,6 +5641,206 @@ function vibeScrollToPost(id) {
 
 function initVibe() {
     vibeRenderFeed();
+}
+
+// ===== CLOUD GAMING =====
+WindowManager.prototype.getCloudGamingContent = function() {
+    const cloudApps = [
+        { id: 'clicker', icon: '👆', name: 'Clicker', desc: 'Click the number to grow your score!', color: '#ff9f0a' },
+        { id: 'blockbomb', icon: '💣', name: 'Block Bomb', desc: 'Sort coloured blocks before they overflow!', color: '#30d158' },
+        { id: 'highscore', icon: '🏆', name: 'High Score', desc: 'Beat your best score — saved locally!', color: '#ffd60a' }
+    ];
+    let html = `
+        <div style="background:#0d1117;height:100%;overflow-y:auto;box-sizing:border-box;padding:20px;font-family:sans-serif;">
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:22px;">
+                <span style="font-size:32px;">☁️</span>
+                <div>
+                    <div style="color:white;font-size:20px;font-weight:bold;">Cloud Gaming</div>
+                    <div style="color:#8b949e;font-size:13px;">Browse and install cloud games</div>
+                </div>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:16px;">
+    `;
+    for (const app of cloudApps) {
+        const installed = cloudInstalledApps.has(app.id);
+        html += `
+            <div style="background:#161b22;border-radius:14px;padding:18px;display:flex;flex-direction:column;align-items:center;gap:8px;box-shadow:0 2px 10px #0006;">
+                <div style="font-size:44px;">${app.icon}</div>
+                <div style="color:white;font-weight:bold;font-size:15px;">${app.name}</div>
+                <div style="color:#8b949e;font-size:12px;text-align:center;">${app.desc}</div>
+                <button onclick="installOrOpenCloudApp('${app.id}')" style="margin-top:6px;background:${installed ? '#238636' : app.color};color:${app.color === '#ffd60a' ? '#000' : 'white'};border:none;border-radius:20px;padding:7px 22px;cursor:pointer;font-size:13px;font-weight:bold;">
+                    ${installed ? 'OPEN' : 'INSTALL'}
+                </button>
+            </div>
+        `;
+    }
+    html += '</div></div>';
+    return html;
+};
+
+function installOrOpenCloudApp(appId) {
+    if (!cloudInstalledApps.has(appId)) {
+        cloudInstalledApps.add(appId);
+        installedApps.add(appId);
+        // Refresh cloud gaming window
+        const cgWin = windowManager.windows.find(w => w.dataset.appId === 'cloudgaming');
+        if (cgWin) cgWin.querySelector('.window-content').innerHTML = windowManager.getCloudGamingContent();
+    } else {
+        openApp(appId);
+    }
+}
+
+// ===== CLICKER =====
+WindowManager.prototype.getClickerContent = function() {
+    return `
+        <div style="background:#1c1c1e;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;font-family:sans-serif;">
+            <div style="color:#ff9f0a;font-size:18px;font-weight:bold;letter-spacing:2px;">CLICKER</div>
+            <div style="color:#8e8e93;font-size:14px;">Score: <span id="clicker-score" style="color:white;font-weight:bold;">0</span></div>
+            <button id="clicker-btn" onclick="clickerClick()" style="width:120px;height:120px;border-radius:60px;background:#ff9f0a;border:none;font-size:48px;font-weight:bold;color:white;cursor:pointer;box-shadow:0 4px 20px #ff9f0a66;transition:transform .1s;">0</button>
+            <div style="color:#636366;font-size:12px;">Click the number to score!</div>
+        </div>
+    `;
+};
+
+function initClicker() {
+    window._clickerScore = 0;
+}
+
+function clickerClick() {
+    window._clickerScore = (window._clickerScore || 0) + 1;
+    const btn = document.getElementById('clicker-btn');
+    const scoreEl = document.getElementById('clicker-score');
+    if (btn) btn.textContent = window._clickerScore;
+    if (scoreEl) scoreEl.textContent = window._clickerScore;
+    if (btn) {
+        btn.style.transform = 'scale(0.92)';
+        setTimeout(() => { btn.style.transform = 'scale(1)'; }, 100);
+    }
+}
+
+// ===== BLOCK BOMB =====
+const BLOCK_COLORS = ['#ff453a','#30d158','#0a84ff','#ffd60a','#bf5af2'];
+let _bbGrid = [], _bbScore = 0, _bbSelected = null;
+
+WindowManager.prototype.getBlockBombContent = function() {
+    return `
+        <div style="background:#1c1c1e;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;font-family:sans-serif;padding:16px;box-sizing:border-box;">
+            <div style="color:#30d158;font-size:18px;font-weight:bold;letter-spacing:2px;">BLOCK BOMB</div>
+            <div style="color:#8e8e93;font-size:13px;">Score: <span id="bb-score" style="color:white;font-weight:bold;">0</span> &nbsp;|&nbsp; <span style="color:#ff453a;" id="bb-msg"></span></div>
+            <div id="bb-grid" style="display:grid;grid-template-columns:repeat(5,48px);grid-template-rows:repeat(6,48px);gap:4px;"></div>
+            <div style="color:#636366;font-size:11px;">Click two adjacent blocks of the same colour to clear them!</div>
+            <button onclick="initBlockBomb()" style="background:#30d158;color:white;border:none;border-radius:16px;padding:7px 20px;cursor:pointer;font-size:13px;font-weight:bold;">New Game</button>
+        </div>
+    `;
+};
+
+function initBlockBomb() {
+    _bbScore = 0;
+    _bbSelected = null;
+    _bbGrid = [];
+    for (let r = 0; r < 6; r++) {
+        _bbGrid[r] = [];
+        for (let c = 0; c < 5; c++) {
+            _bbGrid[r][c] = Math.floor(Math.random() * BLOCK_COLORS.length);
+        }
+    }
+    bbRender();
+}
+
+function bbRender() {
+    const grid = document.getElementById('bb-grid');
+    const scoreEl = document.getElementById('bb-score');
+    if (!grid) return;
+    if (scoreEl) scoreEl.textContent = _bbScore;
+    grid.innerHTML = '';
+    for (let r = 0; r < 6; r++) {
+        for (let c = 0; c < 5; c++) {
+            const cell = document.createElement('div');
+            const colorIdx = _bbGrid[r][c];
+            cell.style.cssText = `width:48px;height:48px;border-radius:8px;cursor:pointer;transition:transform .1s;box-shadow:0 2px 6px #0006;background:${colorIdx === -1 ? '#2c2c2e' : BLOCK_COLORS[colorIdx]};`;
+            const isSelected = _bbSelected && _bbSelected[0] === r && _bbSelected[1] === c;
+            if (isSelected) cell.style.outline = '3px solid white';
+            if (colorIdx !== -1) {
+                cell.onclick = () => bbSelect(r, c);
+                cell.onmouseenter = () => { cell.style.transform = 'scale(1.08)'; };
+                cell.onmouseleave = () => { cell.style.transform = 'scale(1)'; };
+            }
+            grid.appendChild(cell);
+        }
+    }
+}
+
+function bbSelect(r, c) {
+    if (_bbGrid[r][c] === -1) return;
+    if (!_bbSelected) {
+        _bbSelected = [r, c];
+        bbRender();
+        return;
+    }
+    const [sr, sc] = _bbSelected;
+    const adjacent = (Math.abs(r - sr) + Math.abs(c - sc)) === 1;
+    if (adjacent && _bbGrid[r][c] === _bbGrid[sr][sc]) {
+        _bbGrid[r][c] = -1;
+        _bbGrid[sr][sc] = -1;
+        _bbScore += 10;
+        const msgEl = document.getElementById('bb-msg');
+        if (msgEl) { msgEl.textContent = '+10!'; setTimeout(() => { if (msgEl) msgEl.textContent = ''; }, 700); }
+    }
+    _bbSelected = null;
+    bbRender();
+}
+
+// ===== HIGH SCORE =====
+WindowManager.prototype.getHighScoreContent = function() {
+    return `
+        <div style="background:#1c1c1e;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;font-family:sans-serif;padding:20px;box-sizing:border-box;">
+            <div style="color:#ffd60a;font-size:18px;font-weight:bold;letter-spacing:2px;">🏆 HIGH SCORE</div>
+            <div style="color:#8e8e93;font-size:13px;">Best: <span id="hs-best" style="color:#ffd60a;font-weight:bold;font-size:18px;">0</span></div>
+            <div style="color:white;font-size:40px;font-weight:bold;" id="hs-current">0</div>
+            <div style="display:flex;gap:12px;">
+                <button onclick="hsAdd(1)" style="background:#ffd60a;color:#000;border:none;border-radius:16px;padding:10px 20px;cursor:pointer;font-size:16px;font-weight:bold;">+1</button>
+                <button onclick="hsAdd(5)" style="background:#ff9f0a;color:white;border:none;border-radius:16px;padding:10px 20px;cursor:pointer;font-size:16px;font-weight:bold;">+5</button>
+                <button onclick="hsAdd(10)" style="background:#ff453a;color:white;border:none;border-radius:16px;padding:10px 20px;cursor:pointer;font-size:16px;font-weight:bold;">+10</button>
+            </div>
+            <button onclick="hsSave()" style="background:#30d158;color:white;border:none;border-radius:16px;padding:8px 24px;cursor:pointer;font-size:14px;font-weight:bold;">Save Score</button>
+            <button onclick="hsReset()" style="background:#3a3a3c;color:#8e8e93;border:none;border-radius:16px;padding:6px 18px;cursor:pointer;font-size:12px;">Reset</button>
+            <div id="hs-status" style="color:#30d158;font-size:13px;min-height:18px;"></div>
+        </div>
+    `;
+};
+
+function initHighScore() {
+    window._hsCurrent = 0;
+    const best = parseInt(localStorage.getItem('highscore_best') || '0');
+    const bestEl = document.getElementById('hs-best');
+    if (bestEl) bestEl.textContent = best;
+}
+
+function hsAdd(n) {
+    window._hsCurrent = (window._hsCurrent || 0) + n;
+    const el = document.getElementById('hs-current');
+    if (el) el.textContent = window._hsCurrent;
+}
+
+function hsSave() {
+    const current = window._hsCurrent || 0;
+    const best = parseInt(localStorage.getItem('highscore_best') || '0');
+    if (current > best) {
+        localStorage.setItem('highscore_best', current);
+        const bestEl = document.getElementById('hs-best');
+        if (bestEl) bestEl.textContent = current;
+        const status = document.getElementById('hs-status');
+        if (status) { status.textContent = '🎉 New best saved!'; setTimeout(() => { if (status) status.textContent = ''; }, 2000); }
+    } else {
+        const status = document.getElementById('hs-status');
+        if (status) { status.textContent = 'Score saved (not a new best).'; setTimeout(() => { if (status) status.textContent = ''; }, 2000); }
+    }
+}
+
+function hsReset() {
+    window._hsCurrent = 0;
+    const el = document.getElementById('hs-current');
+    if (el) el.textContent = 0;
 }
 
 // Initialize
