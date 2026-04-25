@@ -75,11 +75,18 @@ const APPS = {
         color: '#ff6a00',
         minWidth: 760,
         minHeight: 540
+    },
+    relltext: {
+        name: 'Rell Text',
+        icon: '💬',
+        color: '#0f766e',
+        minWidth: 620,
+        minHeight: 520
     }
 };
 
 // Store app installation state
-const installedApps = new Set(['playstore', 'notes', 'game2048', 'calculator', 'memory', 'calendar', 'net2', 'browser', 'simpleai', 'vibe', 'rec']);
+const installedApps = new Set(['playstore', 'notes', 'game2048', 'calculator', 'memory', 'calendar', 'net2', 'browser', 'simpleai', 'vibe', 'rec', 'relltext']);
 
 // Global error handler for better debugging
 window.addEventListener('error', (e) => {
@@ -308,6 +315,9 @@ class WindowManager {
             case 'rec':
                 cleanupRec();
                 break;
+            case 'relltext':
+                cleanupRellText();
+                break;
 
             // Add cleanup for other apps if needed
         }
@@ -340,6 +350,8 @@ class WindowManager {
                 return getVibeContent();
             case 'rec':
                 return this.getRecContent();
+            case 'relltext':
+                return this.getRellTextContent();
             default:
                 return '<p>App not implemented</p>';
         }
@@ -455,6 +467,23 @@ class WindowManager {
                     <span class="rec-dot"></span>
                 </div>
                 <div id="rec-stage" class="rec-stage"></div>
+            </div>
+        `;
+    }
+
+    getRellTextContent() {
+        return `
+            <div class="relltext-app">
+                <div class="relltext-topbar">
+                    <span class="relltext-badge">PUBLIC</span>
+                    <span class="relltext-badge">ANON</span>
+                    <span id="relltext-status" class="relltext-status">Connecting...</span>
+                </div>
+                <div id="relltext-messages" class="relltext-messages"></div>
+                <div class="relltext-compose">
+                    <input id="relltext-input" class="relltext-input" maxlength="300" placeholder="Say something public..." />
+                    <button id="relltext-send" class="relltext-send">Send</button>
+                </div>
             </div>
         `;
     }
@@ -824,6 +853,9 @@ class WindowManager {
                 break;
             case 'rec':
                 initRec();
+                break;
+            case 'relltext':
+                initRellText(contentEl);
                 break;
         }
     }
@@ -1359,6 +1391,159 @@ function initRec() {
 function cleanupRec() {
     clearRecTimers();
     clearRecInputHandlers();
+}
+
+// ===== RELL TEXT APP =====
+const rellTextState = {
+    gun: null,
+    room: null,
+    listener: null,
+    seenIds: new Set(),
+    anonId: `anon-${Math.random().toString(36).slice(2, 8)}`,
+    inputHandler: null,
+    sendHandler: null,
+    roomKey: 'rell-text-public-room-v1'
+};
+
+function escapeHtml(str) {
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
+function getRellTextElements() {
+    return {
+        messages: document.getElementById('relltext-messages'),
+        input: document.getElementById('relltext-input'),
+        send: document.getElementById('relltext-send'),
+        status: document.getElementById('relltext-status')
+    };
+}
+
+function setRellTextStatus(text, isGood) {
+    const { status } = getRellTextElements();
+    if (!status) return;
+    status.textContent = text;
+    status.classList.toggle('good', !!isGood);
+}
+
+function appendRellTextMessage(author, message, ts) {
+    const { messages } = getRellTextElements();
+    if (!messages) return;
+
+    const item = document.createElement('div');
+    item.className = 'relltext-message';
+
+    const safeAuthor = escapeHtml(author || 'anon');
+    const safeMessage = escapeHtml(message || '');
+    const time = new Date(Number(ts) || Date.now()).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+
+    item.innerHTML = `
+        <div class="relltext-meta">${safeAuthor} <span class="relltext-time">${time}</span></div>
+        <div class="relltext-body">${safeMessage}</div>
+    `;
+
+    messages.appendChild(item);
+    if (messages.children.length > 250) {
+        messages.removeChild(messages.firstElementChild);
+    }
+    messages.scrollTop = messages.scrollHeight;
+}
+
+function loadGunLibrary() {
+    if (window.Gun) return Promise.resolve(window.Gun);
+
+    return new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/gun/gun.js';
+        script.async = true;
+        script.onload = () => resolve(window.Gun);
+        script.onerror = () => reject(new Error('Failed to load realtime library'));
+        document.head.appendChild(script);
+    });
+}
+
+function sendRellTextMessage() {
+    const { input } = getRellTextElements();
+    if (!input || !rellTextState.room) return;
+
+    const text = input.value.trim();
+    if (!text) return;
+
+    const payload = {
+        id: `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+        author: rellTextState.anonId,
+        text,
+        ts: Date.now()
+    };
+
+    rellTextState.room.set(payload);
+    input.value = '';
+}
+
+function initRellText(contentEl) {
+    const { messages, input, send } = getRellTextElements();
+    if (!messages || !input || !send) return;
+
+    messages.innerHTML = '';
+    appendRellTextMessage('system', 'This room is public and anonymous. No private messages.', Date.now());
+    setRellTextStatus('Connecting...', false);
+
+    rellTextState.sendHandler = () => sendRellTextMessage();
+    rellTextState.inputHandler = (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            sendRellTextMessage();
+        }
+    };
+
+    send.addEventListener('click', rellTextState.sendHandler);
+    input.addEventListener('keydown', rellTextState.inputHandler);
+
+    loadGunLibrary()
+        .then((Gun) => {
+            rellTextState.gun = Gun([
+                'https://gun-manhattan.herokuapp.com/gun',
+                'https://gun-us.herokuapp.com/gun',
+                'https://gun-eu.herokuapp.com/gun'
+            ]);
+            rellTextState.room = rellTextState.gun.get(rellTextState.roomKey).get('messages');
+
+            setRellTextStatus('Live', true);
+
+            rellTextState.listener = rellTextState.room.map().on((data, key) => {
+                if (!data || !data.text) return;
+                const messageId = data.id || key;
+                if (rellTextState.seenIds.has(messageId)) return;
+                rellTextState.seenIds.add(messageId);
+                appendRellTextMessage(data.author || 'anon', data.text, data.ts);
+            });
+        })
+        .catch(() => {
+            setRellTextStatus('Unavailable', false);
+            appendRellTextMessage('system', 'Live public chat is temporarily unavailable.', Date.now());
+        });
+}
+
+function cleanupRellText() {
+    const { input, send } = getRellTextElements();
+
+    if (send && rellTextState.sendHandler) {
+        send.removeEventListener('click', rellTextState.sendHandler);
+    }
+    if (input && rellTextState.inputHandler) {
+        input.removeEventListener('keydown', rellTextState.inputHandler);
+    }
+    if (rellTextState.listener && typeof rellTextState.listener.off === 'function') {
+        rellTextState.listener.off();
+    }
+
+    rellTextState.sendHandler = null;
+    rellTextState.inputHandler = null;
+    rellTextState.listener = null;
 }
 
 // ===== NOTES APP =====
