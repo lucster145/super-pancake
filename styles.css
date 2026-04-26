@@ -657,15 +657,44 @@ body, html {
     padding: 7px 16px;
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    gap: 12px;
     color: #6b563e;
     font-size: 12px;
     border-bottom: 1px solid rgba(134, 112, 83, 0.15);
     background: rgba(255, 255, 255, 0.7);
 }
 
+.pronotes-scroll-controls {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.pronotes-scroll-btn {
+    width: 28px;
+    height: 24px;
+    border: 1px solid #d2bfa0;
+    border-radius: 7px;
+    background: #fff;
+    color: #5c3f20;
+    cursor: pointer;
+    font-size: 13px;
+    line-height: 1;
+}
+
+.pronotes-scroll-btn:hover {
+    border-color: #b45309;
+    background: #fff7e8;
+}
+
 .pronotes-page-shell {
     flex: 1;
     overflow: auto;
+    scroll-behavior: smooth;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: #c59a62 rgba(255, 255, 255, 0.35);
     padding: 20px;
     background:
         linear-gradient(180deg, rgba(120, 83, 43, 0.07), transparent 120px),
@@ -673,6 +702,21 @@ body, html {
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.pronotes-page-shell::-webkit-scrollbar {
+    width: 10px;
+}
+
+.pronotes-page-shell::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 999px;
+}
+
+.pronotes-page-shell::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #d8a05a, #b7791f);
+    border-radius: 999px;
+    border: 2px solid rgba(255, 255, 255, 0.5);
 }
 
 .pronotes-ruler {

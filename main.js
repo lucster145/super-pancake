@@ -482,8 +482,12 @@ class WindowManager {
                     <div class="pronotes-statusbar">
                         <span id="pronotes-save-status">Ready</span>
                         <span id="pronotes-count-status">0 words</span>
+                        <div class="pronotes-scroll-controls" aria-label="Scroll controls">
+                            <button type="button" class="pronotes-scroll-btn" id="pronotes-scroll-up" title="Scroll up">↑</button>
+                            <button type="button" class="pronotes-scroll-btn" id="pronotes-scroll-down" title="Scroll down">↓</button>
+                        </div>
                     </div>
-                    <div class="pronotes-page-shell">
+                    <div class="pronotes-page-shell" id="pronotes-page-shell" tabindex="0" aria-label="Document page area">
                         <div class="pronotes-ruler" aria-hidden="true"></div>
                         <div class="pronotes-page" id="pronotes-editor" contenteditable="true" role="textbox" aria-multiline="true"></div>
                     </div>
@@ -1574,6 +1578,9 @@ function initNotesApp(contentEl) {
     const linkBtn = contentEl.querySelector('#pronotes-link-btn');
     const statusEl = contentEl.querySelector('#pronotes-save-status');
     const countEl = contentEl.querySelector('#pronotes-count-status');
+    const pageShell = contentEl.querySelector('#pronotes-page-shell');
+    const scrollUpBtn = contentEl.querySelector('#pronotes-scroll-up');
+    const scrollDownBtn = contentEl.querySelector('#pronotes-scroll-down');
 
     const defaultDocHtml = '<h1>Welcome to Pro Notes</h1><p>Start writing your story. Use the toolbar for rich text formatting just like a desktop word processor.</p>';
     let docs = [];
@@ -1699,6 +1706,14 @@ function initNotesApp(contentEl) {
         countEl.textContent = `${words} words • ${chars} chars`;
     }
 
+    function scrollPageBy(amount) {
+        if (!pageShell) return;
+        pageShell.scrollBy({
+            top: amount,
+            behavior: 'smooth'
+        });
+    }
+
     function applyCommand(command, value = null) {
         editor.focus();
         document.execCommand(command, false, value);
@@ -1777,8 +1792,34 @@ function initNotesApp(contentEl) {
         if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 's') {
             event.preventDefault();
             queueSave('Saved manually');
+            return;
+        }
+
+        if (event.key === 'PageDown' || (event.altKey && event.key === 'ArrowDown')) {
+            event.preventDefault();
+            scrollPageBy((pageShell?.clientHeight || 480) * 0.85);
+            return;
+        }
+
+        if (event.key === 'PageUp' || (event.altKey && event.key === 'ArrowUp')) {
+            event.preventDefault();
+            scrollPageBy(-((pageShell?.clientHeight || 480) * 0.85));
         }
     });
+
+    if (scrollUpBtn) {
+        scrollUpBtn.addEventListener('click', () => {
+            scrollPageBy(-320);
+            editor.focus();
+        });
+    }
+
+    if (scrollDownBtn) {
+        scrollDownBtn.addEventListener('click', () => {
+            scrollPageBy(320);
+            editor.focus();
+        });
+    }
 
     contentEl.querySelectorAll('.pronotes-tool-btn[data-cmd]').forEach((button) => {
         button.addEventListener('click', () => {
