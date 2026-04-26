@@ -7,11 +7,11 @@ const APPS = {
         minHeight: 600
     },
     notes: {
-        name: 'Notes',
+        name: 'Pro Notes',
         icon: '📝',
-        color: '#a6750c',
-        minWidth: 400,
-        minHeight: 300
+        color: '#b16600',
+        minWidth: 980,
+        minHeight: 650
     },
     game2048: {
         name: '2048 Game',
@@ -411,14 +411,83 @@ class WindowManager {
 
     getNotesContent() {
         return `
-            <div class="notes-content">
-                <div class="notes-header">
-                    <button class="game-button" onclick="addNewNote()">+ New Note</button>
-                </div>
-                <div class="notes-list" id="notes-list">
-                    <div class="note-item" onclick="selectNote(this)">Click to add note</div>
-                </div>
-                <textarea class="note-text" id="note-text" placeholder="Write your note here..."></textarea>
+            <div class="pronotes-app">
+                <aside class="pronotes-sidebar">
+                    <div class="pronotes-brand">
+                        <div class="pronotes-brand-icon">📝</div>
+                        <div>
+                            <h2>Pro Notes</h2>
+                            <p>Word-style writing studio</p>
+                        </div>
+                    </div>
+                    <button class="pronotes-primary-btn" id="pronotes-new-doc" type="button">+ New Document</button>
+                    <div class="pronotes-doc-list" id="pronotes-doc-list"></div>
+                </aside>
+                <section class="pronotes-workspace">
+                    <header class="pronotes-header">
+                        <input id="pronotes-title" class="pronotes-title-input" type="text" value="Untitled Document" aria-label="Document title">
+                        <div class="pronotes-header-actions">
+                            <button type="button" class="pronotes-action-btn" id="pronotes-duplicate">Duplicate</button>
+                            <button type="button" class="pronotes-action-btn" id="pronotes-delete">Delete</button>
+                            <button type="button" class="pronotes-action-btn" id="pronotes-export-html">Export HTML</button>
+                            <button type="button" class="pronotes-action-btn" id="pronotes-export-text">Export TXT</button>
+                            <button type="button" class="pronotes-action-btn" id="pronotes-print">Print</button>
+                        </div>
+                    </header>
+                    <div class="pronotes-toolbar" role="toolbar" aria-label="Formatting toolbar">
+                        <select id="pronotes-block-style" class="pronotes-select" aria-label="Block style">
+                            <option value="P">Normal text</option>
+                            <option value="H1">Heading 1</option>
+                            <option value="H2">Heading 2</option>
+                            <option value="H3">Heading 3</option>
+                            <option value="BLOCKQUOTE">Quote</option>
+                        </select>
+                        <select id="pronotes-font-size" class="pronotes-select" aria-label="Font size">
+                            <option value="2">12</option>
+                            <option value="3" selected>16</option>
+                            <option value="4">18</option>
+                            <option value="5">24</option>
+                            <option value="6">32</option>
+                        </select>
+                        <div class="pronotes-tool-group">
+                            <button type="button" class="pronotes-tool-btn" data-cmd="undo" title="Undo">↶</button>
+                            <button type="button" class="pronotes-tool-btn" data-cmd="redo" title="Redo">↷</button>
+                        </div>
+                        <div class="pronotes-tool-group">
+                            <button type="button" class="pronotes-tool-btn" data-cmd="bold" title="Bold"><strong>B</strong></button>
+                            <button type="button" class="pronotes-tool-btn" data-cmd="italic" title="Italic"><em>I</em></button>
+                            <button type="button" class="pronotes-tool-btn" data-cmd="underline" title="Underline"><u>U</u></button>
+                            <button type="button" class="pronotes-tool-btn" data-cmd="strikeThrough" title="Strikethrough"><s>S</s></button>
+                        </div>
+                        <div class="pronotes-tool-group">
+                            <button type="button" class="pronotes-tool-btn" data-cmd="justifyLeft" title="Align left">⟸</button>
+                            <button type="button" class="pronotes-tool-btn" data-cmd="justifyCenter" title="Align center">≡</button>
+                            <button type="button" class="pronotes-tool-btn" data-cmd="justifyRight" title="Align right">⟹</button>
+                        </div>
+                        <div class="pronotes-tool-group">
+                            <button type="button" class="pronotes-tool-btn" data-cmd="insertUnorderedList" title="Bulleted list">• List</button>
+                            <button type="button" class="pronotes-tool-btn" data-cmd="insertOrderedList" title="Numbered list">1. List</button>
+                            <button type="button" class="pronotes-tool-btn" data-cmd="removeFormat" title="Clear formatting">Tx</button>
+                        </div>
+                        <label class="pronotes-color-picker" title="Text color">
+                            <span>A</span>
+                            <input type="color" id="pronotes-text-color" value="#1f2937" aria-label="Text color">
+                        </label>
+                        <label class="pronotes-color-picker" title="Highlight color">
+                            <span>🖍</span>
+                            <input type="color" id="pronotes-highlight-color" value="#fff59d" aria-label="Highlight color">
+                        </label>
+                        <button type="button" class="pronotes-tool-btn" id="pronotes-link-btn" title="Insert link">🔗 Link</button>
+                    </div>
+                    <div class="pronotes-statusbar">
+                        <span id="pronotes-save-status">Ready</span>
+                        <span id="pronotes-count-status">0 words</span>
+                    </div>
+                    <div class="pronotes-page-shell">
+                        <div class="pronotes-ruler" aria-hidden="true"></div>
+                        <div class="pronotes-page" id="pronotes-editor" contenteditable="true" role="textbox" aria-multiline="true"></div>
+                    </div>
+                </section>
             </div>
         `;
     }
@@ -491,8 +560,8 @@ class WindowManager {
         return `
             <div class="rec-app">
                 <div class="rec-topbar">
-                    <span id="rec-live-badge" class="rec-offline-badge">LIVE</span>
-                    <span class="rec-dot"></span>
+                    <div class="rec-dot" aria-hidden="true"></div>
+                    <div id="rec-live-badge" class="rec-offline-badge">LIVE</div>
                 </div>
                 <div id="rec-stage" class="rec-stage"></div>
             </div>
@@ -1487,60 +1556,295 @@ function cleanupRec() {
 
 // ===== NOTES APP =====
 function initNotesApp(contentEl) {
-    const notesList = contentEl.querySelector('#notes-list');
-    const noteText = contentEl.querySelector('#note-text');
-    let currentNote = null;
-    const notes = JSON.parse(localStorage.getItem('notes')) || [];
+    const storageKey = 'pro-notes-docs-v2';
+    const legacyStorageKey = 'notes';
+    const docListEl = contentEl.querySelector('#pronotes-doc-list');
+    const titleInput = contentEl.querySelector('#pronotes-title');
+    const editor = contentEl.querySelector('#pronotes-editor');
+    const newDocBtn = contentEl.querySelector('#pronotes-new-doc');
+    const duplicateBtn = contentEl.querySelector('#pronotes-duplicate');
+    const deleteBtn = contentEl.querySelector('#pronotes-delete');
+    const exportHtmlBtn = contentEl.querySelector('#pronotes-export-html');
+    const exportTxtBtn = contentEl.querySelector('#pronotes-export-text');
+    const printBtn = contentEl.querySelector('#pronotes-print');
+    const blockStyleSelect = contentEl.querySelector('#pronotes-block-style');
+    const fontSizeSelect = contentEl.querySelector('#pronotes-font-size');
+    const textColorInput = contentEl.querySelector('#pronotes-text-color');
+    const highlightColorInput = contentEl.querySelector('#pronotes-highlight-color');
+    const linkBtn = contentEl.querySelector('#pronotes-link-btn');
+    const statusEl = contentEl.querySelector('#pronotes-save-status');
+    const countEl = contentEl.querySelector('#pronotes-count-status');
 
-    function displayNotes() {
-        notesList.innerHTML = '';
-        if (notes.length === 0) {
-            notesList.innerHTML = '<div class="note-item" onclick="selectNote(this)">Click to add note</div>';
+    const defaultDocHtml = '<h1>Welcome to Pro Notes</h1><p>Start writing your story. Use the toolbar for rich text formatting just like a desktop word processor.</p>';
+    let docs = [];
+    let activeDocId = null;
+    let saveTimer = null;
+
+    function safeParse(key) {
+        try {
+            return JSON.parse(localStorage.getItem(key) || '[]');
+        } catch (error) {
+            console.warn('Could not parse saved notes:', error);
+            return [];
+        }
+    }
+
+    function loadDocs() {
+        const storedDocs = safeParse(storageKey);
+        if (Array.isArray(storedDocs) && storedDocs.length > 0) {
+            docs = storedDocs;
             return;
         }
-        notes.forEach((note, idx) => {
-            const item = document.createElement('div');
-            item.className = 'note-item';
-            item.textContent = note.title || 'Untitled';
-            item.onclick = () => {
-                selectNoteItem(item, idx);
-            };
-            notesList.appendChild(item);
+
+        const legacyDocs = safeParse(legacyStorageKey);
+        if (Array.isArray(legacyDocs) && legacyDocs.length > 0) {
+            docs = legacyDocs.map((legacyDoc, index) => ({
+                id: `${Date.now()}-${index}`,
+                title: (legacyDoc.title || 'Imported Note').slice(0, 120),
+                content: legacyDoc.content
+                    ? `<p>${String(legacyDoc.content).replace(/\n/g, '</p><p>')}</p>`
+                    : '<p></p>',
+                updatedAt: Date.now() - (legacyDocs.length - index)
+            }));
+            saveDocs('Imported old notes');
+            return;
+        }
+
+        docs = [
+            {
+                id: `${Date.now()}-welcome`,
+                title: 'Untitled Document',
+                content: defaultDocHtml,
+                updatedAt: Date.now()
+            }
+        ];
+        saveDocs('Created first document');
+    }
+
+    function saveDocs(statusLabel = 'Saved') {
+        localStorage.setItem(storageKey, JSON.stringify(docs));
+        statusEl.textContent = statusLabel;
+    }
+
+    function queueSave(statusLabel = 'Saved just now') {
+        statusEl.textContent = 'Saving...';
+        clearTimeout(saveTimer);
+        saveTimer = setTimeout(() => {
+            const currentDoc = docs.find((doc) => doc.id === activeDocId);
+            if (currentDoc) {
+                currentDoc.updatedAt = Date.now();
+            }
+            saveDocs(statusLabel);
+            renderDocList();
+        }, 240);
+    }
+
+    function createDoc(baseTitle = 'Untitled Document', content = '<p></p>') {
+        const doc = {
+            id: `${Date.now()}-${Math.random().toString(16).slice(2, 8)}`,
+            title: baseTitle,
+            content,
+            updatedAt: Date.now()
+        };
+        docs.unshift(doc);
+        activeDocId = doc.id;
+        saveDocs('Document created');
+        renderDocList();
+        openDoc(doc.id);
+        titleInput.focus();
+        titleInput.select();
+    }
+
+    function openDoc(docId) {
+        const doc = docs.find((item) => item.id === docId);
+        if (!doc) return;
+        activeDocId = doc.id;
+        titleInput.value = doc.title;
+        editor.innerHTML = doc.content;
+        renderDocList();
+        updateWordCount();
+        editor.focus();
+    }
+
+    function deleteCurrentDoc() {
+        if (!activeDocId || docs.length === 0) return;
+        if (!confirm('Delete this document?')) return;
+
+        docs = docs.filter((doc) => doc.id !== activeDocId);
+        if (docs.length === 0) {
+            createDoc();
+            return;
+        }
+
+        activeDocId = docs[0].id;
+        saveDocs('Document deleted');
+        openDoc(activeDocId);
+    }
+
+    function duplicateCurrentDoc() {
+        const currentDoc = docs.find((doc) => doc.id === activeDocId);
+        if (!currentDoc) return;
+        createDoc(`${currentDoc.title} Copy`, currentDoc.content);
+        statusEl.textContent = 'Document duplicated';
+    }
+
+    function activeDoc() {
+        return docs.find((doc) => doc.id === activeDocId);
+    }
+
+    function updateWordCount() {
+        const text = (editor.textContent || '').replace(/\s+/g, ' ').trim();
+        const words = text ? text.split(' ').length : 0;
+        const chars = text.length;
+        countEl.textContent = `${words} words • ${chars} chars`;
+    }
+
+    function applyCommand(command, value = null) {
+        editor.focus();
+        document.execCommand(command, false, value);
+        const currentDoc = activeDoc();
+        if (!currentDoc) return;
+        currentDoc.content = editor.innerHTML;
+        queueSave('Saved formatting');
+        updateWordCount();
+    }
+
+    function renderDocList() {
+        docListEl.innerHTML = '';
+        docs.forEach((doc) => {
+            const item = document.createElement('button');
+            item.type = 'button';
+            item.className = `pronotes-doc-item${doc.id === activeDocId ? ' active' : ''}`;
+
+            const previewText = String(doc.content || '')
+                .replace(/<[^>]+>/g, ' ')
+                .replace(/\s+/g, ' ')
+                .trim()
+                .slice(0, 62);
+
+            const titleSpan = document.createElement('span');
+            titleSpan.className = 'pronotes-doc-item-title';
+            titleSpan.textContent = doc.title || 'Untitled Document';
+
+            const previewSpan = document.createElement('span');
+            previewSpan.className = 'pronotes-doc-item-preview';
+            previewSpan.textContent = previewText || 'Empty document';
+
+            item.appendChild(titleSpan);
+            item.appendChild(previewSpan);
+
+            item.addEventListener('click', () => openDoc(doc.id));
+            docListEl.appendChild(item);
         });
     }
 
-    window.selectNoteItem = (el, idx) => {
-        document.querySelectorAll('.note-item').forEach(n => n.classList.remove('selected'));
-        el.classList.add('selected');
-        currentNote = idx;
-        noteText.value = notes[idx].content || '';
-    };
+    function buildExportHtml() {
+        const currentDoc = activeDoc();
+        if (!currentDoc) return '';
+        return `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${currentDoc.title}</title></head><body>${currentDoc.content}</body></html>`;
+    }
 
-    window.addNewNote = () => {
-        notes.push({ title: 'New Note', content: '' });
-        localStorage.setItem('notes', JSON.stringify(notes));
-        displayNotes();
-        currentNote = notes.length - 1;
-        if (notes.length > 0) {
-            const items = document.querySelectorAll('.note-item');
-            items[items.length - 1].click();
-        }
-    };
+    function downloadFile(fileName, content, mimeType) {
+        const safeName = fileName.replace(/[\\/:*?"<>|]+/g, '-');
+        const blob = new Blob([content], { type: mimeType });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = safeName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+    }
 
-    window.selectNote = function(el) {
-        if (el.textContent === 'Click to add note') {
-            window.addNewNote();
-        }
-    };
+    titleInput.addEventListener('input', () => {
+        const currentDoc = activeDoc();
+        if (!currentDoc) return;
+        currentDoc.title = titleInput.value.trim() || 'Untitled Document';
+        queueSave('Saved title');
+        renderDocList();
+    });
 
-    noteText.addEventListener('change', () => {
-        if (currentNote !== null) {
-            notes[currentNote].content = noteText.value;
-            localStorage.setItem('notes', JSON.stringify(notes));
+    editor.addEventListener('input', () => {
+        const currentDoc = activeDoc();
+        if (!currentDoc) return;
+        currentDoc.content = editor.innerHTML;
+        queueSave('Saved changes');
+        updateWordCount();
+    });
+
+    editor.addEventListener('keydown', (event) => {
+        if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 's') {
+            event.preventDefault();
+            queueSave('Saved manually');
         }
     });
 
-    displayNotes();
+    contentEl.querySelectorAll('.pronotes-tool-btn[data-cmd]').forEach((button) => {
+        button.addEventListener('click', () => {
+            applyCommand(button.dataset.cmd);
+        });
+    });
+
+    blockStyleSelect.addEventListener('change', () => {
+        applyCommand('formatBlock', `<${blockStyleSelect.value}>`);
+    });
+
+    fontSizeSelect.addEventListener('change', () => {
+        applyCommand('fontSize', fontSizeSelect.value);
+    });
+
+    textColorInput.addEventListener('input', () => {
+        applyCommand('foreColor', textColorInput.value);
+    });
+
+    highlightColorInput.addEventListener('input', () => {
+        applyCommand('hiliteColor', highlightColorInput.value);
+    });
+
+    linkBtn.addEventListener('click', () => {
+        const url = prompt('Enter URL');
+        if (url) {
+            applyCommand('createLink', url);
+        }
+    });
+
+    newDocBtn.addEventListener('click', () => createDoc());
+    duplicateBtn.addEventListener('click', duplicateCurrentDoc);
+    deleteBtn.addEventListener('click', deleteCurrentDoc);
+
+    exportHtmlBtn.addEventListener('click', () => {
+        const currentDoc = activeDoc();
+        if (!currentDoc) return;
+        downloadFile(`${currentDoc.title || 'document'}.html`, buildExportHtml(), 'text/html;charset=utf-8');
+        statusEl.textContent = 'Exported HTML';
+    });
+
+    exportTxtBtn.addEventListener('click', () => {
+        const currentDoc = activeDoc();
+        if (!currentDoc) return;
+        downloadFile(`${currentDoc.title || 'document'}.txt`, editor.innerText || '', 'text/plain;charset=utf-8');
+        statusEl.textContent = 'Exported TXT';
+    });
+
+    printBtn.addEventListener('click', () => {
+        const html = buildExportHtml();
+        if (!html) return;
+        const printWin = window.open('', '_blank');
+        if (!printWin) return;
+        printWin.document.open();
+        printWin.document.write(html);
+        printWin.document.close();
+        printWin.focus();
+        printWin.print();
+    });
+
+    loadDocs();
+    activeDocId = docs[0]?.id || null;
+    renderDocList();
+    if (activeDocId) {
+        openDoc(activeDocId);
+    }
 }
 
 // ===== 2048 GAME =====
@@ -3463,78 +3767,123 @@ function toDisplayName(domain) {
         .join(' ');
 }
 
+function getDomainFlavor(domain) {
+    const cleanDomain = String(domain || '').replace(/^www\./, '').toLowerCase();
+    const tld = cleanDomain.includes('.') ? cleanDomain.split('.').pop() : 'site';
+
+    const flavorByDomain = {
+        'hazygames.fun': {
+            icon: '🎮',
+            focus: 'Arcade guides, challenge modes, and hidden strategies',
+            gradient: 'linear-gradient(135deg,#27296d,#5e60ce)',
+            vibe: 'Arcade Lab',
+            facts: ['Daily score challenges unlock new badges', 'Most-played mode this week: Reaction', 'Speedrunners share route tips in comments'],
+            zones: ['Beginner Arcade Path', 'Boss Level Walkthroughs', 'Secret Combo Vault'],
+            searches: ['reaction world record', 'drop block strategy', 'best beginner game']
+        },
+        'zappycook.net': {
+            icon: '🍳',
+            focus: 'Fast recipes, ingredient swaps, and meal prep',
+            gradient: 'linear-gradient(135deg,#ef6c00,#f9a825)',
+            vibe: 'Kitchen Grid',
+            facts: ['All recipes target 30 minutes or less', 'Each dish includes one budget substitute', 'Top trend: protein-packed lunchboxes'],
+            zones: ['15-Minute Dinners', 'No-Oven Desserts', 'One-Pan School Lunches'],
+            searches: ['5 ingredient dinner', 'cheap high protein meals', 'easy dessert cups']
+        },
+        'pixelvault.io': {
+            icon: '🖼️',
+            focus: 'Pixel art showcases, palettes, and creator techniques',
+            gradient: 'linear-gradient(135deg,#1d2671,#c33764)',
+            vibe: 'Gallery Forge',
+            facts: ['Trending palette: Neon Dusk 32', 'Most remixed tag: cyber-city', 'Weekly spotlight features first-time artists'],
+            zones: ['Palette Playground', 'Loop Animation School', 'Sprite Critique Corner'],
+            searches: ['8-bit shading tutorial', 'pixel animation walk cycle', 'best color palette 32']
+        },
+        'brickyard.io': {
+            icon: '🧱',
+            focus: 'Brick builds, part logic, and modular design patterns',
+            gradient: 'linear-gradient(135deg,#b33939,#e77f67)',
+            vibe: 'Brick Yard',
+            facts: ['Designs are tagged by piece count and difficulty', 'Top micro-build under 100 pieces updates daily', 'Mechanical builds include gear ratio notes'],
+            zones: ['Micro Builds', 'Mechanics Garage', 'Display Diorama Deck'],
+            searches: ['city corner build guide', 'technic gear ratio basics', 'under 300 pieces train']
+        }
+    };
+
+    if (flavorByDomain[cleanDomain]) {
+        return flavorByDomain[cleanDomain];
+    }
+
+    const flavorByTld = {
+        io: { icon: '🧠', focus: 'Tech experiments, tools, and practical builds', gradient: 'linear-gradient(135deg,#334d50,#45b649)', vibe: 'Build Deck' },
+        tech: { icon: '⚙️', focus: 'Product launches, innovation, and engineering explainers', gradient: 'linear-gradient(135deg,#1f4037,#99f2c8)', vibe: 'Tech Station' },
+        org: { icon: '📚', focus: 'Community guides, explainers, and knowledge hubs', gradient: 'linear-gradient(135deg,#373b44,#4286f4)', vibe: 'Knowledge Commons' },
+        fun: { icon: '🎉', focus: 'Games, humor, and creator-driven entertainment', gradient: 'linear-gradient(135deg,#ff512f,#f09819)', vibe: 'Fun District' },
+        net: { icon: '🗂️', focus: 'Collections, ranked picks, and reference directories', gradient: 'linear-gradient(135deg,#614385,#516395)', vibe: 'Resource Network' },
+        com: { icon: '🌍', focus: 'General interest stories and curated features', gradient: 'linear-gradient(135deg,#4b6cb7,#182848)', vibe: 'Main Plaza' },
+        space: { icon: '🚀', focus: 'Astronomy, missions, and night sky observations', gradient: 'linear-gradient(135deg,#0f2027,#2c5364)', vibe: 'Orbit Hangar' },
+        games: { icon: '🕹️', focus: 'Game reviews, challenges, and gameplay labs', gradient: 'linear-gradient(135deg,#42275a,#734b6d)', vibe: 'Game Yard' },
+        tv: { icon: '📺', focus: 'Shows, streaming picks, and watch guides', gradient: 'linear-gradient(135deg,#141e30,#243b55)', vibe: 'Screen Hall' },
+        social: { icon: '💬', focus: 'Community posts, trends, and creator highlights', gradient: 'linear-gradient(135deg,#ff6a00,#ee0979)', vibe: 'Social Lane' },
+        weather: { icon: '⛅', focus: 'Forecasts, storm tracking, and climate notes', gradient: 'linear-gradient(135deg,#1c92d2,#f2fcfe)', vibe: 'Sky Desk' }
+    };
+
+    const fallback = flavorByTld[tld] || {
+        icon: '🌐',
+        focus: 'Mixed guides, practical references, and fun explainers',
+        gradient: 'linear-gradient(135deg,#1e3a8a,#0369a1)',
+        vibe: 'Open Index'
+    };
+
+    return {
+        ...fallback,
+        facts: [
+            `Top section today: ${toDisplayName(cleanDomain)} picks`,
+            'Editors rotate new picks every morning',
+            'Most pages include one quick-start checklist'
+        ],
+        zones: ['Starter Picks', 'Deep Dives', 'Toolbox and Templates'],
+        searches: ['quick guide', 'best beginner picks', 'advanced tricks']
+    };
+}
+
 function getGenericWebsite(domain) {
     const safeDomain = escapeBrowserHtml(domain);
     const safeName = escapeBrowserHtml(toDisplayName(domain));
-    const cleanDomain = String(domain || '').replace(/^www\./, '');
-    const tld = cleanDomain.includes('.') ? cleanDomain.split('.').pop() : 'site';
-
-    const focusByTld = {
-        io: 'Technology and developer projects',
-        tech: 'Product launches, innovation and tutorials',
-        org: 'Community knowledge and long-form guides',
-        fun: 'Entertainment, games and creator content',
-        net: 'Collections, directories and resources',
-        com: 'General business and consumer content',
-        space: 'Science, exploration and astronomy',
-        games: 'Game news, reviews and walkthroughs',
-        tv: 'Streaming and video highlights',
-        social: 'Community posts and social updates',
-        garden: 'Plants, landscaping and outdoor tips',
-        weather: 'Forecasts, storm tracking and climate notes',
-        adventure: 'Travel stories and activity guides',
-        fantasy: 'Fictional worlds and lore write-ups'
-    };
-
-    const focus = focusByTld[tld] || 'Mixed articles, updates and practical resources';
+    const flavor = getDomainFlavor(domain);
 
     return `
         <div class="fake-website">
-            <div class="fake-site-header" style="background:linear-gradient(135deg,#1e3a8a,#0369a1);padding:20px;border-radius:8px 8px 0 0;color:white;">
-                <h1 style="margin:0;font-size:28px;">🌐 ${safeDomain}</h1>
-                <p style="margin:4px 0 0;opacity:0.9;">Welcome to ${safeName} online</p>
+            <div class="fake-site-header" style="background:${flavor.gradient};padding:20px;border-radius:8px 8px 0 0;color:white;">
+                <h1 style="margin:0;font-size:28px;">${flavor.icon} ${safeDomain}</h1>
+                <p style="margin:4px 0 0;opacity:0.9;">${safeName} · ${escapeBrowserHtml(flavor.vibe)}</p>
             </div>
             <div class="fake-site-body" style="background:#f8fafc;padding:20px;border-radius:0 0 8px 8px;border:1px solid #dbeafe;">
-                <h2 style="margin:0 0 12px;color:#1e40af;">${safeName}</h2>
-                <p style="margin:0 0 10px;color:#334155;line-height:1.7;">This site is now fully routed and stable inside the Web Browser app. It uses an enhanced auto-generated profile so content does not disappear and each domain still has useful information.</p>
-                <p style="margin:0 0 16px;color:#334155;line-height:1.7;"><strong>Primary focus:</strong> ${escapeBrowserHtml(focus)}</p>
-                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px;">
-                    <div style="background:white;border:1px solid #e2e8f0;border-radius:8px;padding:10px;">
-                        <strong style="display:block;color:#0f172a;">Status</strong>
-                        <span style="color:#16a34a;">Online</span>
-                    </div>
-                    <div style="background:white;border:1px solid #e2e8f0;border-radius:8px;padding:10px;">
-                        <strong style="display:block;color:#0f172a;">Domain</strong>
-                        <span style="color:#334155;">${safeDomain}</span>
-                    </div>
-                    <div style="background:white;border:1px solid #e2e8f0;border-radius:8px;padding:10px;">
-                        <strong style="display:block;color:#0f172a;">Mode</strong>
-                        <span style="color:#334155;">Expanded generated page</span>
-                    </div>
-                </div>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-                    <div style="background:white;border:1px solid #e2e8f0;border-radius:8px;padding:12px;">
-                        <h3 style="margin:0 0 6px;color:#0f172a;font-size:14px;">Latest Highlights</h3>
-                        <ul style="margin:0;padding-left:18px;color:#334155;font-size:13px;line-height:1.6;">
-                            <li>Weekly feature article published</li>
-                            <li>Community recommendations updated</li>
-                            <li>Beginner guide section refreshed</li>
-                            <li>Top resources list expanded</li>
+                <p style="margin:0 0 14px;color:#334155;line-height:1.7;"><strong>Primary focus:</strong> ${escapeBrowserHtml(flavor.focus)}</p>
+                <div class="brickio-board">
+                    <div class="brickio-card">
+                        <h3>Now Trending</h3>
+                        <ul>
+                            ${flavor.facts.map(item => `<li>${escapeBrowserHtml(item)}</li>`).join('')}
                         </ul>
                     </div>
-                    <div style="background:white;border:1px solid #e2e8f0;border-radius:8px;padding:12px;">
-                        <h3 style="margin:0 0 6px;color:#0f172a;font-size:14px;">Quick Stats</h3>
-                        <ul style="margin:0;padding-left:18px;color:#334155;font-size:13px;line-height:1.6;">
-                            <li>Articles: 120+</li>
-                            <li>Guides: 34</li>
-                            <li>Updated: Daily</li>
-                            <li>Read time: 4-10 min each</li>
+                    <div class="brickio-card">
+                        <h3>Build Zones</h3>
+                        <ul>
+                            ${flavor.zones.map(zone => `<li>${escapeBrowserHtml(zone)}</li>`).join('')}
                         </ul>
                     </div>
+                    <div class="brickio-card">
+                        <h3>Try Searching</h3>
+                        <div class="brickio-tags">
+                            ${flavor.searches.map(term => `<span>${escapeBrowserHtml(term)}</span>`).join('')}
+                        </div>
+                    </div>
                 </div>
-                <div style="margin-top:12px;background:white;border:1px solid #e2e8f0;border-radius:8px;padding:12px;">
-                    <h3 style="margin:0 0 6px;color:#0f172a;font-size:14px;">Suggested Searches</h3>
-                    <p style="margin:0;color:#334155;font-size:13px;line-height:1.6;">Try topics like "beginner guide", "top picks", "weekly roundup", "how-to", and "best tools" to find deeper pages quickly.</p>
+                <div style="margin-top:12px;background:white;border:1px solid #e2e8f0;border-radius:10px;padding:14px;">
+                    <h3 style="margin:0 0 8px;color:#0f172a;">About This Site</h3>
+                    <p style="margin:0;color:#334155;line-height:1.65;">${safeName} has a custom profile in this browser simulation so every domain feels unique. This page is generated with a Brick.io-inspired card layout and topic-specific fun info.</p>
+                    <p style="margin:8px 0 0;color:#475569;">Domain: <strong>${safeDomain}</strong> · Vibe: <strong>${escapeBrowserHtml(flavor.vibe)}</strong></p>
                 </div>
             </div>
         </div>
@@ -3602,57 +3951,47 @@ function initQuizMasterWebsite() {
 
 function getWebsiteKnowledgePack(domain) {
     const cleanDomain = String(domain || '').replace(/^www\./, '').toLowerCase();
-    const focusMap = {
-        'hazygames.fun': 'Game discovery, walkthroughs and challenge modes',
-        'zappycook.net': 'Fast recipes, meal prep and ingredient swaps',
-        'pixelvault.io': 'Digital art collections, creative tools and prompts',
-        'cosmicblog.org': 'Astronomy explainers, observations and space news',
-        'novaspark.tech': 'Tech trends, device comparisons and AI updates',
-        'dailypets.fun': 'Pet care guides, breed profiles and training basics',
-        'quizmaster.io': 'Trivia sets, learning drills and score challenges',
-        'buildcraft.tech': 'DIY builds, maker workflows and tool safety',
-        'stargazer.space': 'Night-sky calendars and telescope recommendations',
-        'munchbox.net': 'Lunchbox planning, snacks and nutrition balance',
-        'codecubs.io': 'Beginner programming paths and coding exercises',
-        'sketchwild.org': 'Drawing techniques and visual storytelling practice',
-        'factblast.fun': 'Curated facts with references and learning context',
-        'frostbite.net': 'Frozen recipes, texture tips and serving ideas',
-        'neonpulse.fun': 'Music discovery, artist deep dives and playlists',
-        'plantpedia.net': 'Plant encyclopedia, care cycles and troubleshooting',
-        'brickyard.io': 'Brick build plans, parts lists and design patterns',
-        'funnybones.fun': 'Clean humor, joke formats and writing prompts',
-        'cloudjournal.org': 'Weather logs, cloud analysis and forecast notes'
+    const safeName = toDisplayName(cleanDomain);
+    const flavor = getDomainFlavor(cleanDomain);
+
+    const customPacks = {
+        'cosmicblog.org': {
+            timeline: ['Night log archive passed 5,000 entries', 'Community telescope map launched', 'Meteor watch party added live checklist'],
+            quickFacts: ['Saturn has 140+ confirmed moons', 'The ISS orbits Earth every 90 minutes', 'A teaspoon of neutron star matter is incredibly dense'],
+            faq: ['Best beginner telescope size? Start at 70-90mm.', 'Do I need dark skies? It helps, but Moon and planets are visible in cities.', 'Can phones capture stars? Yes, with longer exposure and tripod support.'],
+            resources: ['Tonight visibility board', 'Planet rise/set clock', 'Beginner astrophotography setup']
+        },
+        'brickyard.io': {
+            timeline: ['Micro-build arena opened', 'Gearbox challenge season started', 'Community part-swap marketplace added'],
+            quickFacts: ['Top build length this month: 132 cm train', 'Average starter set uses 240 pieces', 'Most used color this week: dark bluish gray'],
+            faq: ['Best starter piece count? 150-300 pieces.', 'How to make sturdy towers? Overlap seams every 2 layers.', 'Good wheelbase for small cars? 6 to 8 studs works well.'],
+            resources: ['Piece count planner', 'Color harmony chart', 'Modular city starter blueprint']
+        }
     };
 
-    const focus = focusMap[cleanDomain] || 'Reference articles, guides, and curated updates';
+    const pack = customPacks[cleanDomain] || {
+        timeline: [
+            `${safeName} opened its first interactive section`,
+            'Creator submissions and community voting unlocked',
+            'Brick-board format added for easier browsing'
+        ],
+        quickFacts: flavor.facts,
+        faq: [
+            `What is ${safeName} best for? ${flavor.focus}.`,
+            'Is there beginner-friendly content? Yes, starter paths are highlighted.',
+            'Can I find advanced material? Yes, look in Deep Dives and expert picks.'
+        ],
+        resources: flavor.zones
+    };
 
     return {
-        focus,
-        timeline: [
-            '2024: Core content library launched',
-            '2025: Contributor tools and community updates added',
-            '2026: Deep-dive guides and weekly digest introduced'
-        ],
-        quickFacts: [
-            'New entries are published every week',
-            'Beginner and advanced guides are both included',
-            'Most pages include practical examples and checklists',
-            'Collections are grouped by topic for fast browsing',
-            'Search suggestions update based on recent trends'
-        ],
-        faq: [
-            'How often is content updated? Usually every 1 to 3 days.',
-            'Can beginners use this site? Yes, beginner tracks are marked clearly.',
-            'Are there long-form guides? Yes, each topic has deep-dive pages.',
-            'Is there a quick-start path? Yes, use Featured and Top Picks first.'
-        ],
-        resources: [
-            'Top picks and editor recommendations',
-            'Step-by-step starter roadmap',
-            'Troubleshooting and common mistakes',
-            'Advanced techniques and optimization notes',
-            'Reference list for further reading'
-        ]
+        focus: flavor.focus,
+        timeline: pack.timeline,
+        quickFacts: pack.quickFacts,
+        faq: pack.faq,
+        resources: pack.resources,
+        searches: flavor.searches,
+        vibe: flavor.vibe
     };
 }
 
@@ -3670,45 +4009,43 @@ function injectWebsiteMegaInfo(domain) {
 
     const section = document.createElement('div');
     section.id = 'website-mega-info';
-    section.style.cssText = 'margin-top:16px;border:1px solid rgba(30,64,175,0.2);border-radius:10px;padding:14px;background:rgba(255,255,255,0.85);';
+    section.className = 'brickio-mega';
 
     section.innerHTML = `
-        <h2 style="margin:0 0 10px;color:#1e3a8a;">Extended Info Center</h2>
-        <p style="margin:0 0 12px;color:#334155;line-height:1.7;"><strong>${safeDomain}</strong> focus: ${safeFocus}. This section adds deeper context, practical guidance, and ongoing update summaries.</p>
+        <h2>Brick Info Yard</h2>
+        <p><strong>${safeDomain}</strong> works like a mini portal focused on ${safeFocus}. This yard adds topic-rich blocks so every website has different, real-feeling info.</p>
 
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-            <div style="background:white;border:1px solid #dbeafe;border-radius:8px;padding:10px;">
-                <h3 style="margin:0 0 6px;color:#0f172a;font-size:14px;">Roadmap Timeline</h3>
-                <ul style="margin:0;padding-left:18px;color:#334155;font-size:13px;line-height:1.65;">
+        <div class="brickio-board">
+            <div class="brickio-card">
+                <h3>Story Timeline</h3>
+                <ul>
                     ${info.timeline.map(item => `<li>${escapeBrowserHtml(item)}</li>`).join('')}
                 </ul>
             </div>
-            <div style="background:white;border:1px solid #dbeafe;border-radius:8px;padding:10px;">
-                <h3 style="margin:0 0 6px;color:#0f172a;font-size:14px;">Quick Facts</h3>
-                <ul style="margin:0;padding-left:18px;color:#334155;font-size:13px;line-height:1.65;">
+            <div class="brickio-card">
+                <h3>Fun Facts</h3>
+                <ul>
                     ${info.quickFacts.map(item => `<li>${escapeBrowserHtml(item)}</li>`).join('')}
                 </ul>
             </div>
-        </div>
-
-        <div style="margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-            <div style="background:white;border:1px solid #dbeafe;border-radius:8px;padding:10px;">
-                <h3 style="margin:0 0 6px;color:#0f172a;font-size:14px;">Frequently Asked Questions</h3>
-                <ul style="margin:0;padding-left:18px;color:#334155;font-size:13px;line-height:1.65;">
+            <div class="brickio-card">
+                <h3>Quick FAQ</h3>
+                <ul>
                     ${info.faq.map(item => `<li>${escapeBrowserHtml(item)}</li>`).join('')}
                 </ul>
             </div>
-            <div style="background:white;border:1px solid #dbeafe;border-radius:8px;padding:10px;">
-                <h3 style="margin:0 0 6px;color:#0f172a;font-size:14px;">Resource Index</h3>
-                <ul style="margin:0;padding-left:18px;color:#334155;font-size:13px;line-height:1.65;">
+            <div class="brickio-card">
+                <h3>Resource Blocks</h3>
+                <ul>
                     ${info.resources.map(item => `<li>${escapeBrowserHtml(item)}</li>`).join('')}
                 </ul>
             </div>
-        </div>
-
-        <div style="margin-top:10px;background:white;border:1px solid #dbeafe;border-radius:8px;padding:10px;">
-            <h3 style="margin:0 0 6px;color:#0f172a;font-size:14px;">Suggested Deep Searches</h3>
-            <p style="margin:0;color:#334155;font-size:13px;line-height:1.7;">Try: "beginner guide", "advanced tips", "best practices", "weekly update", "comparison", "troubleshooting", and "reference".</p>
+            <div class="brickio-card brickio-card-wide">
+                <h3>Search Ideas (${escapeBrowserHtml(info.vibe)})</h3>
+                <div class="brickio-tags">
+                    ${info.searches.map(term => `<span>${escapeBrowserHtml(term)}</span>`).join('')}
+                </div>
+            </div>
         </div>
     `;
 
