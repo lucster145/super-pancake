@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simple PC</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%230078d4' width='100' height='100' rx='10'/%3E%3Ctext x='50' y='65' font-size='60' fill='white' text-anchor='middle'%3E🪟%3C/text%3E%3C/svg%3E">
     <link rel="stylesheet" href="styles.css">
 </head>
@@ -11,6 +14,12 @@
     <div id="desktop">
         <!-- Wallpaper -->
         <div class="wallpaper" role="img" aria-label="Simple PC desktop wallpaper"></div>
+
+        <section class="desktop-hero" aria-label="Desktop highlights">
+            <p class="desktop-kicker">Fresh Build • Always On</p>
+            <h1>Super Pancake OS</h1>
+            <p class="desktop-subtitle">A playful web desktop with games, streaming, AI, and surprise facts from around the internet.</p>
+        </section>
 
         <!-- Desktop Icons -->
         <div class="desktop-icons" role="toolbar" aria-label="Desktop shortcuts">
@@ -55,6 +64,43 @@
                 <p>Cloud Gaming</p>
             </div>
         </div>
+
+        <aside class="webpulse-panel" aria-label="Live web pulse panel">
+            <div class="webpulse-header">
+                <span class="webpulse-live-dot" aria-hidden="true"></span>
+                <h2>Live Web Pulse</h2>
+            </div>
+            <p class="webpulse-caption">What feels alive online right now</p>
+
+            <div class="webpulse-block">
+                <h3>Internet Vibes</h3>
+                <ul id="vibe-feed" class="vibe-feed">
+                    <li>Indie devs are building tiny browser games again.</li>
+                    <li>People are sharing desk setup tours with neon lamps.</li>
+                    <li>Retro UI inspiration is trending on design blogs.</li>
+                </ul>
+            </div>
+
+            <div class="webpulse-block">
+                <h3>Fun Fact</h3>
+                <p id="fun-fact" class="fun-fact">The first webcam watched a coffee pot at Cambridge University in the early 1990s.</p>
+            </div>
+
+            <div class="webpulse-grid">
+                <div class="pulse-stat">
+                    <span class="pulse-label">Tabs Open Worldwide</span>
+                    <strong id="tabs-online">8.2B</strong>
+                </div>
+                <div class="pulse-stat">
+                    <span class="pulse-label">Night Coders Awake</span>
+                    <strong id="night-coders">1.9M</strong>
+                </div>
+                <div class="pulse-stat pulse-stat-wide">
+                    <span class="pulse-label">Tiny Wins Today</span>
+                    <strong id="tiny-wins">42,018</strong>
+                </div>
+            </div>
+        </aside>
 
         <!-- Windows Container -->
         <div id="windows-container"></div>
