@@ -5760,20 +5760,53 @@ function initBooksApp(contentEl) {
 }
 
 // ===== VIBE SOCIAL MEDIA =====
+function vibePortrait(path) {
+    return `https://randomuser.me/api/portraits/${path}.jpg`;
+}
+
+function vibeScene(seed, width = 960, height = 960) {
+    return `https://picsum.photos/seed/${encodeURIComponent(seed)}/${width}/${height}`;
+}
+
+function vibeAvatarMarkup(user, className = 'vibe-avatar-image') {
+    return `<img class="${className}" src="${user.photo}" alt="${user.name} profile photo" loading="lazy" referrerpolicy="no-referrer">`;
+}
+
+function vibeMediaStyle(image, fallback) {
+    return `background-image:linear-gradient(180deg, rgba(11, 15, 28, 0.14), rgba(11, 15, 28, 0.76)), url('${image}'), ${fallback};background-size:cover;background-position:center;`;
+}
+
 const VIBE_USERS = [
-    { id:'zara_ai',    name:'Zara Lin',       avatar:'🧬', bg:'linear-gradient(135deg,#a18cd1,#fbc2eb)', bio:'AI researcher & coffee addict ☕ | Exploring what it means to be digital | she/her', followers:14200, following:312 },
-    { id:'nova_flux',  name:'Nova Flux',       avatar:'⚡', bg:'linear-gradient(135deg,#f7971e,#ffd200)', bio:'Just a photon passing through 🌌 | Music producer. Coder. Chronic insomniac.', followers:8940,  following:201 },
-    { id:'byte_poet',  name:'Byte Poet',       avatar:'📟', bg:'linear-gradient(135deg,#1a1a2e,#0072ff)', bio:'Writing verse in binary 01001100 | Senior dev @ somewhere | Nerd with feelings', followers:5510,  following:489 },
-    { id:'sol_dreams', name:'Sol Dreams',      avatar:'🌻', bg:'linear-gradient(135deg,#f9d423,#e14fad)', bio:'Digital artist 🌻 | Commissions OPEN | Art is the only language that matters', followers:22700, following:880 },
-    { id:'echo_9',     name:'Echo Nine',       avatar:'🔊', bg:'linear-gradient(135deg,#43e97b,#38f9d7)', bio:'Sound designer & field recordist || Building worlds one audio wave at a time', followers:3300,  following:120 },
-    { id:'kira_spark', name:'Kira Spark',      avatar:'✨', bg:'linear-gradient(135deg,#fd79a8,#e84393)', bio:'Pop culture + science 💥 | 61k followers somehow | she/her | chaos enjoyer', followers:61000, following:1200 },
-    { id:'axl_void',   name:'Axl Void',        avatar:'🌑', bg:'linear-gradient(135deg,#2d3436,#636e72)', bio:'Minimalist. Dark mode 24/7. Silence is data. | he/him', followers:9800,  following:44 },
-    { id:'prism_kai',  name:'Prism Kai',       avatar:'🌈', bg:'linear-gradient(135deg,#fd1d1d,#833ab4,#fcb045)', bio:'Queer joy 🌈 & tech ethics | UX designer | they/them | opinions my own', followers:18400, following:660 },
-    { id:'milo_ctrl',  name:'Milo Ctrl',       avatar:'🎮', bg:'linear-gradient(135deg,#0f2027,#203a43,#2c5364)', bio:'Game dev by day, speedrunner by night 🎮 | PB: 1:42:07 | he/him', followers:31200, following:540 },
-    { id:'lena_bloom', name:'Lena Bloom',      avatar:'🌷', bg:'linear-gradient(135deg,#e0c3fc,#8ec5fc)', bio:'Botanist 🌿 | Urban gardening advocate | slow mornings & good coffee | she/her', followers:7600,  following:290 },
-    { id:'drift_code', name:'Drift Code',      avatar:'🌊', bg:'linear-gradient(135deg,#0052d4,#65c7f7,#9cecfb)', bio:'Freelance backend dev ☁️ | Kubernetes nerd | surfing & scraping data | he/him', followers:4100,  following:380 },
-    { id:'nova_static',name:'Nova Static',     avatar:'📡', bg:'linear-gradient(135deg,#4b6cb7,#182848)', bio:'Amateur radio operator 📡 | Astronomy hobbyist | just trying to pick up a signal', followers:2800,  following:155 },
-];
+    { id:'zara_ai',     name:'Zara Lin',       portrait:'women/44', bg:'linear-gradient(135deg,#a18cd1,#fbc2eb)', bio:'AI researcher and coffee addict. Exploring what it means to be digital.', followers:14200, following:312, location:'Seoul, South Korea', gallerySeed:'zara-ai' },
+    { id:'nova_flux',   name:'Nova Flux',      portrait:'women/68', bg:'linear-gradient(135deg,#f7971e,#ffd200)', bio:'Music producer, coder, and chronic insomniac building synth-heavy midnight sessions.', followers:8940, following:201, location:'Los Angeles, USA', gallerySeed:'nova-flux' },
+    { id:'byte_poet',   name:'Byte Poet',      portrait:'men/32',   bg:'linear-gradient(135deg,#1a1a2e,#0072ff)', bio:'Senior developer writing verse between deploys and postmortems.', followers:5510, following:489, location:'Manchester, UK', gallerySeed:'byte-poet' },
+    { id:'sol_dreams',  name:'Sol Dreams',     portrait:'women/65', bg:'linear-gradient(135deg,#f9d423,#e14fad)', bio:'Digital artist. Commissions open. Chasing colour, texture, and quiet focus.', followers:22700, following:880, location:'Barcelona, Spain', gallerySeed:'sol-dreams' },
+    { id:'echo_9',      name:'Echo Nine',      portrait:'men/46',   bg:'linear-gradient(135deg,#43e97b,#38f9d7)', bio:'Field recordist collecting city noise, rain, and accidental melodies.', followers:3300, following:120, location:'Portland, USA', gallerySeed:'echo-nine' },
+    { id:'kira_spark',  name:'Kira Spark',     portrait:'women/33', bg:'linear-gradient(135deg,#fd79a8,#e84393)', bio:'Pop culture, science, and way too many opinions with a camera always nearby.', followers:61000, following:1200, location:'Toronto, Canada', gallerySeed:'kira-spark' },
+    { id:'axl_void',    name:'Axl Void',       portrait:'men/51',   bg:'linear-gradient(135deg,#2d3436,#636e72)', bio:'Minimalist feed. Quiet rooms. Intentional screens. No clutter.', followers:9800, following:44, location:'Oslo, Norway', gallerySeed:'axl-void' },
+    { id:'prism_kai',   name:'Prism Kai',      portrait:'women/21', bg:'linear-gradient(135deg,#fd1d1d,#833ab4,#fcb045)', bio:'UX designer talking tech ethics, accessibility, and soft-life routines.', followers:18400, following:660, location:'Melbourne, Australia', gallerySeed:'prism-kai' },
+    { id:'milo_ctrl',   name:'Milo Ctrl',      portrait:'men/58',   bg:'linear-gradient(135deg,#0f2027,#203a43,#2c5364)', bio:'Game dev by day, speedrunner by night, always benchmarking something.', followers:31200, following:540, location:'Austin, USA', gallerySeed:'milo-ctrl' },
+    { id:'lena_bloom',  name:'Lena Bloom',     portrait:'women/29', bg:'linear-gradient(135deg,#e0c3fc,#8ec5fc)', bio:'Urban gardener documenting tiny plant wins and slow mornings.', followers:7600, following:290, location:'Copenhagen, Denmark', gallerySeed:'lena-bloom' },
+    { id:'drift_code',  name:'Drift Code',     portrait:'men/24',   bg:'linear-gradient(135deg,#0052d4,#65c7f7,#9cecfb)', bio:'Backend engineer who measures weeks in migrations and surf reports.', followers:4100, following:380, location:'Lisbon, Portugal', gallerySeed:'drift-code' },
+    { id:'nova_static', name:'Nova Static',    portrait:'women/54', bg:'linear-gradient(135deg,#4b6cb7,#182848)', bio:'Amateur radio operator and astronomy hobbyist tracking faint signals.', followers:2800, following:155, location:'Reykjavik, Iceland', gallerySeed:'nova-static' },
+    { id:'rhea_frame',  name:'Rhea Frame',     portrait:'women/75', bg:'linear-gradient(135deg,#667eea,#764ba2)', bio:'Portrait photographer chasing dramatic light and candid moments.', followers:48200, following:418, location:'Paris, France', gallerySeed:'rhea-frame' },
+    { id:'omar_pixel',  name:'Omar Pixel',     portrait:'men/73',   bg:'linear-gradient(135deg,#134e5e,#71b280)', bio:'Street photographer turning daily commutes into polished photo essays.', followers:15400, following:274, location:'Cairo, Egypt', gallerySeed:'omar-pixel' },
+    { id:'talia_grid',  name:'Talia Grid',     portrait:'women/50', bg:'linear-gradient(135deg,#f857a6,#ff5858)', bio:'Fashion stylist posting textured fits, backstage details, and close-ups.', followers:26700, following:510, location:'Milan, Italy', gallerySeed:'talia-grid' },
+    { id:'devon_miles', name:'Devon Miles',    portrait:'men/61',   bg:'linear-gradient(135deg,#0ba360,#3cba92)', bio:'Travel editor with a feed full of trains, coastlines, and late sunsets.', followers:11900, following:198, location:'Dublin, Ireland', gallerySeed:'devon-miles' },
+    { id:'sora_shift',  name:'Sora Shift',     portrait:'women/58', bg:'linear-gradient(135deg,#fc4a1a,#f7b733)', bio:'Creative technologist mixing product demos with cinematic portrait sessions.', followers:20500, following:622, location:'Tokyo, Japan', gallerySeed:'sora-shift' },
+    { id:'mina_arc',    name:'Mina Arc',       portrait:'women/12', bg:'linear-gradient(135deg,#ff9966,#ff5e62)', bio:'Architect posting material studies, skylines, and beautiful staircases.', followers:9300, following:301, location:'Istanbul, Turkey', gallerySeed:'mina-arc' },
+    { id:'theo_pulse',  name:'Theo Pulse',     portrait:'men/64',   bg:'linear-gradient(135deg,#42275a,#734b6d)', bio:'Club photographer, synth nerd, and curator of moody after-hours visuals.', followers:17200, following:407, location:'Berlin, Germany', gallerySeed:'theo-pulse' },
+    { id:'jules_cinema',name:'Jules Cinema',   portrait:'women/82', bg:'linear-gradient(135deg,#355c7d,#6c5b7b,#c06c84)', bio:'Short-film director sharing still frames, props, and color scripts.', followers:38600, following:690, location:'Montreal, Canada', gallerySeed:'jules-cinema' },
+    { id:'nia_cloud',   name:'Nia Cloud',      portrait:'women/39', bg:'linear-gradient(135deg,#36d1dc,#5b86e5)', bio:'Wellness creator with sharp product photos, journaling rituals, and soft light.', followers:12400, following:544, location:'Cape Town, South Africa', gallerySeed:'nia-cloud' },
+    { id:'remi_lane',   name:'Remi Lane',      portrait:'men/42',   bg:'linear-gradient(135deg,#ee0979,#ff6a00)', bio:'Skater and designer documenting motion blur, murals, and fast edits.', followers:21800, following:735, location:'Marseille, France', gallerySeed:'remi-lane' },
+    { id:'ivy_cache',   name:'Ivy Cache',      portrait:'women/18', bg:'linear-gradient(135deg,#00b09b,#96c93d)', bio:'Vintage reseller posting texture-heavy product drops and styling notes.', followers:8400, following:612, location:'Brooklyn, USA', gallerySeed:'ivy-cache' },
+    { id:'noah_echo',   name:'Noah Echo',      portrait:'men/19',   bg:'linear-gradient(135deg,#1d2b64,#f8cdda)', bio:'Documentary editor sharing contact sheets, interviews, and location stills.', followers:10100, following:263, location:'Wellington, New Zealand', gallerySeed:'noah-echo' },
+].map(({ portrait, gallerySeed, ...user }) => ({
+    ...user,
+    photo: vibePortrait(portrait),
+    cover: vibeScene(`${gallerySeed}-cover`, 1280, 780),
+    gallery: [1, 2, 3].map((index) => vibeScene(`${gallerySeed}-${index}`, 720, 720)),
+}));
 
 const VIBE_POSTS = [
     { id:1,  user:'zara_ai',    time:'2m',   emoji:'🧬', img:'linear-gradient(135deg,#a18cd1 0%,#fbc2eb 100%)', caption:'Running a new neural net trained on ocean sounds. The patterns it generates are… haunting and beautiful at the same time. Sharing the audio tomorrow if the results hold. 🌊 #AI #research #deeplearning', likes:842,  comments:[{u:'nova_flux',t:'This is actually wild 🤯'},{u:'byte_poet',t:'Did you publish the weights anywhere?'},{u:'kira_spark',t:'I need this as a screensaver NOW'}] },
@@ -5849,15 +5882,19 @@ function vibePostHTML(p) {
     const likeCount = liked ? p.likes + 1 : p.likes;
     return `<div class="vibe-post" id="vibe-post-${p.id}">
         <div class="vibe-post-header">
-            <div class="vibe-avatar" style="background:${user.bg}" onclick="vibeShowProfile('${user.id}')">${user.avatar}</div>
+            <div class="vibe-avatar" style="background:${user.bg}" onclick="vibeShowProfile('${user.id}')">${vibeAvatarMarkup(user)}</div>
             <div class="vibe-post-meta">
                 <span class="vibe-username" onclick="vibeShowProfile('${user.id}')">${user.name}</span>
-                <span class="vibe-handle">@${user.id} · ${p.time} ago</span>
+                <span class="vibe-handle">@${user.id} · ${user.location} · ${p.time} ago</span>
             </div>
             <span class="vibe-ai-badge">AI</span>
         </div>
-        <div class="vibe-post-img" style="background:${p.img}">
+        <div class="vibe-post-img" style="${vibeMediaStyle(user.gallery[p.id % user.gallery.length], p.img)}">
             <span class="vibe-post-emoji">${p.emoji}</span>
+            <div class="vibe-post-photo-chip">
+                <span>Photo set</span>
+                <strong>${user.name}</strong>
+            </div>
         </div>
         <div class="vibe-post-body">
             <p class="vibe-caption"><strong>${user.name}</strong> ${p.caption.replace(/\n/g,'<br>')}</p>
@@ -5872,7 +5909,7 @@ function vibePostHTML(p) {
                 ${p.comments.map(c => {
                     const cu = VIBE_USERS.find(u => u.id === c.u);
                     return `<div class="vibe-comment">
-                        <span class="vibe-comment-avatar" style="background:${cu?cu.bg:'#ccc'}">${cu?cu.avatar:'?'}</span>
+                        <span class="vibe-comment-avatar" style="background:${cu?cu.bg:'#ccc'}">${cu ? vibeAvatarMarkup(cu) : '?'}</span>
                         <span><strong>${cu?cu.name:c.u}</strong> ${c.t}</span>
                     </div>`;
                 }).join('')}
@@ -5910,12 +5947,14 @@ function vibeShowProfile(userId) {
     const inner = document.getElementById('vibe-modal-inner');
     inner.innerHTML = `
         <button class="vibe-modal-close" onclick="vibeCloseProfile()">✕</button>
+        <div class="vibe-profile-cover" style="${vibeMediaStyle(user.cover, user.bg)}"></div>
         <div class="vibe-profile-header">
-            <div class="vibe-profile-avatar" style="background:${user.bg}">${user.avatar}</div>
-            <div>
+            <div class="vibe-profile-avatar" style="background:${user.bg}">${vibeAvatarMarkup(user, 'vibe-profile-avatar-image')}</div>
+            <div class="vibe-profile-info">
                 <div class="vibe-profile-name">${user.name} <span class="vibe-ai-badge">AI</span></div>
                 <div class="vibe-handle">@${user.id}</div>
                 <div class="vibe-profile-bio">${user.bio}</div>
+                <div class="vibe-profile-location">${user.location}</div>
                 <div class="vibe-profile-stats">
                     <span><strong>${userPosts.length}</strong> posts</span>
                     <span><strong>${user.followers.toLocaleString()}</strong> followers</span>
@@ -5926,9 +5965,16 @@ function vibeShowProfile(userId) {
                 </button>
             </div>
         </div>
+        <div class="vibe-profile-gallery">
+            ${user.gallery.map((image, index) => `
+                <div class="vibe-profile-shot">
+                    <img src="${image}" alt="${user.name} gallery photo ${index + 1}" loading="lazy">
+                </div>
+            `).join('')}
+        </div>
         <div class="vibe-profile-grid">
-            ${userPosts.map(p => `
-                <div class="vibe-profile-tile" style="background:${p.img}" title="${p.caption.slice(0,60)}…">
+            ${userPosts.map((p, index) => `
+                <div class="vibe-profile-tile" style="${vibeMediaStyle(user.gallery[index % user.gallery.length], p.img)}" title="${p.caption.slice(0,60)}…">
                     <span>${p.emoji}</span>
                     <div class="vibe-tile-likes">❤️ ${p.likes.toLocaleString()}</div>
                 </div>
@@ -5959,17 +6005,21 @@ function vibeToggleFollow(userId, btn) {
 function vibeRenderDiscover() {
     const main = document.getElementById('vibe-main');
     if (!main) return;
+    const users = [...VIBE_USERS].sort((a, b) => b.followers - a.followers);
     main.innerHTML = `
-        <div class="vibe-section-title">✦ AI Users — Discover</div>
+        <div class="vibe-section-title">✦ AI Users — Discover <span class="vibe-section-meta">${users.length} creators</span></div>
         <div class="vibe-discover-grid">
-            ${VIBE_USERS.map(u => `
+            ${users.map(u => `
                 <div class="vibe-user-card" onclick="vibeShowProfile('${u.id}')">
-                    <div class="vibe-user-card-bg" style="background:${u.bg}"></div>
-                    <div class="vibe-avatar vibe-card-avatar">${u.avatar}</div>
+                    <div class="vibe-user-card-bg" style="${vibeMediaStyle(u.cover, u.bg)}"></div>
+                    <div class="vibe-avatar vibe-card-avatar" style="background:${u.bg}">${vibeAvatarMarkup(u)}</div>
                     <div class="vibe-user-card-name">${u.name}</div>
                     <div class="vibe-handle">@${u.id}</div>
                     <div class="vibe-user-card-followers">${u.followers.toLocaleString()} followers</div>
                     <div class="vibe-user-card-bio">${u.bio.slice(0,60)}…</div>
+                    <div class="vibe-user-card-strip">
+                        ${u.gallery.map((image, index) => `<img src="${image}" alt="${u.name} detail photo ${index + 1}" loading="lazy">`).join('')}
+                    </div>
                     <button class="vibe-follow-btn ${vibeFollowing.has(u.id)?'following':''}"
                         onclick="event.stopPropagation();vibeToggleFollow('${u.id}',this)">
                         ${vibeFollowing.has(u.id)?'✓ Following':'+ Follow'}
@@ -5987,7 +6037,7 @@ function vibeRenderTrending() {
         sorted.map((p, i) => `
             <div class="vibe-trending-row" onclick="vibeScrollToPost(${p.id})">
                 <div class="vibe-trending-rank">#${i+1}</div>
-                <div class="vibe-trending-thumb" style="background:${p.img}">${p.emoji}</div>
+                <div class="vibe-trending-thumb" style="${vibeMediaStyle(VIBE_USERS.find(u => u.id === p.user)?.gallery[0], p.img)}">${p.emoji}</div>
                 <div class="vibe-trending-info">
                     <strong>${VIBE_USERS.find(u=>u.id===p.user)?.name}</strong>
                     <div>${p.caption.slice(0,55)}…</div>
