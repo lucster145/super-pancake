@@ -399,8 +399,14 @@ class WindowManager {
 
     getPlayStoreContent() {
         let html = '<div class="play-store-content">';
-        
-        for (const [appId, app] of Object.entries(APPS)) {
+
+        const orderedApps = Object.entries(APPS).sort((a, b) => {
+            if (a[0] === 'everygame') return -1;
+            if (b[0] === 'everygame') return 1;
+            return 0;
+        });
+
+        for (const [appId, app] of orderedApps) {
             if (appId === 'playstore') continue;
             
             const isInstalled = installedApps.has(appId);
@@ -1031,7 +1037,13 @@ function populateAllAppsList() {
     const listContainer = document.getElementById('all-apps-list');
     listContainer.innerHTML = '';
 
-    for (const [appId, app] of Object.entries(APPS)) {
+    const orderedApps = Object.entries(APPS).sort((a, b) => {
+        if (a[0] === 'everygame') return -1;
+        if (b[0] === 'everygame') return 1;
+        return 0;
+    });
+
+    for (const [appId, app] of orderedApps) {
         const tile = document.createElement('div');
         tile.className = 'app-tile';
         tile.onclick = () => {
