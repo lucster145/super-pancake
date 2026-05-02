@@ -6155,5 +6155,82 @@ function bbSelect(r, c) {
     bbRender();
 }
 
+// ===== DESKTOP WEB PULSE =====
+(function initDesktopWebPulse() {
+    const vibeFeed = document.getElementById('vibe-feed');
+    const factEl = document.getElementById('fun-fact');
+    const tabsEl = document.getElementById('tabs-online');
+    const codersEl = document.getElementById('night-coders');
+    const winsEl = document.getElementById('tiny-wins');
+
+    if (!vibeFeed || !factEl || !tabsEl || !codersEl || !winsEl) {
+        return;
+    }
+
+    const funFacts = [
+        'The first domain name ever registered was symbolics.com in 1985.',
+        'The word "robot" comes from the Czech word robota, meaning forced labor.',
+        'Email predates the public internet by several years.',
+        'More than half of global web traffic now comes from mobile devices.',
+        'The earliest website is still online and explains what the web is.',
+        'Programmers once debugged software by removing real moths from computers.'
+    ];
+
+    const vibeLines = [
+        'Open source maintainers are shipping weekend patch releases.',
+        'Small community forums are making a comeback for niche hobbies.',
+        'Indie artists are dropping browser-first mini experiences.',
+        'Game jams are turning 48-hour prototypes into full launches.',
+        'People are learning one keyboard shortcut a day and loving it.',
+        'Designers are remixing early web aesthetics with modern motion.'
+    ];
+
+    let factIndex = 0;
+    let vibeStart = 0;
+    let tabsValue = 8_200_000_000;
+    let codersValue = 1_900_000;
+    let winsValue = 42_018;
+
+    const formatCompact = (value) => {
+        if (value >= 1_000_000_000) {
+            return `${(value / 1_000_000_000).toFixed(1)}B`;
+        }
+        if (value >= 1_000_000) {
+            return `${(value / 1_000_000).toFixed(1)}M`;
+        }
+        return value.toLocaleString();
+    };
+
+    const updateStats = () => {
+        tabsValue += Math.floor(4200 + Math.random() * 8600);
+        codersValue += Math.floor(120 + Math.random() * 240);
+        winsValue += Math.floor(3 + Math.random() * 16);
+
+        tabsEl.textContent = formatCompact(tabsValue);
+        codersEl.textContent = formatCompact(codersValue);
+        winsEl.textContent = winsValue.toLocaleString();
+    };
+
+    const updateFact = () => {
+        factIndex = (factIndex + 1) % funFacts.length;
+        factEl.textContent = funFacts[factIndex];
+    };
+
+    const updateVibes = () => {
+        vibeStart = (vibeStart + 1) % vibeLines.length;
+        const next = [
+            vibeLines[vibeStart],
+            vibeLines[(vibeStart + 1) % vibeLines.length],
+            vibeLines[(vibeStart + 2) % vibeLines.length]
+        ];
+        vibeFeed.innerHTML = next.map((line) => `<li>${line}</li>`).join('');
+    };
+
+    updateStats();
+    setInterval(updateStats, 2200);
+    setInterval(updateFact, 6200);
+    setInterval(updateVibes, 7800);
+})();
+
 // Initialize
 console.log('Simple PC loaded successfully!');

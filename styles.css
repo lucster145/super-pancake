@@ -1806,3 +1806,281 @@ body, html {
 .hidden {
     display: none !important;
 }
+
+/* Super Pancake desktop refresh */
+:root {
+    --bg-a: #0c1828;
+    --bg-b: #13396b;
+    --bg-c: #0f8f79;
+    --glass: rgba(12, 22, 36, 0.62);
+    --glass-border: rgba(255, 255, 255, 0.26);
+    --ink-light: #e9f3ff;
+    --accent: #ffb15c;
+}
+
+body,
+html {
+    font-family: 'Manrope', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.wallpaper {
+    background:
+        radial-gradient(circle at 80% 15%, rgba(255, 177, 92, 0.34), transparent 28%),
+        radial-gradient(circle at 18% 78%, rgba(80, 225, 188, 0.29), transparent 34%),
+        linear-gradient(120deg, var(--bg-a) 0%, var(--bg-b) 44%, var(--bg-c) 100%);
+}
+
+.wallpaper::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.09) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.09) 1px, transparent 1px);
+    background-size: 46px 46px;
+    mask-image: radial-gradient(circle at 35% 35%, black 30%, transparent 92%);
+    opacity: 0.35;
+}
+
+.desktop-hero {
+    position: absolute;
+    left: 28px;
+    top: 18px;
+    z-index: 1;
+    width: min(540px, calc(100vw - 48px));
+    color: var(--ink-light);
+    animation: heroRise 720ms ease-out;
+    pointer-events: none;
+}
+
+.desktop-kicker {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: rgba(233, 243, 255, 0.84);
+    margin-bottom: 8px;
+    font-weight: 700;
+}
+
+.desktop-hero h1 {
+    font-family: 'Space Grotesk', 'Manrope', sans-serif;
+    font-size: clamp(32px, 5.3vw, 56px);
+    line-height: 1.02;
+    margin-bottom: 10px;
+    text-shadow: 0 12px 34px rgba(0, 0, 0, 0.36);
+}
+
+.desktop-subtitle {
+    max-width: 500px;
+    font-size: 15px;
+    color: rgba(233, 243, 255, 0.88);
+    line-height: 1.55;
+}
+
+.desktop-icons {
+    top: 172px;
+    left: 24px;
+    gap: 30px;
+    max-width: calc(100vw - 430px);
+}
+
+.desktop-icon {
+    border: 1px solid transparent;
+    background: rgba(8, 17, 31, 0.28);
+    backdrop-filter: blur(4px);
+    border-radius: 12px;
+    transition: background-color 0.25s, transform 0.25s, border-color 0.25s;
+    animation: iconPop 460ms ease-out both;
+}
+
+.desktop-icon:hover {
+    transform: translateY(-3px);
+    border-color: rgba(255, 255, 255, 0.34);
+    background-color: rgba(255, 255, 255, 0.16);
+}
+
+.webpulse-panel {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: min(360px, calc(100vw - 40px));
+    max-height: calc(100vh - 94px);
+    overflow: auto;
+    z-index: 2;
+    border-radius: 20px;
+    border: 1px solid var(--glass-border);
+    background: linear-gradient(160deg, rgba(6, 14, 26, 0.73), var(--glass));
+    box-shadow: 0 28px 60px rgba(3, 9, 20, 0.42);
+    padding: 18px;
+    color: #ecf8ff;
+    animation: panelSlide 700ms ease-out;
+}
+
+.webpulse-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 4px;
+}
+
+.webpulse-live-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    background: #60ff9f;
+    box-shadow: 0 0 0 0 rgba(96, 255, 159, 0.9);
+    animation: ping 1.7s infinite;
+}
+
+.webpulse-header h2 {
+    margin: 0;
+    font-family: 'Space Grotesk', 'Manrope', sans-serif;
+    font-size: 22px;
+}
+
+.webpulse-caption {
+    color: rgba(236, 248, 255, 0.72);
+    font-size: 12px;
+    margin-bottom: 14px;
+}
+
+.webpulse-block {
+    padding: 12px;
+    border-radius: 13px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.08);
+    margin-bottom: 12px;
+}
+
+.webpulse-block h3 {
+    margin: 0 0 8px;
+    font-size: 14px;
+    letter-spacing: 0.02em;
+}
+
+.vibe-feed {
+    margin: 0;
+    padding-left: 18px;
+    display: grid;
+    gap: 6px;
+    font-size: 13px;
+    line-height: 1.45;
+}
+
+.fun-fact {
+    margin: 0;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.92);
+    line-height: 1.55;
+}
+
+.webpulse-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.pulse-stat {
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.23);
+    padding: 10px;
+}
+
+.pulse-stat-wide {
+    grid-column: 1 / -1;
+}
+
+.pulse-label {
+    display: block;
+    font-size: 11px;
+    color: rgba(236, 248, 255, 0.76);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.pulse-stat strong {
+    font-family: 'Space Grotesk', 'Manrope', sans-serif;
+    font-size: 27px;
+    color: #fff7e8;
+}
+
+@keyframes panelSlide {
+    from {
+        opacity: 0;
+        transform: translateX(26px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+}
+
+@keyframes heroRise {
+    from {
+        opacity: 0;
+        transform: translateY(-18px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes iconPop {
+    from {
+        opacity: 0;
+        transform: translateY(8px) scale(0.94);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes ping {
+    0% {
+        box-shadow: 0 0 0 0 rgba(96, 255, 159, 0.9);
+    }
+    70% {
+        box-shadow: 0 0 0 14px rgba(96, 255, 159, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(96, 255, 159, 0);
+    }
+}
+
+@media (max-width: 1080px) {
+    .desktop-icons {
+        max-width: calc(100vw - 40px);
+    }
+
+    .webpulse-panel {
+        width: min(340px, calc(100vw - 40px));
+        top: 140px;
+    }
+}
+
+@media (max-width: 860px) {
+    .desktop-hero {
+        left: 16px;
+        top: 12px;
+        width: calc(100vw - 32px);
+    }
+
+    .desktop-icons {
+        top: 130px;
+        left: 14px;
+        gap: 16px;
+    }
+
+    .webpulse-panel {
+        right: 12px;
+        left: 12px;
+        top: auto;
+        bottom: 58px;
+        width: auto;
+        max-height: 34vh;
+    }
+}
