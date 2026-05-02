@@ -2618,6 +2618,151 @@ html {
     }
 }
 
+.everygame-app {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: radial-gradient(circle at top left, #134e4a, #05222f 60%);
+    color: #e6fffb;
+}
+
+.everygame-topbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.everygame-led {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #34d399;
+    box-shadow: 0 0 16px rgba(52, 211, 153, 0.8);
+}
+
+.everygame-count {
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    font-weight: 700;
+}
+
+.everygame-stage {
+    flex: 1;
+    min-height: 0;
+    padding: 12px;
+}
+
+.everygame-menu {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.everygame-menu-head {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    opacity: 0.8;
+}
+
+.everygame-grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(10, minmax(0, 1fr));
+    gap: 8px;
+    overflow: auto;
+    padding-right: 4px;
+}
+
+.everygame-slot {
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.08);
+    color: #d9fffa;
+    border-radius: 10px;
+    min-height: 42px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.everygame-slot:hover {
+    background: rgba(52, 211, 153, 0.24);
+}
+
+.everygame-play {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.everygame-hud {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(3, 15, 24, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
+    padding: 8px 10px;
+}
+
+.everygame-stat {
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.everygame-hint {
+    margin-left: auto;
+    font-size: 18px;
+    opacity: 0.88;
+}
+
+.everygame-canvas {
+    width: 100%;
+    flex: 1;
+    min-height: 260px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    background: #081521;
+    touch-action: none;
+}
+
+.everygame-mini {
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.08);
+    color: #d9fffa;
+    border-radius: 8px;
+    min-width: 36px;
+    height: 32px;
+    cursor: pointer;
+}
+
+.everygame-result {
+    height: 100%;
+    display: grid;
+    place-items: center;
+    gap: 16px;
+}
+
+.everygame-result-score {
+    font-size: 56px;
+    font-weight: 800;
+    color: #5eead4;
+}
+
+.everygame-result-actions {
+    display: flex;
+    gap: 10px;
+}
+
+@media (max-width: 760px) {
+    .everygame-grid {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+}
+
 @media (max-width: 1080px) {
     .desktop-icons {
         max-width: calc(100vw - 40px);
