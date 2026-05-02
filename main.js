@@ -76,6 +76,13 @@ const APPS = {
         minWidth: 760,
         minHeight: 540
     },
+    everygame: {
+        name: 'Every Game',
+        icon: '🎲',
+        color: '#14b8a6',
+        minWidth: 840,
+        minHeight: 620
+    },
     runtuchvictory: {
         name: 'Run Tuch Victory',
         icon: '🏈',
@@ -107,7 +114,7 @@ const APPS = {
 };
 
 // Store app installation state
-const installedApps = new Set(['playstore', 'notes', 'game2048', 'calculator', 'memory', 'calendar', 'net2', 'browser', 'simpleai', 'vibe', 'rec', 'runtuchvictory', 'cloudgaming']);
+const installedApps = new Set(['playstore', 'notes', 'game2048', 'calculator', 'memory', 'calendar', 'net2', 'browser', 'simpleai', 'vibe', 'rec', 'everygame', 'runtuchvictory', 'cloudgaming']);
 const cloudInstalledApps = new Set(); // apps installed from Cloud Gaming
 
 // Global error handler for better debugging
@@ -337,6 +344,9 @@ class WindowManager {
             case 'rec':
                 cleanupRec();
                 break;
+            case 'everygame':
+                cleanupEveryGame();
+                break;
             case 'runtuchvictory':
                 cleanupRunTuchVictory();
                 break;
@@ -372,6 +382,8 @@ class WindowManager {
                 return getVibeContent();
             case 'rec':
                 return this.getRecContent();
+            case 'everygame':
+                return this.getEveryGameContent();
             case 'runtuchvictory':
                 return this.getRunTuchVictoryContent();
             case 'cloudgaming':
@@ -568,6 +580,19 @@ class WindowManager {
                     <div id="rec-live-badge" class="rec-offline-badge">LIVE</div>
                 </div>
                 <div id="rec-stage" class="rec-stage"></div>
+            </div>
+        `;
+    }
+
+    getEveryGameContent() {
+        return `
+            <div class="everygame-app">
+                <div class="everygame-topbar">
+                    <div class="everygame-led" aria-hidden="true"></div>
+                    <div class="everygame-count">100</div>
+                    <button class="everygame-mini" onclick="everyGameShowMenu()">◼</button>
+                </div>
+                <div id="everygame-stage" class="everygame-stage"></div>
             </div>
         `;
     }
@@ -973,6 +998,9 @@ class WindowManager {
                 break;
             case 'rec':
                 initRec();
+                break;
+            case 'everygame':
+                initEveryGame();
                 break;
             case 'runtuchvictory':
                 initRunTuchVictory();
@@ -1557,6 +1585,572 @@ function cleanupRec() {
     clearRecTimers();
     clearRecInputHandlers();
 }
+
+// ===== EVERY GAME APP =====
+const everyGameState = {
+    catalog: [],
+    game: null,
+    runtime: null,
+    rafId: null,
+    timerId: null,
+    keydownHandler: null,
+    keyupHandler: null,
+    pointerMoveHandler: null,
+    pointerDownHandler: null,
+    pointerUpHandler: null,
+    timeLeft: 0,
+    score: 0,
+    started: false
+};
+
+const EVERY_GAME_SYMBOL_A = ['◉', '◈', '◍', '◎', '◌', '◇', '▣', '▤', '▦', '▨'];
+const EVERY_GAME_SYMBOL_B = ['✦', '✧', '✶', '✹', '✷', '✺', '✸', '✱', '✪', '✴'];
+const EVERY_GAME_MODES = ['tap', 'dodge', 'pulse', 'orbit', 'paddle', 'balance', 'trace', 'collect'];
+
+function buildEveryGameCatalog() {
+    const games = [];
+    for (let i = 1; i <= 100; i += 1) {
+        const mode = EVERY_GAME_MODES[(i - 1) % EVERY_GAME_MODES.length];
+        const tier = 1 + Math.floor((i - 1) / EVERY_GAME_MODES.length);
+        games.push({
+            id: `eg-${i}`,
+            glyph: `${EVERY_GAME_SYMBOL_A[(i - 1) % EVERY_GAME_SYMBOL_A.length]}${EVERY_GAME_SYMBOL_B[Math.floor((i - 1) / EVERY_GAME_SYMBOL_A.length)]}`,
+            mode,
+            tier,
+            duration: 18 + (i % 10),
+            target: 12 + tier
+        });
+    }
+    return games;
+}
+
+function cleanupEveryGame() {
+    if (everyGameState.rafId) cancelAnimationFrame(everyGameState.rafId);
+    clearInterval(everyGameState.timerId);
+    everyGameState.rafId = null;
+    everyGameState.timerId = null;
+
+    const canvas = document.getElementById('everygame-canvas');
+    if (canvas && everyGameState.pointerMoveHandler) {
+        canvas.removeEventListener('pointermove', everyGameState.pointerMoveHandler);
+        canvas.removeEventListener('pointerdown', everyGameState.pointerDownHandler);
+        window.removeEventListener('pointerup', everyGameState.pointerUpHandler);
+    }
+    if (everyGameState.keydownHandler) {
+        document.removeEventListener('keydown', everyGameState.keydownHandler);
+        document.removeEventListener('keyup', everyGameState.keyupHandler);
+    }
+
+    everyGameState.keydownHandler = null;
+    everyGameState.keyupHandler = null;
+    everyGameState.pointerMoveHandler = null;
+    everyGameState.pointerDownHandler = null;
+    everyGameState.pointerUpHandler = null;
+    everyGameState.runtime = null;
+    everyGameState.started = false;
+}
+
+function getEveryGameStage() {
+    return document.getElementById('everygame-stage');
+}
+
+function everyGameShowMenu() {
+    cleanupEveryGame();
+    const stage = getEveryGameStage();
+    if (!stage) return;
+
+    const buttons = everyGameState.catalog.map((game) => (
+        `<button class="everygame-slot" onclick="startEveryGame('${game.id}')" aria-label="Open game ${game.id.slice(3)}">${game.glyph}</button>`
+    )).join('');
+
+    stage.innerHTML = `
+        <div class="everygame-menu">
+            <div class="everygame-menu-head">
+                <span>∞</span>
+                <span>◉</span>
+                <span>⊚</span>
+            </div>
+            <div class="everygame-grid">${buttons}</div>
+        </div>
+    `;
+}
+
+function everyGameUpdateHud() {
+    const score = document.getElementById('everygame-score');
+    const time = document.getElementById('everygame-time');
+    if (score) score.textContent = String(everyGameState.score);
+    if (time) time.textContent = String(everyGameState.timeLeft);
+}
+
+function createEveryGameRuntime(game, width, height) {
+    const base = {
+        width,
+        height,
+        pointerX: width / 2,
+        pointerY: height / 2,
+        pointerDown: false,
+        keys: {},
+        note: '◌'
+    };
+
+    switch (game.mode) {
+        case 'tap':
+            return {
+                ...base,
+                targets: Array.from({ length: Math.min(8, 2 + game.tier) }).map(() => ({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    vx: (Math.random() - 0.5) * (2 + game.tier * 0.3),
+                    vy: (Math.random() - 0.5) * (2 + game.tier * 0.3),
+                    r: 12 + Math.random() * 12
+                })),
+                note: 'tap'
+            };
+        case 'dodge':
+            return { ...base, playerX: width / 2, rocks: [], drift: 2 + game.tier * 0.25, note: 'avoid' };
+        case 'pulse':
+            return { ...base, phase: 0, gate: 0.12 + Math.max(0.02, 0.2 - game.tier * 0.01), note: 'space' };
+        case 'orbit':
+            return { ...base, angle: 0, speed: 0.016 + game.tier * 0.0018, gateStart: Math.random() * Math.PI * 2, gateSize: 0.6, note: 'click' };
+        case 'paddle':
+            return {
+                ...base,
+                paddleX: width / 2,
+                ball: { x: width / 2, y: height * 0.62, vx: 2 + game.tier * 0.18, vy: -3.2 },
+                bricks: Array.from({ length: 14 + game.tier }).map((_, idx) => ({
+                    x: 24 + (idx % 7) * 70,
+                    y: 26 + Math.floor(idx / 7) * 24,
+                    alive: true
+                })),
+                note: 'bounce'
+            };
+        case 'balance':
+            return { ...base, marker: width / 2, drift: (Math.random() > 0.5 ? 1 : -1) * (1.2 + game.tier * 0.14), note: 'center' };
+        case 'trace':
+            return {
+                ...base,
+                orb: { x: width / 2, y: height / 2, a: 0, radius: 80 + game.tier * 5 },
+                note: 'hold'
+            };
+        case 'collect':
+        default:
+            return {
+                ...base,
+                player: { x: width / 2, y: height / 2 },
+                stars: Array.from({ length: 7 + Math.floor(game.tier / 2) }).map(() => ({ x: Math.random() * width, y: Math.random() * height })),
+                mines: Array.from({ length: 3 + Math.floor(game.tier / 3) }).map(() => ({ x: Math.random() * width, y: Math.random() * height })),
+                note: 'collect'
+            };
+    }
+}
+
+function startEveryGame(gameId) {
+    const stage = getEveryGameStage();
+    if (!stage) return;
+
+    const game = everyGameState.catalog.find((item) => item.id === gameId);
+    if (!game) return;
+
+    cleanupEveryGame();
+    everyGameState.game = game;
+    everyGameState.timeLeft = game.duration;
+    everyGameState.score = 0;
+    everyGameState.started = true;
+
+    stage.innerHTML = `
+        <div class="everygame-play">
+            <div class="everygame-hud">
+                <button class="everygame-mini" onclick="everyGameShowMenu()">◼</button>
+                <div class="everygame-stat">◆ <span id="everygame-score">0</span></div>
+                <div class="everygame-stat">◷ <span id="everygame-time">${game.duration}</span></div>
+                <div class="everygame-hint" id="everygame-hint">${game.glyph}</div>
+            </div>
+            <canvas id="everygame-canvas" class="everygame-canvas" width="760" height="460"></canvas>
+        </div>
+    `;
+
+    const canvas = document.getElementById('everygame-canvas');
+    if (!canvas) return;
+
+    const runtime = createEveryGameRuntime(game, canvas.width, canvas.height);
+    everyGameState.runtime = runtime;
+
+    everyGameState.pointerMoveHandler = (e) => {
+        const rect = canvas.getBoundingClientRect();
+        runtime.pointerX = ((e.clientX - rect.left) / rect.width) * canvas.width;
+        runtime.pointerY = ((e.clientY - rect.top) / rect.height) * canvas.height;
+    };
+    everyGameState.pointerDownHandler = (e) => {
+        runtime.pointerDown = true;
+        everyGameState.pointerMoveHandler(e);
+        if (game.mode === 'tap') {
+            runtime.targets.forEach((target) => {
+                const dx = runtime.pointerX - target.x;
+                const dy = runtime.pointerY - target.y;
+                if ((dx * dx) + (dy * dy) <= target.r * target.r) {
+                    everyGameState.score += 1;
+                    target.x = Math.random() * runtime.width;
+                    target.y = Math.random() * runtime.height;
+                }
+            });
+            everyGameUpdateHud();
+        }
+        if (game.mode === 'orbit') {
+            const inGate = runtime.angle >= runtime.gateStart && runtime.angle <= (runtime.gateStart + runtime.gateSize);
+            if (inGate) {
+                everyGameState.score += 2;
+            } else {
+                everyGameState.score = Math.max(0, everyGameState.score - 1);
+            }
+            runtime.gateStart = Math.random() * Math.PI * 2;
+            everyGameUpdateHud();
+        }
+    };
+    everyGameState.pointerUpHandler = () => {
+        runtime.pointerDown = false;
+    };
+
+    everyGameState.keydownHandler = (e) => {
+        runtime.keys[e.key] = true;
+        if (game.mode === 'pulse' && e.key === ' ') {
+            const wave = Math.sin(runtime.phase);
+            if (Math.abs(wave) <= runtime.gate) {
+                everyGameState.score += 2;
+            } else {
+                everyGameState.score = Math.max(0, everyGameState.score - 1);
+            }
+            everyGameUpdateHud();
+        }
+    };
+    everyGameState.keyupHandler = (e) => {
+        runtime.keys[e.key] = false;
+    };
+
+    canvas.addEventListener('pointermove', everyGameState.pointerMoveHandler);
+    canvas.addEventListener('pointerdown', everyGameState.pointerDownHandler);
+    window.addEventListener('pointerup', everyGameState.pointerUpHandler);
+    document.addEventListener('keydown', everyGameState.keydownHandler);
+    document.addEventListener('keyup', everyGameState.keyupHandler);
+
+    everyGameState.timerId = setInterval(() => {
+        everyGameState.timeLeft -= 1;
+        everyGameUpdateHud();
+        if (everyGameState.timeLeft <= 0) {
+            everyGameEnd();
+        }
+    }, 1000);
+
+    const ctx = canvas.getContext('2d');
+    let lastTs = performance.now();
+
+    const loop = (ts) => {
+        if (!ctx || !everyGameState.started || everyGameState.timeLeft <= 0) return;
+        const dt = Math.min(32, ts - lastTs);
+        lastTs = ts;
+
+        updateEveryGameRuntime(game, runtime, dt);
+        drawEveryGameRuntime(ctx, game, runtime);
+
+        everyGameState.rafId = requestAnimationFrame(loop);
+    };
+
+    everyGameState.rafId = requestAnimationFrame(loop);
+    everyGameUpdateHud();
+}
+
+function updateEveryGameRuntime(game, rt, dt) {
+    const frame = dt / 16.67;
+    if (game.mode === 'tap') {
+        rt.targets.forEach((target) => {
+            target.x += target.vx * frame;
+            target.y += target.vy * frame;
+            if (target.x < target.r || target.x > rt.width - target.r) target.vx *= -1;
+            if (target.y < target.r || target.y > rt.height - target.r) target.vy *= -1;
+        });
+        return;
+    }
+
+    if (game.mode === 'dodge') {
+        if (rt.keys.ArrowLeft || rt.keys.a) rt.playerX -= (5 + game.tier * 0.2) * frame;
+        if (rt.keys.ArrowRight || rt.keys.d) rt.playerX += (5 + game.tier * 0.2) * frame;
+        rt.playerX = Math.max(18, Math.min(rt.width - 18, rt.playerX));
+
+        if (Math.random() < 0.04 + game.tier * 0.002) {
+            rt.rocks.push({ x: 12 + Math.random() * (rt.width - 24), y: -24, r: 8 + Math.random() * 10 });
+        }
+        for (let i = rt.rocks.length - 1; i >= 0; i -= 1) {
+            const rock = rt.rocks[i];
+            rock.y += rt.drift * frame;
+            const dx = rock.x - rt.playerX;
+            const dy = rock.y - (rt.height - 28);
+            if ((dx * dx) + (dy * dy) < (rock.r + 11) * (rock.r + 11)) {
+                everyGameState.timeLeft = 0;
+                return;
+            }
+            if (rock.y > rt.height + 20) {
+                rt.rocks.splice(i, 1);
+                everyGameState.score += 1;
+                everyGameUpdateHud();
+            }
+        }
+        return;
+    }
+
+    if (game.mode === 'pulse') {
+        rt.phase += (0.11 + game.tier * 0.004) * frame;
+        return;
+    }
+
+    if (game.mode === 'orbit') {
+        rt.angle += rt.speed * dt;
+        if (rt.angle > Math.PI * 2) rt.angle -= Math.PI * 2;
+        return;
+    }
+
+    if (game.mode === 'paddle') {
+        rt.paddleX = Math.max(45, Math.min(rt.width - 45, rt.pointerX));
+        rt.ball.x += rt.ball.vx * frame;
+        rt.ball.y += rt.ball.vy * frame;
+
+        if (rt.ball.x < 8 || rt.ball.x > rt.width - 8) rt.ball.vx *= -1;
+        if (rt.ball.y < 8) rt.ball.vy *= -1;
+        if (rt.ball.y > rt.height + 20) {
+            rt.ball.x = rt.width / 2;
+            rt.ball.y = rt.height * 0.62;
+            rt.ball.vy = -3.2;
+            everyGameState.score = Math.max(0, everyGameState.score - 2);
+            everyGameUpdateHud();
+        }
+
+        if (rt.ball.y > rt.height - 42 && Math.abs(rt.ball.x - rt.paddleX) < 52 && rt.ball.vy > 0) {
+            rt.ball.vy *= -1;
+            rt.ball.vx += ((rt.ball.x - rt.paddleX) / 52) * 0.6;
+        }
+
+        rt.bricks.forEach((brick) => {
+            if (!brick.alive) return;
+            if (rt.ball.x > brick.x && rt.ball.x < brick.x + 58 && rt.ball.y > brick.y && rt.ball.y < brick.y + 16) {
+                brick.alive = false;
+                rt.ball.vy *= -1;
+                everyGameState.score += 1;
+                everyGameUpdateHud();
+            }
+        });
+        return;
+    }
+
+    if (game.mode === 'balance') {
+        if (rt.keys.ArrowLeft || rt.keys.a) rt.marker -= (4.4 + game.tier * 0.2) * frame;
+        if (rt.keys.ArrowRight || rt.keys.d) rt.marker += (4.4 + game.tier * 0.2) * frame;
+        rt.marker += rt.drift * frame;
+        if (Math.random() < 0.03) rt.drift *= -1;
+        rt.marker = Math.max(10, Math.min(rt.width - 10, rt.marker));
+
+        const centerDist = Math.abs(rt.marker - (rt.width / 2));
+        if (centerDist < 40) {
+            everyGameState.score += 0.08 * frame;
+            everyGameUpdateHud();
+        }
+        return;
+    }
+
+    if (game.mode === 'trace') {
+        rt.orb.a += (0.025 + game.tier * 0.001) * dt;
+        rt.orb.x = (rt.width / 2) + Math.cos(rt.orb.a * 0.013) * rt.orb.radius;
+        rt.orb.y = (rt.height / 2) + Math.sin(rt.orb.a * 0.021) * (rt.orb.radius * 0.8);
+        const dx = rt.pointerX - rt.orb.x;
+        const dy = rt.pointerY - rt.orb.y;
+        if (rt.pointerDown && (dx * dx) + (dy * dy) < 36 * 36) {
+            everyGameState.score += 0.11 * frame;
+            everyGameUpdateHud();
+        }
+        return;
+    }
+
+    if (game.mode === 'collect') {
+        rt.player.x += (rt.pointerX - rt.player.x) * 0.08;
+        rt.player.y += (rt.pointerY - rt.player.y) * 0.08;
+
+        rt.stars.forEach((star) => {
+            const dx = star.x - rt.player.x;
+            const dy = star.y - rt.player.y;
+            if ((dx * dx) + (dy * dy) < 20 * 20) {
+                star.x = Math.random() * rt.width;
+                star.y = Math.random() * rt.height;
+                everyGameState.score += 1;
+                everyGameUpdateHud();
+            }
+        });
+
+        rt.mines.forEach((mine) => {
+            mine.x += (Math.random() - 0.5) * 1.4;
+            mine.y += (Math.random() - 0.5) * 1.4;
+            mine.x = Math.max(6, Math.min(rt.width - 6, mine.x));
+            mine.y = Math.max(6, Math.min(rt.height - 6, mine.y));
+
+            const dx = mine.x - rt.player.x;
+            const dy = mine.y - rt.player.y;
+            if ((dx * dx) + (dy * dy) < 18 * 18) {
+                everyGameState.timeLeft = Math.max(0, everyGameState.timeLeft - 2);
+                mine.x = Math.random() * rt.width;
+                mine.y = Math.random() * rt.height;
+                everyGameUpdateHud();
+            }
+        });
+    }
+}
+
+function drawEveryGameRuntime(ctx, game, rt) {
+    ctx.clearRect(0, 0, rt.width, rt.height);
+    const bg = ctx.createLinearGradient(0, 0, rt.width, rt.height);
+    bg.addColorStop(0, '#061825');
+    bg.addColorStop(1, '#132f3f');
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, rt.width, rt.height);
+
+    if (game.mode === 'tap') {
+        rt.targets.forEach((target) => {
+            ctx.beginPath();
+            ctx.fillStyle = '#5eead4';
+            ctx.arc(target.x, target.y, target.r, 0, Math.PI * 2);
+            ctx.fill();
+        });
+        return;
+    }
+
+    if (game.mode === 'dodge') {
+        ctx.fillStyle = '#f59e0b';
+        ctx.beginPath();
+        ctx.arc(rt.playerX, rt.height - 28, 11, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#fb7185';
+        rt.rocks.forEach((rock) => {
+            ctx.beginPath();
+            ctx.arc(rock.x, rock.y, rock.r, 0, Math.PI * 2);
+            ctx.fill();
+        });
+        return;
+    }
+
+    if (game.mode === 'pulse') {
+        const y = rt.height / 2;
+        ctx.strokeStyle = '#f8fafc';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        for (let x = 0; x <= rt.width; x += 4) {
+            const waveY = y + Math.sin(rt.phase + x * 0.02) * 80;
+            if (x === 0) ctx.moveTo(x, waveY);
+            else ctx.lineTo(x, waveY);
+        }
+        ctx.stroke();
+        ctx.fillStyle = 'rgba(94,234,212,0.25)';
+        ctx.fillRect((rt.width / 2) - 26, y - 86, 52, 172);
+        return;
+    }
+
+    if (game.mode === 'orbit') {
+        const cx = rt.width / 2;
+        const cy = rt.height / 2;
+        const r = 130;
+        ctx.strokeStyle = '#93c5fd';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.strokeStyle = '#34d399';
+        ctx.lineWidth = 8;
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, rt.gateStart, rt.gateStart + rt.gateSize);
+        ctx.stroke();
+        ctx.fillStyle = '#fbbf24';
+        ctx.beginPath();
+        ctx.arc(cx + Math.cos(rt.angle) * r, cy + Math.sin(rt.angle) * r, 10, 0, Math.PI * 2);
+        ctx.fill();
+        return;
+    }
+
+    if (game.mode === 'paddle') {
+        ctx.fillStyle = '#34d399';
+        ctx.fillRect(rt.paddleX - 52, rt.height - 30, 104, 10);
+        ctx.fillStyle = '#f8fafc';
+        ctx.beginPath();
+        ctx.arc(rt.ball.x, rt.ball.y, 8, 0, Math.PI * 2);
+        ctx.fill();
+        rt.bricks.forEach((brick) => {
+            if (!brick.alive) return;
+            ctx.fillStyle = '#38bdf8';
+            ctx.fillRect(brick.x, brick.y, 58, 16);
+        });
+        return;
+    }
+
+    if (game.mode === 'balance') {
+        const center = rt.width / 2;
+        ctx.fillStyle = 'rgba(244,114,182,0.22)';
+        ctx.fillRect(center - 40, 0, 80, rt.height);
+        ctx.fillStyle = '#f8fafc';
+        ctx.fillRect(rt.marker - 8, (rt.height / 2) - 70, 16, 140);
+        return;
+    }
+
+    if (game.mode === 'trace') {
+        ctx.strokeStyle = '#60a5fa';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.ellipse(rt.width / 2, rt.height / 2, rt.orb.radius, rt.orb.radius * 0.8, 0, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.fillStyle = '#fde047';
+        ctx.beginPath();
+        ctx.arc(rt.orb.x, rt.orb.y, 14, 0, Math.PI * 2);
+        ctx.fill();
+        return;
+    }
+
+    if (game.mode === 'collect') {
+        ctx.fillStyle = '#34d399';
+        rt.stars.forEach((star) => {
+            ctx.beginPath();
+            ctx.arc(star.x, star.y, 7, 0, Math.PI * 2);
+            ctx.fill();
+        });
+        ctx.fillStyle = '#fb7185';
+        rt.mines.forEach((mine) => {
+            ctx.beginPath();
+            ctx.arc(mine.x, mine.y, 8, 0, Math.PI * 2);
+            ctx.fill();
+        });
+        ctx.fillStyle = '#f8fafc';
+        ctx.beginPath();
+        ctx.arc(rt.player.x, rt.player.y, 11, 0, Math.PI * 2);
+        ctx.fill();
+    }
+}
+
+function everyGameEnd() {
+    cleanupEveryGame();
+    const stage = getEveryGameStage();
+    if (!stage) return;
+
+    stage.innerHTML = `
+        <div class="everygame-result">
+            <div class="everygame-result-score">${Math.floor(everyGameState.score)}</div>
+            <div class="everygame-result-actions">
+                <button class="everygame-mini" onclick="everyGameShowMenu()">◼</button>
+                <button class="everygame-mini" onclick="startEveryGame('${everyGameState.game ? everyGameState.game.id : 'eg-1'}')">↻</button>
+            </div>
+        </div>
+    `;
+}
+
+function initEveryGame() {
+    if (!everyGameState.catalog.length) {
+        everyGameState.catalog = buildEveryGameCatalog();
+    }
+    everyGameShowMenu();
+}
+
+window.startEveryGame = startEveryGame;
+window.everyGameShowMenu = everyGameShowMenu;
 
 // ===== NOTES APP =====
 function initNotesApp(contentEl) {
