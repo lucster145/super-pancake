@@ -6386,8 +6386,22 @@ function vibeScene(seed, width = 960, height = 960) {
     return `https://picsum.photos/seed/${encodeURIComponent(seed)}/${width}/${height}`;
 }
 
-function vibeAvatarMarkup(user, className = 'vibe-avatar-image') {
-    return `<img class="${className}" src="${user.photo}" alt="${user.name} profile photo" loading="lazy" referrerpolicy="no-referrer">`;
+function vibeAvatarMarkup(user, className = 'vibe-avatar-emoji') {
+    return vibeEmojiAvatarMarkup(user, className);
+}
+
+const VIBE_AVATAR_EMOJIS = ['🤖', '🧠', '✨', '🎨', '🎮', '🎧', '🚀', '🌈', '📡', '⚡', '🕹️', '🌟'];
+
+function vibeEmojiForUser(userId) {
+    let hash = 0;
+    for (let i = 0; i < userId.length; i++) {
+        hash = (hash * 31 + userId.charCodeAt(i)) >>> 0;
+    }
+    return VIBE_AVATAR_EMOJIS[hash % VIBE_AVATAR_EMOJIS.length];
+}
+
+function vibeEmojiAvatarMarkup(user, className = 'vibe-avatar-emoji') {
+    return `<span class="${className}" aria-label="${user.name} emoji avatar">${vibeEmojiForUser(user.id)}</span>`;
 }
 
 function vibeMediaStyle(image, fallback) {
@@ -6500,7 +6514,7 @@ function vibePostHTML(p) {
     const likeCount = liked ? p.likes + 1 : p.likes;
     return `<div class="vibe-post" id="vibe-post-${p.id}">
         <div class="vibe-post-header">
-            <div class="vibe-avatar" style="background:${user.bg}" onclick="vibeShowProfile('${user.id}')">${vibeAvatarMarkup(user)}</div>
+            <div class="vibe-avatar" style="background:${user.bg}" onclick="vibeShowProfile('${user.id}')">${vibeEmojiAvatarMarkup(user)}</div>
             <div class="vibe-post-meta">
                 <span class="vibe-username" onclick="vibeShowProfile('${user.id}')">${user.name}</span>
                 <span class="vibe-handle">@${user.id} · ${user.location} · ${p.time} ago</span>
@@ -6527,7 +6541,7 @@ function vibePostHTML(p) {
                 ${p.comments.map(c => {
                     const cu = VIBE_USERS.find(u => u.id === c.u);
                     return `<div class="vibe-comment">
-                        <span class="vibe-comment-avatar" style="background:${cu?cu.bg:'#ccc'}">${cu ? vibeAvatarMarkup(cu) : '?'}</span>
+                        <span class="vibe-comment-avatar" style="background:${cu?cu.bg:'#ccc'}">${cu ? vibeEmojiAvatarMarkup(cu, 'vibe-comment-avatar-emoji') : '?'}</span>
                         <span><strong>${cu?cu.name:c.u}</strong> ${c.t}</span>
                     </div>`;
                 }).join('')}
@@ -6567,7 +6581,7 @@ function vibeShowProfile(userId) {
         <button class="vibe-modal-close" onclick="vibeCloseProfile()">✕</button>
         <div class="vibe-profile-cover" style="${vibeMediaStyle(user.cover, user.bg)}"></div>
         <div class="vibe-profile-header">
-            <div class="vibe-profile-avatar" style="background:${user.bg}">${vibeAvatarMarkup(user, 'vibe-profile-avatar-image')}</div>
+            <div class="vibe-profile-avatar" style="background:${user.bg}">${vibeEmojiAvatarMarkup(user, 'vibe-profile-avatar-emoji')}</div>
             <div class="vibe-profile-info">
                 <div class="vibe-profile-name">${user.name} <span class="vibe-ai-badge">AI</span></div>
                 <div class="vibe-handle">@${user.id}</div>
@@ -6630,7 +6644,7 @@ function vibeRenderDiscover() {
             ${users.map(u => `
                 <div class="vibe-user-card" onclick="vibeShowProfile('${u.id}')">
                     <div class="vibe-user-card-bg" style="${vibeMediaStyle(u.cover, u.bg)}"></div>
-                    <div class="vibe-avatar vibe-card-avatar" style="background:${u.bg}">${vibeAvatarMarkup(u)}</div>
+                    <div class="vibe-avatar vibe-card-avatar" style="background:${u.bg}">${vibeEmojiAvatarMarkup(u)}</div>
                     <div class="vibe-user-card-name">${u.name}</div>
                     <div class="vibe-handle">@${u.id}</div>
                     <div class="vibe-user-card-followers">${u.followers.toLocaleString()} followers</div>
