@@ -110,11 +110,18 @@ const APPS = {
         color: '#30d158',
         minWidth: 500,
         minHeight: 520
+    },
+    supersports: {
+        name: 'Super Sports',
+        icon: '⚽',
+        color: '#FF4444',
+        minWidth: 900,
+        minHeight: 650
     }
 };
 
 // Store app installation state
-const installedApps = new Set(['playstore', 'notes', 'game2048', 'calculator', 'memory', 'calendar', 'net2', 'browser', 'simpleai', 'vibe', 'rec', 'everygame', 'runtuchvictory', 'cloudgaming']);
+const installedApps = new Set(['playstore', 'notes', 'game2048', 'calculator', 'memory', 'calendar', 'net2', 'browser', 'simpleai', 'vibe', 'rec', 'everygame', 'runtuchvictory', 'cloudgaming', 'supersports']);
 const cloudInstalledApps = new Set(); // apps installed from Cloud Gaming
 
 // Global error handler for better debugging
@@ -350,6 +357,9 @@ class WindowManager {
             case 'runtuchvictory':
                 cleanupRunTuchVictory();
                 break;
+            case 'supersports':
+                cleanupSuperSports();
+                break;
 
             // Add cleanup for other apps if needed
         }
@@ -392,6 +402,8 @@ class WindowManager {
                 return this.getClickerContent();
             case 'blockbomb':
                 return this.getBlockBombContent();
+            case 'supersports':
+                return this.getSuperSportsContent();
             default:
                 return '<p>App not implemented</p>';
         }
@@ -968,6 +980,35 @@ class WindowManager {
         `;
     }
 
+    getSuperSportsContent() {
+        return `
+            <div class="supersports-app">
+                <div class="supersports-header">
+                    <h2>⚽ Super Sports</h2>
+                    <p>8-Bit Sports Games Collection</p>
+                </div>
+                <div class="supersports-games">
+                    <div class="supersports-game-card" onclick="startSuperSportsGame('pong')">
+                        <div class="game-icon">🏓</div>
+                        <div class="game-name">Pong Battle</div>
+                        <div class="game-desc">Classic arcade pong</div>
+                    </div>
+                    <div class="supersports-game-card" onclick="startSuperSportsGame('wimbledon')">
+                        <div class="game-icon">🎾</div>
+                        <div class="game-name">Wimbledon 8-Bit</div>
+                        <div class="game-desc">Tennis rally challenge</div>
+                    </div>
+                    <div class="supersports-game-card" onclick="startSuperSportsGame('platformer')">
+                        <div class="game-icon">🏃</div>
+                        <div class="game-name">Pixel Runner</div>
+                        <div class="game-desc">8-Bit platformer</div>
+                    </div>
+                </div>
+                <div id="supersports-game-container" class="supersports-game-container"></div>
+            </div>
+        `;
+    }
+
     shadeColor(color, amount) {
         let usePound = false;
         if (color[0] === "#") {
@@ -1022,6 +1063,9 @@ class WindowManager {
                 break;
             case 'blockbomb':
                 initBlockBomb();
+                break;
+            case 'supersports':
+                initSuperSports();
                 break;
         }
     }
@@ -6913,6 +6957,573 @@ function bbSelect(r, c) {
     setInterval(updateFact, 6200);
     setInterval(updateVibes, 7800);
 })();
+
+// Super Sports Games
+let superSportsGameState = null;
+
+function initSuperSports() {
+    // Init function, games will be initialized when selected
+}
+
+function cleanupSuperSports() {
+    if (superSportsGameState && superSportsGameState.animationId) {
+        cancelAnimationFrame(superSportsGameState.animationId);
+    }
+    superSportsGameState = null;
+}
+
+function startSuperSportsGame(gameType) {
+    const container = document.getElementById('supersports-game-container');
+    container.innerHTML = '';
+    
+    const backBtn = document.createElement('button');
+    backBtn.className = 'supersports-back-btn';
+    backBtn.textContent = '← Back';
+    backBtn.onclick = () => {
+        if (superSportsGameState && superSportsGameState.animationId) {
+            cancelAnimationFrame(superSportsGameState.animationId);
+        }
+        superSportsGameState = null;
+        container.innerHTML = '';
+        document.querySelector('.supersports-games').style.display = 'block';
+    };
+    
+    document.querySelector('.supersports-games').style.display = 'none';
+    container.appendChild(backBtn);
+    
+    if (gameType === 'pong') {
+        initPongGame(container);
+    } else if (gameType === 'wimbledon') {
+        initWimbledonGame(container);
+    } else if (gameType === 'platformer') {
+        initPlatformerGame(container);
+    }
+}
+
+// PONG GAME
+function initPongGame(container) {
+    const canvas = document.createElement('canvas');
+    canvas.width = 600;
+    canvas.height = 400;
+    canvas.style.display = 'block';
+    canvas.style.margin = '10px auto';
+    canvas.style.border = '2px solid #333';
+    canvas.style.backgroundColor = '#000';
+    container.appendChild(canvas);
+    
+    const ctx = canvas.getContext('2d');
+    
+    const pong = {
+        paddleHeight: 80,
+        paddleWidth: 8,
+        ballSize: 6,
+        ballSpeed: 4,
+        paddleSpeed: 5,
+        canvas: canvas,
+        leftPaddle: { x: 10, y: canvas.height / 2 - 40 },
+        rightPaddle: { x: canvas.width - 18, y: canvas.height / 2 - 40 },
+        ball: { x: canvas.width / 2, y: canvas.height / 2, dx: 4, dy: 3 },
+        leftScore: 0,
+        rightScore: 0,
+        keys: {}
+    };
+    
+    superSportsGameState = pong;
+    
+    document.addEventListener('keydown', (e) => {
+        pong.keys[e.key] = true;
+    });
+    
+    document.addEventListener('keyup', (e) => {
+        pong.keys[e.key] = false;
+    });
+    
+    function drawRect(x, y, w, h, color) {
+        ctx.fillStyle = color;
+        ctx.fillRect(x, y, w, h);
+    }
+    
+    function drawText(text, x, y, size, color) {
+        ctx.fillStyle = color;
+        ctx.font = `${size}px Arial`;
+        ctx.textAlign = 'center';
+        ctx.fillText(text, x, y);
+    }
+    
+    function update() {
+        // Paddle movement (AI for right, player for left)
+        if (pong.keys['w'] || pong.keys['ArrowUp']) {
+            pong.leftPaddle.y = Math.max(0, pong.leftPaddle.y - pong.paddleSpeed);
+        }
+        if (pong.keys['s'] || pong.keys['ArrowDown']) {
+            pong.leftPaddle.y = Math.min(canvas.height - pong.paddleHeight, pong.leftPaddle.y + pong.paddleSpeed);
+        }
+        
+        // AI for right paddle
+        let paddleCenter = pong.rightPaddle.y + pong.paddleHeight / 2;
+        if (paddleCenter < pong.ball.y - 35) {
+            pong.rightPaddle.y += pong.paddleSpeed * 0.7;
+        } else if (paddleCenter > pong.ball.y + 35) {
+            pong.rightPaddle.y -= pong.paddleSpeed * 0.7;
+        }
+        pong.rightPaddle.y = Math.max(0, Math.min(canvas.height - pong.paddleHeight, pong.rightPaddle.y));
+        
+        // Ball movement
+        pong.ball.x += pong.ball.dx;
+        pong.ball.y += pong.ball.dy;
+        
+        // Ball collision with top/bottom
+        if (pong.ball.y - pong.ballSize < 0 || pong.ball.y + pong.ballSize > canvas.height) {
+            pong.ball.dy = -pong.ball.dy;
+            pong.ball.y = Math.max(pong.ballSize, Math.min(canvas.height - pong.ballSize, pong.ball.y));
+        }
+        
+        // Ball collision with paddles
+        if (pong.ball.x - pong.ballSize < pong.leftPaddle.x + pong.paddleWidth &&
+            pong.ball.y > pong.leftPaddle.y && pong.ball.y < pong.leftPaddle.y + pong.paddleHeight) {
+            pong.ball.dx = Math.abs(pong.ball.dx);
+            pong.ball.x = pong.leftPaddle.x + pong.paddleWidth + pong.ballSize;
+        }
+        
+        if (pong.ball.x + pong.ballSize > pong.rightPaddle.x &&
+            pong.ball.y > pong.rightPaddle.y && pong.ball.y < pong.rightPaddle.y + pong.paddleHeight) {
+            pong.ball.dx = -Math.abs(pong.ball.dx);
+            pong.ball.x = pong.rightPaddle.x - pong.ballSize;
+        }
+        
+        // Score
+        if (pong.ball.x < 0) {
+            pong.rightScore++;
+            resetBall();
+        }
+        if (pong.ball.x > canvas.width) {
+            pong.leftScore++;
+            resetBall();
+        }
+    }
+    
+    function resetBall() {
+        pong.ball.x = canvas.width / 2;
+        pong.ball.y = canvas.height / 2;
+        pong.ball.dx = (Math.random() > 0.5 ? 1 : -1) * 4;
+        pong.ball.dy = (Math.random() > 0.5 ? 1 : -1) * 3;
+    }
+    
+    function draw() {
+        // Clear canvas
+        drawRect(0, 0, canvas.width, canvas.height, '#000');
+        
+        // Draw midline
+        for (let y = 0; y < canvas.height; y += 20) {
+            drawRect(canvas.width / 2 - 1, y, 2, 10, '#666');
+        }
+        
+        // Draw paddles
+        drawRect(pong.leftPaddle.x, pong.leftPaddle.y, pong.paddleWidth, pong.paddleHeight, '#0ff');
+        drawRect(pong.rightPaddle.x, pong.rightPaddle.y, pong.paddleWidth, pong.paddleHeight, '#f0f');
+        
+        // Draw ball
+        drawRect(pong.ball.x - pong.ballSize, pong.ball.y - pong.ballSize, pong.ballSize * 2, pong.ballSize * 2, '#fff');
+        
+        // Draw scores
+        drawText(pong.leftScore, canvas.width / 4, 40, 32, '#0ff');
+        drawText(pong.rightScore, (canvas.width * 3) / 4, 40, 32, '#f0f');
+        drawText('USE W/S or ARROW KEYS to move paddle', canvas.width / 2, canvas.height - 20, 12, '#666');
+    }
+    
+    function gameLoop() {
+        update();
+        draw();
+        pong.animationId = requestAnimationFrame(gameLoop);
+    }
+    
+    gameLoop();
+}
+
+// WIMBLEDON TENNIS GAME
+function initWimbledonGame(container) {
+    const canvas = document.createElement('canvas');
+    canvas.width = 600;
+    canvas.height = 400;
+    canvas.style.display = 'block';
+    canvas.style.margin = '10px auto';
+    canvas.style.border = '2px solid #333';
+    canvas.style.backgroundColor = '#006600';
+    container.appendChild(canvas);
+    
+    const ctx = canvas.getContext('2d');
+    
+    const tennis = {
+        canvas: canvas,
+        player: { x: canvas.width / 2, y: canvas.height - 50, width: 40, height: 20 },
+        ball: { x: canvas.width / 2, y: 100, radius: 5, dx: 0, dy: 2, speed: 4 },
+        score: 0,
+        combo: 0,
+        gameOver: false,
+        keys: {},
+        difficulty: 1,
+        ballsHit: 0
+    };
+    
+    superSportsGameState = tennis;
+    
+    document.addEventListener('keydown', (e) => {
+        tennis.keys[e.key] = true;
+    });
+    
+    document.addEventListener('keyup', (e) => {
+        tennis.keys[e.key] = false;
+    });
+    
+    function drawRect(x, y, w, h, color) {
+        ctx.fillStyle = color;
+        ctx.fillRect(x, y, w, h);
+    }
+    
+    function drawCircle(x, y, r, color) {
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, Math.PI * 2);
+        ctx.fill();
+    }
+    
+    function drawText(text, x, y, size, color) {
+        ctx.fillStyle = color;
+        ctx.font = `bold ${size}px Arial`;
+        ctx.textAlign = 'center';
+        ctx.fillText(text, x, y);
+    }
+    
+    function update() {
+        if (tennis.gameOver) return;
+        
+        // Player movement
+        if (tennis.keys['a'] || tennis.keys['ArrowLeft']) {
+            tennis.player.x = Math.max(0, tennis.player.x - 5);
+        }
+        if (tennis.keys['d'] || tennis.keys['ArrowRight']) {
+            tennis.player.x = Math.min(canvas.width - tennis.player.width, tennis.player.x + 5);
+        }
+        
+        // Ball movement
+        tennis.ball.x += tennis.ball.dx;
+        tennis.ball.y += tennis.ball.dy;
+        
+        // Ball bounces off walls
+        if (tennis.ball.x - tennis.ball.radius < 0 || tennis.ball.x + tennis.ball.radius > canvas.width) {
+            tennis.ball.dx = -tennis.ball.dx;
+        }
+        
+        // Ball hits top
+        if (tennis.ball.y - tennis.ball.radius < 0) {
+            tennis.ball.dy = Math.abs(tennis.ball.dy);
+        }
+        
+        // Collision with paddle
+        if (tennis.ball.y + tennis.ball.radius >= tennis.player.y &&
+            tennis.ball.x >= tennis.player.x && tennis.ball.x <= tennis.player.x + tennis.player.width &&
+            tennis.ball.dy > 0) {
+            tennis.ball.dy = -Math.abs(tennis.ball.dy);
+            tennis.ball.y = tennis.player.y - tennis.ball.radius;
+            
+            // Add angle based on hit position
+            const hitPos = (tennis.ball.x - tennis.player.x) / tennis.player.width;
+            tennis.ball.dx = (hitPos - 0.5) * 6;
+            
+            tennis.score += 10 * (1 + tennis.combo);
+            tennis.combo++;
+            tennis.ballsHit++;
+            
+            if (tennis.ballsHit % 5 === 0) {
+                tennis.difficulty += 0.3;
+            }
+        }
+        
+        // Ball goes out of bounds
+        if (tennis.ball.y > canvas.height) {
+            tennis.gameOver = true;
+        }
+    }
+    
+    function draw() {
+        // Draw grass court
+        drawRect(0, 0, canvas.width, canvas.height, '#006600');
+        
+        // Draw court lines
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(20, 20, canvas.width - 40, canvas.height - 60);
+        
+        // Draw net
+        for (let y = 0; y < canvas.height; y += 15) {
+            drawRect(canvas.width / 2 - 1, y, 2, 10, '#aaa');
+        }
+        
+        // Draw player paddle (racket)
+        ctx.fillStyle = '#ffcc00';
+        ctx.strokeStyle = '#000';
+        ctx.lineWidth = 2;
+        ctx.fillRect(tennis.player.x - 5, tennis.player.y, tennis.player.width + 10, tennis.player.height);
+        ctx.strokeRect(tennis.player.x - 5, tennis.player.y, tennis.player.width + 10, tennis.player.height);
+        
+        // Draw ball
+        drawCircle(tennis.ball.x, tennis.ball.y, tennis.ball.radius, '#ffff00');
+        
+        // Draw UI
+        drawText('SCORE: ' + tennis.score, canvas.width / 2, 30, 20, '#ffffff');
+        drawText('COMBO: ' + tennis.combo, canvas.width / 4, 30, 16, '#ffff00');
+        
+        if (tennis.gameOver) {
+            ctx.fillStyle = 'rgba(0,0,0,0.7)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            drawText('GAME OVER', canvas.width / 2, canvas.height / 2 - 30, 48, '#ffff00');
+            drawText('FINAL SCORE: ' + tennis.score, canvas.width / 2, canvas.height / 2 + 30, 24, '#ffffff');
+            drawText('Press R to restart or go back', canvas.width / 2, canvas.height / 2 + 70, 14, '#aaaaaa');
+        } else {
+            drawText('USE A/D or ARROW KEYS', canvas.width / 2, canvas.height - 10, 12, '#aaaaaa');
+        }
+    }
+    
+    function gameLoop() {
+        update();
+        draw();
+        tennis.animationId = requestAnimationFrame(gameLoop);
+    }
+    
+    gameLoop();
+}
+
+// 8-BIT PLATFORMER GAME
+function initPlatformerGame(container) {
+    const canvas = document.createElement('canvas');
+    canvas.width = 600;
+    canvas.height = 400;
+    canvas.style.display = 'block';
+    canvas.style.margin = '10px auto';
+    canvas.style.border = '2px solid #333';
+    canvas.style.backgroundColor = '#87CEEB';
+    container.appendChild(canvas);
+    
+    const ctx = canvas.getContext('2d');
+    
+    const platformer = {
+        canvas: canvas,
+        player: { x: 50, y: 300, width: 20, height: 20, velocityY: 0, velocityX: 0, isJumping: false },
+        gravity: 0.5,
+        jumpPower: 12,
+        moveSpeed: 3,
+        score: 0,
+        coins: [],
+        platforms: [],
+        enemies: [],
+        gameOver: false,
+        keys: {},
+        level: 1,
+        lives: 3
+    };
+    
+    superSportsGameState = platformer;
+    
+    // Create platforms
+    function createPlatforms() {
+        platformer.platforms = [
+            { x: 0, y: 380, width: canvas.width, height: 20 }, // Ground
+            { x: 150, y: 320, width: 120, height: 20 },
+            { x: 400, y: 320, width: 120, height: 20 },
+            { x: 100, y: 240, width: 80, height: 20 },
+            { x: 420, y: 240, width: 80, height: 20 },
+            { x: 250, y: 160, width: 100, height: 20 }
+        ];
+    }
+    
+    // Create coins
+    function createCoins() {
+        platformer.coins = [
+            { x: 200, y: 280, collected: false },
+            { x: 450, y: 280, collected: false },
+            { x: 150, y: 200, collected: false },
+            { x: 480, y: 200, collected: false },
+            { x: 300, y: 120, collected: false }
+        ];
+    }
+    
+    // Create enemies
+    function createEnemies() {
+        platformer.enemies = [
+            { x: 300, y: 340, width: 16, height: 16, dx: 2, direction: 1 }
+        ];
+    }
+    
+    createPlatforms();
+    createCoins();
+    createEnemies();
+    
+    document.addEventListener('keydown', (e) => {
+        platformer.keys[e.key] = true;
+        if (e.key === ' ' || e.key === 'w' || e.key === 'ArrowUp') {
+            if (!platformer.player.isJumping && platformer.keys[' ']) {
+                platformer.player.velocityY = -platformer.jumpPower;
+                platformer.player.isJumping = true;
+            }
+        }
+    });
+    
+    document.addEventListener('keyup', (e) => {
+        platformer.keys[e.key] = false;
+    });
+    
+    function drawRect(x, y, w, h, color) {
+        ctx.fillStyle = color;
+        ctx.fillRect(x, y, w, h);
+    }
+    
+    function drawText(text, x, y, size, color) {
+        ctx.fillStyle = color;
+        ctx.font = `bold ${size}px Arial`;
+        ctx.textAlign = 'left';
+        ctx.fillText(text, x, y);
+    }
+    
+    function update() {
+        if (platformer.gameOver) return;
+        
+        // Horizontal movement
+        platformer.player.velocityX = 0;
+        if (platformer.keys['a'] || platformer.keys['ArrowLeft']) {
+            platformer.player.velocityX = -platformer.moveSpeed;
+        }
+        if (platformer.keys['d'] || platformer.keys['ArrowRight']) {
+            platformer.player.velocityX = platformer.moveSpeed;
+        }
+        
+        platformer.player.x += platformer.player.velocityX;
+        platformer.player.x = Math.max(0, Math.min(canvas.width - platformer.player.width, platformer.player.x));
+        
+        // Gravity
+        platformer.player.velocityY += platformer.gravity;
+        platformer.player.y += platformer.player.velocityY;
+        
+        // Platform collision
+        platformer.player.isJumping = true;
+        for (let plat of platformer.platforms) {
+            if (platformer.player.velocityY > 0 &&
+                platformer.player.y + platformer.player.height >= plat.y &&
+                platformer.player.y + platformer.player.height <= plat.y + 20 &&
+                platformer.player.x + platformer.player.width > plat.x &&
+                platformer.player.x < plat.x + plat.width) {
+                platformer.player.velocityY = 0;
+                platformer.player.y = plat.y - platformer.player.height;
+                platformer.player.isJumping = false;
+            }
+        }
+        
+        // Coin collection
+        for (let coin of platformer.coins) {
+            if (!coin.collected &&
+                platformer.player.x < coin.x + 10 &&
+                platformer.player.x + platformer.player.width > coin.x &&
+                platformer.player.y < coin.y + 10 &&
+                platformer.player.y + platformer.player.height > coin.y) {
+                coin.collected = true;
+                platformer.score += 100;
+            }
+        }
+        
+        // Enemy movement
+        for (let enemy of platformer.enemies) {
+            enemy.x += enemy.dx * enemy.direction;
+            if (enemy.x <= 150 || enemy.x >= canvas.width - 150) {
+                enemy.direction *= -1;
+            }
+            
+            // Enemy collision
+            if (platformer.player.x < enemy.x + enemy.width &&
+                platformer.player.x + platformer.player.width > enemy.x &&
+                platformer.player.y < enemy.y + enemy.height &&
+                platformer.player.y + platformer.player.height > enemy.y) {
+                platformer.lives--;
+                if (platformer.lives <= 0) {
+                    platformer.gameOver = true;
+                } else {
+                    platformer.player.x = 50;
+                    platformer.player.y = 300;
+                }
+            }
+        }
+        
+        // Game over if fall off screen
+        if (platformer.player.y > canvas.height) {
+            platformer.lives--;
+            if (platformer.lives <= 0) {
+                platformer.gameOver = true;
+            } else {
+                platformer.player.x = 50;
+                platformer.player.y = 300;
+            }
+        }
+    }
+    
+    function draw() {
+        // Draw sky
+        drawRect(0, 0, canvas.width, canvas.height, '#87CEEB');
+        
+        // Draw clouds
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(50, 40, 60, 20);
+        ctx.fillRect(500, 80, 80, 25);
+        
+        // Draw platforms
+        for (let plat of platformer.platforms) {
+            drawRect(plat.x, plat.y, plat.width, plat.height, '#8B4513');
+        }
+        
+        // Draw coins
+        for (let coin of platformer.coins) {
+            if (!coin.collected) {
+                drawRect(coin.x, coin.y, 10, 10, '#FFD700');
+                drawRect(coin.x + 2, coin.y + 2, 6, 6, '#FFA500');
+            }
+        }
+        
+        // Draw player
+        drawRect(platformer.player.x, platformer.player.y, platformer.player.width, platformer.player.height, '#FF0000');
+        // Eyes
+        ctx.fillStyle = '#000';
+        ctx.fillRect(platformer.player.x + 4, platformer.player.y + 5, 4, 4);
+        ctx.fillRect(platformer.player.x + 12, platformer.player.y + 5, 4, 4);
+        
+        // Draw enemies
+        for (let enemy of platformer.enemies) {
+            drawRect(enemy.x, enemy.y, enemy.width, enemy.height, '#00AA00');
+        }
+        
+        // Draw UI
+        drawText('SCORE: ' + platformer.score, 10, 20, 16, '#000');
+        drawText('LIVES: ' + platformer.lives, 10, 45, 16, '#000');
+        drawText('USE A/D to move, SPACE to jump', 10, 380, 12, '#666');
+        
+        if (platformer.gameOver) {
+            ctx.fillStyle = 'rgba(0,0,0,0.7)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 48px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('GAME OVER', canvas.width / 2, canvas.height / 2 - 30);
+            ctx.font = 'bold 24px Arial';
+            ctx.fillText('FINAL SCORE: ' + platformer.score, canvas.width / 2, canvas.height / 2 + 30);
+            ctx.font = '14px Arial';
+            ctx.fillText('Go back to try again', canvas.width / 2, canvas.height / 2 + 70);
+        }
+    }
+    
+    function gameLoop() {
+        update();
+        draw();
+        platformer.animationId = requestAnimationFrame(gameLoop);
+    }
+    
+    gameLoop();
+}
 
 // Initialize
 console.log('Simple PC loaded successfully!');

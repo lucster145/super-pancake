@@ -2822,3 +2822,100 @@ html {
         max-height: 34vh;
     }
 }
+
+/* Super Sports App */
+.supersports-app {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 15px;
+    background: linear-gradient(135deg, #FF4444 0%, #FF6666 100%);
+    color: #fff;
+    font-family: 'Arial', sans-serif;
+}
+
+.supersports-header {
+    text-align: center;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.supersports-header h2 {
+    font-size: 28px;
+    margin-bottom: 5px;
+}
+
+.supersports-header p {
+    font-size: 12px;
+    opacity: 0.9;
+}
+
+.supersports-games {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    flex: 1;
+    padding: 10px 0;
+}
+
+.supersports-game-card {
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.supersports-game-card:hover {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.8);
+    transform: translateY(-3px);
+}
+
+.game-icon {
+    font-size: 48px;
+    margin-bottom: 10px;
+}
+
+.game-name {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.game-desc {
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+.supersports-game-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    overflow-y: auto;
+}
+
+.supersports-back-btn {
+    background: rgba(0, 0, 0, 0.3);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    margin-bottom: 10px;
+    transition: all 0.2s;
+}
+
+.supersports-back-btn:hover {
+    background: rgba(0, 0, 0, 0.5);
+}
