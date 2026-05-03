@@ -258,12 +258,14 @@ body, html {
     bottom: 48px;
     left: 8px;
     width: 300px;
-    height: 400px;
+    max-height: 80vh;
     background: rgba(0, 0, 0, 0.9);
     backdrop-filter: blur(20px);
     border-radius: 8px;
     z-index: 200;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
 .start-menu.hidden {
@@ -304,7 +306,7 @@ body, html {
 
 .all-apps-list {
     padding: 10px;
-    height: calc(100% - 80px);
+    flex: 1;
     overflow-y: auto;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
