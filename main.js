@@ -48,6 +48,13 @@ const APPS = {
         minWidth: 800,
         minHeight: 600
     },
+    live: {
+        name: 'Live',
+        icon: '📡',
+        color: '#0f766e',
+        minWidth: 820,
+        minHeight: 560
+    },
     browser: {
         name: 'Web Browser',
         icon: '🌐',
@@ -121,7 +128,7 @@ const APPS = {
 };
 
 // Store app installation state
-const installedApps = new Set(['playstore', 'notes', 'game2048', 'calculator', 'memory', 'calendar', 'net2', 'browser', 'simpleai', 'vibe', 'rec', 'everygame', 'runtuchvictory', 'cloudgaming', 'supersports']);
+const installedApps = new Set(['playstore', 'notes', 'game2048', 'calculator', 'memory', 'calendar', 'net2', 'live', 'browser', 'simpleai', 'vibe', 'rec', 'everygame', 'runtuchvictory', 'cloudgaming', 'supersports']);
 const cloudInstalledApps = new Set(); // apps installed from Cloud Gaming
 
 // Global error handler for better debugging
@@ -360,6 +367,9 @@ class WindowManager {
             case 'supersports':
                 cleanupSuperSports();
                 break;
+            case 'live':
+                cleanupLive();
+                break;
 
             // Add cleanup for other apps if needed
         }
@@ -383,6 +393,8 @@ class WindowManager {
                 return this.getCalendarContent();
             case 'net2':
                 return this.getNet2Content();
+            case 'live':
+                return this.getLiveContent();
             case 'browser':
                 return this.getBrowserContent();
 
@@ -865,6 +877,29 @@ class WindowManager {
         `;
     }
 
+    getLiveContent() {
+        return `
+            <div class="live-app">
+                <div class="live-header">
+                    <div class="live-pill">ALWAYS ON</div>
+                    <h2>Live</h2>
+                    <p id="live-time-label" class="live-time-label">Loading channel...</p>
+                </div>
+                <div class="live-video-wrap">
+                    <video id="live-video" class="live-video" autoplay muted loop playsinline preload="metadata"></video>
+                    <div class="live-overlay">
+                        <span class="live-dot" aria-hidden="true"></span>
+                        <span>LIVE</span>
+                    </div>
+                </div>
+                <div class="live-meta">
+                    <h3 id="live-program-title">Loading program...</h3>
+                    <p id="live-program-description">Building the right stream for your local time.</p>
+                </div>
+            </div>
+        `;
+    }
+
     getBrowserContent() {
         return `
             <div class="browser-content">
@@ -1042,6 +1077,9 @@ class WindowManager {
             case 'net2':
                 initNet2();
                 break;
+            case 'live':
+                initLive(contentEl);
+                break;
 
             case 'simpleai':
                 initCaleAI();
@@ -1206,6 +1244,113 @@ updateClock();
 updateInternetStatus();
 window.addEventListener('online', updateInternetStatus);
 window.addEventListener('offline', updateInternetStatus);
+
+// ===== LIVE APP =====
+const liveState = {
+    timerId: null,
+    tickBound: null,
+    currentKey: ''
+};
+
+const LIVE_SCHEDULE = [
+    {
+        key: 'late-night',
+        startHour: 0,
+        endHour: 6,
+        label: 'Late Night Channel',
+        title: 'Midnight Calm',
+        description: 'Quiet visuals and slower pacing while the world sleeps.',
+        video: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4'
+    },
+    {
+        key: 'morning',
+        startHour: 6,
+        endHour: 12,
+        label: 'Morning Channel',
+        title: 'Sunrise Energy',
+        description: 'Bright scenes and a fresh start for the day ahead.',
+        video: 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4'
+    },
+    {
+        key: 'afternoon',
+        startHour: 12,
+        endHour: 18,
+        label: 'Afternoon Channel',
+        title: 'Daylight Focus',
+        description: 'Steady, active visuals made for prime daytime hours.',
+        video: 'https://storage.googleapis.com/coverr-main/mp4/Mt_Baker.mp4'
+    },
+    {
+        key: 'evening',
+        startHour: 18,
+        endHour: 22,
+        label: 'Evening Channel',
+        title: 'Golden Hour Live',
+        description: 'Warm tones and relaxed motion for end-of-day watching.',
+        video: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
+    },
+    {
+        key: 'night',
+        startHour: 22,
+        endHour: 24,
+        label: 'Night Channel',
+        title: 'After Hours Stream',
+        description: 'Deeper visuals that carry into late-night mode.',
+        video: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4'
+    }
+];
+
+function getLiveSlot(date = new Date()) {
+    const hour = date.getHours();
+    return LIVE_SCHEDULE.find((slot) => hour >= slot.startHour && hour < slot.endHour) || LIVE_SCHEDULE[0];
+}
+
+function applyLiveSlot(slot) {
+    const video = document.getElementById('live-video');
+    const timeLabel = document.getElementById('live-time-label');
+    const title = document.getElementById('live-program-title');
+    const description = document.getElementById('live-program-description');
+    if (!video || !timeLabel || !title || !description) return;
+
+    timeLabel.textContent = slot.label;
+    title.textContent = slot.title;
+    description.textContent = slot.description;
+
+    if (liveState.currentKey !== slot.key || video.src !== slot.video) {
+        liveState.currentKey = slot.key;
+        video.src = slot.video;
+        video.load();
+    }
+
+    video.muted = true;
+    video.play().catch(() => {
+        // If autoplay is blocked, keep retrying on next timer tick.
+    });
+}
+
+function updateLiveByTime() {
+    applyLiveSlot(getLiveSlot(new Date()));
+}
+
+function initLive() {
+    cleanupLive();
+    liveState.tickBound = updateLiveByTime;
+    updateLiveByTime();
+    liveState.timerId = setInterval(liveState.tickBound, 30000);
+    document.addEventListener('visibilitychange', liveState.tickBound);
+}
+
+function cleanupLive() {
+    if (liveState.timerId) {
+        clearInterval(liveState.timerId);
+        liveState.timerId = null;
+    }
+    if (liveState.tickBound) {
+        document.removeEventListener('visibilitychange', liveState.tickBound);
+        liveState.tickBound = null;
+    }
+    liveState.currentKey = '';
+}
 
 // ===== REC APP =====
 const recState = {
