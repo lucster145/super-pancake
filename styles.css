@@ -2921,3 +2921,109 @@ html {
 .supersports-back-btn:hover {
     background: rgba(0, 0, 0, 0.5);
 }
+
+/* Live App */
+.live-app {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 12px;
+    background: linear-gradient(160deg, #062f2d 0%, #0b4c47 55%, #14635a 100%);
+    color: #ecfeff;
+}
+
+.live-header {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.live-pill {
+    align-self: flex-start;
+    background: rgba(236, 254, 255, 0.2);
+    border: 1px solid rgba(236, 254, 255, 0.5);
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    padding: 4px 10px;
+}
+
+.live-header h2 {
+    margin: 0;
+    font-size: 24px;
+    line-height: 1;
+}
+
+.live-time-label {
+    margin: 0;
+    color: rgba(236, 254, 255, 0.9);
+    font-size: 14px;
+}
+
+.live-video-wrap {
+    position: relative;
+    flex: 1;
+    min-height: 240px;
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid rgba(236, 254, 255, 0.35);
+    background: #031a19;
+}
+
+.live-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.live-overlay {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: rgba(7, 20, 22, 0.68);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+}
+
+.live-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #ef4444;
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.8);
+}
+
+.live-meta h3 {
+    margin: 0;
+    font-size: 19px;
+}
+
+.live-meta p {
+    margin: 5px 0 0;
+    color: rgba(236, 254, 255, 0.9);
+    font-size: 14px;
+}
+
+@media (max-width: 700px) {
+    .live-app {
+        padding: 10px;
+        gap: 10px;
+    }
+
+    .live-header h2 {
+        font-size: 21px;
+    }
+
+    .live-video-wrap {
+        min-height: 190px;
+    }
+}
