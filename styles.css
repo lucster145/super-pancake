@@ -3055,6 +3055,37 @@ html {
     font-size: 14px;
 }
 
+.live-program-lineup {
+    margin-top: 12px;
+    padding: 12px 14px;
+    border: 1px solid rgba(165, 243, 252, 0.22);
+    border-radius: 12px;
+    background: rgba(7, 20, 22, 0.34);
+}
+
+.live-program-lineup-label {
+    margin: 0;
+    color: #99f6e4;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.live-program-lineup-list {
+    margin: 8px 0 0;
+    padding-left: 18px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px 18px;
+    color: rgba(236, 254, 255, 0.94);
+    font-size: 13px;
+}
+
+.live-program-lineup-list li {
+    line-height: 1.35;
+}
+
 .live-guide {
     position: absolute;
     inset: 0;
@@ -3166,6 +3197,10 @@ html {
 
     .live-guide.open {
         padding: 52px 10px 10px;
+    }
+
+    .live-program-lineup-list {
+        grid-template-columns: 1fr;
     }
 
     .live-guide-top,

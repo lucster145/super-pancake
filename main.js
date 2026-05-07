@@ -897,6 +897,7 @@ class WindowManager {
                 <div class="live-meta">
                     <h3 id="live-program-title">Loading program...</h3>
                     <p id="live-program-description">Building the right stream for your local time.</p>
+                    <div id="live-program-lineup" class="live-program-lineup hidden" aria-live="polite"></div>
                 </div>
                 <div class="live-guide" id="live-guide" aria-label="Live channel guide" aria-hidden="true"></div>
             </div>
@@ -1287,9 +1288,21 @@ const LIVE_CHANNELS = [
         key: 'cartoon',
         label: 'Cartoon Channel',
         title: 'Pancake Pals Cartoons',
-        description: 'Original cartoon loop with playful characters and slapstick gags.',
+        description: 'Original cartoon loop with playful characters, slapstick gags, and ten new mini-cartoon premieres.',
         channelNo: 'CH 003',
-        theme: 'cartoon'
+        theme: 'cartoon',
+        episodes: [
+            'Captain Syrup and the Pancake Moon',
+            'Rocket Waffle Rescue',
+            'Bubble City Bake-Off',
+            'Maple Ninja Playground',
+            'Toast Town Treasure Hunt',
+            'Jellybean Jungle Jam',
+            'Cosmo Cookie Cruise',
+            'Flipjack Funhouse Fix-Up',
+            'Sprinkle Squad Saves Saturday',
+            'Muffin Mountain Mystery'
+        ]
     },
     {
         key: 'evening',
@@ -1390,16 +1403,6 @@ const LIVE_CHANNELS = [
         description: 'A live kitchen scene with a cook at the stove, stirring dinner in real-time.',
         channelNo: 'CH 015',
         theme: 'cooking'
-    },
-    {
-        key: 'weather',
-        label: 'Weather Channel',
-        title: 'Storm Watch',
-        description: 'Time-lapse clouds, sky phenomena, and weather patterns.',
-        channelNo: 'CH 016',
-        theme: 'video',
-        fallbackTheme: 'starfield',
-        videoUrl: 'https://cdn.pixabay.com/vimeo/673860689/Timelapse%20Sky%20_%20Free%20Stock%20Video%20Footage%20HD-673860689.mp4'
     },
     {
         key: 'garden',
@@ -2287,12 +2290,25 @@ function applyLiveSlot(channel, mode = 'auto') {
     const timeLabel = document.getElementById('live-time-label');
     const title = document.getElementById('live-program-title');
     const description = document.getElementById('live-program-description');
-    if (!timeLabel || !title || !description) return;
+    const lineup = document.getElementById('live-program-lineup');
+    if (!timeLabel || !title || !description || !lineup) return;
     const isSameChannel = liveState.currentKey === channel.key;
 
     timeLabel.textContent = mode === 'manual' ? `${channel.label} • Manual` : channel.label;
     title.textContent = channel.title;
     description.textContent = channel.description;
+    if (Array.isArray(channel.episodes) && channel.episodes.length > 0) {
+        lineup.classList.remove('hidden');
+        lineup.innerHTML = `
+            <p class="live-program-lineup-label">New Cartoons</p>
+            <ul class="live-program-lineup-list">
+                ${channel.episodes.map((episode) => `<li>${episode}</li>`).join('')}
+            </ul>
+        `;
+    } else {
+        lineup.classList.add('hidden');
+        lineup.innerHTML = '';
+    }
     liveState.currentKey = channel.key;
 
     if (!isSameChannel || channel.theme === 'video') {
