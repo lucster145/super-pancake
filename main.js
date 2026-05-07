@@ -885,7 +885,7 @@ class WindowManager {
                     <h2>Live</h2>
                     <p id="live-time-label" class="live-time-label">Loading channel...</p>
                     <div class="live-header-actions">
-                        <button id="live-go-live" class="live-go-live-btn" aria-label="Start live loop">🔴 Go to Live</button>
+                        <button id="live-go-live" class="live-go-live-btn" aria-label="Switch to Live Now channel">🔴 Live Now</button>
                         <button id="live-guide-toggle" class="live-guide-toggle" aria-label="Toggle channel guide" aria-expanded="false">📺 Guide</button>
                     </div>
                 </div>
@@ -2203,14 +2203,15 @@ function updateLiveGoButton() {
     const goLiveBtn = document.getElementById('live-go-live');
     if (!goLiveBtn) return;
 
-    if (liveState.loopAllActive) {
-        goLiveBtn.textContent = '⏹ Stop Live';
+    const isLiveNowPinned = liveState.manualKey === 'live-now';
+    if (isLiveNowPinned) {
+        goLiveBtn.textContent = '⏹ Exit Live Now';
         goLiveBtn.classList.add('active');
-        goLiveBtn.setAttribute('aria-label', 'Stop live loop');
+        goLiveBtn.setAttribute('aria-label', 'Return to scheduled live channel');
     } else {
-        goLiveBtn.textContent = '🔴 Go to Live';
+        goLiveBtn.textContent = '🔴 Live Now';
         goLiveBtn.classList.remove('active');
-        goLiveBtn.setAttribute('aria-label', 'Start live loop');
+        goLiveBtn.setAttribute('aria-label', 'Switch to Live Now channel');
     }
 }
 
@@ -2243,12 +2244,20 @@ function startLiveLoop() {
 }
 
 function handleGoLiveClick() {
-    if (liveState.loopAllActive) {
-        stopLiveLoop();
+    stopLiveLoop();
+
+    if (liveState.manualKey === 'live-now') {
+        liveState.manualKey = '';
         updateLiveByTime();
         return;
     }
-    startLiveLoop();
+
+    const liveNowChannel = getLiveChannelByKey('live-now');
+    if (!liveNowChannel) return;
+
+    liveState.manualKey = 'live-now';
+    applyLiveSlot(liveNowChannel, 'manual');
+    updateLiveGoButton();
 }
 
 function updateLiveByTime() {
@@ -2260,11 +2269,13 @@ function updateLiveByTime() {
         const manualChannel = getLiveChannelByKey(liveState.manualKey);
         if (manualChannel) {
             applyLiveSlot(manualChannel, 'manual');
+            updateLiveGoButton();
             return;
         }
         liveState.manualKey = '';
     }
     applyLiveSlot(getLiveSlot(new Date()), 'auto');
+    updateLiveGoButton();
 }
 
 function handleLiveGuideClick(event) {
@@ -2280,11 +2291,13 @@ function handleLiveGuideClick(event) {
     if (liveState.manualKey === key) {
         liveState.manualKey = '';
         updateLiveByTime();
+        updateLiveGoButton();
         return;
     }
 
     liveState.manualKey = key;
     applyLiveSlot(channel, 'manual');
+    updateLiveGoButton();
 }
 
 function handleLiveGuideKeydown(event) {
