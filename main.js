@@ -1393,6 +1393,14 @@ const LIVE_CHANNELS = [
         channelNo: 'CH 016',
         theme: 'video',
         videoUrl: 'https://cdn.pixabay.com/vimeo/673860689/Timelapse%20Sky%20_%20Free%20Stock%20Video%20Footage%20HD-673860689.mp4'
+    },
+    {
+        key: 'garden',
+        label: 'Nature Garden Channel',
+        title: 'Blooming Sanctuary',
+        description: 'Animated garden with blooming flowers, trees, and wildlife.',
+        channelNo: 'CH 017',
+        theme: 'garden'
     }
 ];
 
@@ -1401,7 +1409,8 @@ const LIVE_SCHEDULE = [
     { key: 'morning', startHour: 6, endHour: 12 },
     { key: 'cartoon', startHour: 12, endHour: 18 },
     { key: 'evening', startHour: 18, endHour: 22 },
-    { key: 'night', startHour: 22, endHour: 24 }
+    { key: 'night', startHour: 22, endHour: 24 },
+    { key: 'garden', startHour: 8, endHour: 16 }
 ];
 
 function getLiveChannelByKey(key) {
@@ -1806,6 +1815,89 @@ function drawLiveFrame(channel, timeMs) {
             const y = h - amp - 30;
             ctx.fillStyle = i % 2 ? '#22d3ee' : '#f9a8d4';
             ctx.fillRect(x, y, barW, amp);
+        }
+    } else if (channel.theme === 'garden') {
+        const bg = ctx.createLinearGradient(0, 0, 0, h);
+        bg.addColorStop(0, '#87ceeb');
+        bg.addColorStop(1, '#90ee90');
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, w, h);
+
+        ctx.fillStyle = '#8b7355';
+        ctx.fillRect(0, h * 0.75, w, h * 0.25);
+
+        ctx.fillStyle = '#228b22';
+        for (let i = 0; i < 5; i += 1) {
+            const tx = w * (0.15 + i * 0.18);
+            const ty = h * 0.55;
+            ctx.fillRect(tx - 14, ty, 28, h * 0.2);
+            ctx.beginPath();
+            ctx.moveTo(tx, ty - 10);
+            ctx.lineTo(tx - 40, ty + 20);
+            ctx.lineTo(tx + 40, ty + 20);
+            ctx.closePath();
+            ctx.fill();
+        }
+
+        for (let i = 0; i < 8; i += 1) {
+            const flowerX = (w + 100 - ((t * 60) + i * 120) % (w + 100));
+            const flowerY = h * 0.72 + Math.sin(t * 2.5 + i) * 6;
+            ctx.fillStyle = i % 3 === 0 ? '#ff69b4' : (i % 3 === 1 ? '#ffb6c1' : '#ff1493');
+            for (let p = 0; p < 5; p += 1) {
+                const px = flowerX + Math.cos((Math.PI * 2 / 5) * p) * 10;
+                const py = flowerY + Math.sin((Math.PI * 2 / 5) * p) * 10;
+                ctx.beginPath();
+                ctx.arc(px, py, 4, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            ctx.fillStyle = '#ffff00';
+            ctx.beginPath();
+            ctx.arc(flowerX, flowerY, 3, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        for (let i = 0; i < 3; i += 1) {
+            const bx = (w - 200 + ((t * 40) + i * 180) % (w + 100)) - 40;
+            const by = h * 0.42 + Math.sin(t + i) * 8;
+            ctx.fillStyle = i % 2 ? '#8b4513' : '#a0522d';
+            ctx.beginPath();
+            ctx.arc(bx, by, 12, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = '#fff';
+            ctx.beginPath();
+            ctx.arc(bx - 4, by - 3, 3, 0, Math.PI * 2);
+            ctx.arc(bx + 4, by - 3, 3, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = '#000';
+            ctx.beginPath();
+            ctx.arc(bx - 4, by - 3, 1.5, 0, Math.PI * 2);
+            ctx.arc(bx + 4, by - 3, 1.5, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        ctx.fillStyle = '#ffcc00';
+        for (let i = 0; i < 4; i += 1) {
+            const bx = w * (0.25 + i * 0.2);
+            const by = h * 0.28 + Math.sin(t * 1.5 + i) * 12;
+            ctx.beginPath();
+            ctx.arc(bx, by, 8, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = '#ffa500';
+            ctx.beginPath();
+            ctx.arc(bx + 2, by - 2, 3, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = '#ffcc00';
+        }
+
+        ctx.fillStyle = '#228b22';
+        for (let i = 0; i < 3; i += 1) {
+            const sx = w * (0.2 + i * 0.3);
+            const sy = h * 0.68;
+            ctx.beginPath();
+            ctx.arc(sx - 8, sy, 6, 0, Math.PI * 2);
+            ctx.arc(sx, sy - 8, 6, 0, Math.PI * 2);
+            ctx.arc(sx + 8, sy, 6, 0, Math.PI * 2);
+            ctx.fill();
         }
     }
 
