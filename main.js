@@ -1401,6 +1401,14 @@ const LIVE_CHANNELS = [
         description: 'Animated garden with blooming flowers, trees, and wildlife.',
         channelNo: 'CH 017',
         theme: 'garden'
+    },
+    {
+        key: 'live-now',
+        label: 'Live Now',
+        title: 'Non-Stop Entertainment',
+        description: 'Ever-changing mix of cartoons, nature, ocean, neon cities, and more.',
+        channelNo: 'CH 018',
+        theme: 'live-now'
     }
 ];
 
@@ -1410,7 +1418,8 @@ const LIVE_SCHEDULE = [
     { key: 'cartoon', startHour: 12, endHour: 18 },
     { key: 'evening', startHour: 18, endHour: 22 },
     { key: 'night', startHour: 22, endHour: 24 },
-    { key: 'garden', startHour: 8, endHour: 16 }
+    { key: 'garden', startHour: 8, endHour: 16 },
+    { key: 'live-now', startHour: 7, endHour: 20 }
 ];
 
 function getLiveChannelByKey(key) {
@@ -1898,6 +1907,173 @@ function drawLiveFrame(channel, timeMs) {
             ctx.arc(sx, sy - 8, 6, 0, Math.PI * 2);
             ctx.arc(sx + 8, sy, 6, 0, Math.PI * 2);
             ctx.fill();
+        }
+    } else if (channel.theme === 'live-now') {
+        const cycleTime = Math.floor(t / 4) % 6;
+        const cycleT = t % 4;
+        const fadeAlpha = 1 - Math.max(0, Math.min(1, (cycleT - 3) * 2));
+
+        if (cycleTime === 0) {
+            const bg = ctx.createLinearGradient(0, 0, 0, h);
+            bg.addColorStop(0, '#93c5fd');
+            bg.addColorStop(1, '#fde68a');
+            ctx.fillStyle = bg;
+            ctx.fillRect(0, 0, w, h);
+
+            const bounce = Math.abs(Math.sin(cycleT * 2.2)) * 18;
+            const x = w * 0.5 + Math.sin(cycleT * 1.4) * (w * 0.22);
+            const y = h * 0.58 - bounce;
+
+            ctx.fillStyle = '#f97316';
+            net2RoundRect(ctx, x - 90, y - 55, 180, 110, 34);
+            ctx.fill();
+
+            ctx.fillStyle = '#fff7ed';
+            net2RoundRect(ctx, x - 65, y - 35, 130, 70, 26);
+            ctx.fill();
+
+            ctx.fillStyle = '#0f172a';
+            ctx.beginPath();
+            ctx.arc(x - 25, y - 5, 9, 0, Math.PI * 2);
+            ctx.arc(x + 25, y - 5, 9, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.strokeStyle = '#0f172a';
+            ctx.lineWidth = 5;
+            ctx.beginPath();
+            ctx.arc(x, y + 12, 20, 0.1, Math.PI - 0.1);
+            ctx.stroke();
+        } else if (cycleTime === 1) {
+            const bg = ctx.createLinearGradient(0, 0, 0, h);
+            bg.addColorStop(0, '#87ceeb');
+            bg.addColorStop(1, '#90ee90');
+            ctx.fillStyle = bg;
+            ctx.fillRect(0, 0, w, h);
+
+            ctx.fillStyle = '#8b7355';
+            ctx.fillRect(0, h * 0.75, w, h * 0.25);
+
+            ctx.fillStyle = '#228b22';
+            for (let i = 0; i < 5; i += 1) {
+                const tx = w * (0.15 + i * 0.18);
+                const ty = h * 0.55;
+                ctx.fillRect(tx - 14, ty, 28, h * 0.2);
+                ctx.beginPath();
+                ctx.moveTo(tx, ty - 10);
+                ctx.lineTo(tx - 40, ty + 20);
+                ctx.lineTo(tx + 40, ty + 20);
+                ctx.closePath();
+                ctx.fill();
+            }
+
+            for (let i = 0; i < 5; i += 1) {
+                const flowerX = (w + 100 - ((cycleT * 60) + i * 120) % (w + 100));
+                const flowerY = h * 0.72 + Math.sin(cycleT * 2.5 + i) * 6;
+                ctx.fillStyle = i % 3 === 0 ? '#ff69b4' : (i % 3 === 1 ? '#ffb6c1' : '#ff1493');
+                for (let p = 0; p < 5; p += 1) {
+                    const px = flowerX + Math.cos((Math.PI * 2 / 5) * p) * 10;
+                    const py = flowerY + Math.sin((Math.PI * 2 / 5) * p) * 10;
+                    ctx.beginPath();
+                    ctx.arc(px, py, 4, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+        } else if (cycleTime === 2) {
+            const bg = ctx.createLinearGradient(0, 0, 0, h);
+            bg.addColorStop(0, '#0ea5e9');
+            bg.addColorStop(1, '#1e3a8a');
+            ctx.fillStyle = bg;
+            ctx.fillRect(0, 0, w, h);
+
+            for (let i = 0; i < 5; i += 1) {
+                ctx.strokeStyle = `rgba(191, 219, 254, ${0.16 + (i * 0.05)})`;
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                for (let x = 0; x <= w; x += 12) {
+                    const y = h * 0.5 + i * 16 + Math.sin((x / 70) + cycleT * 2 + i) * 8;
+                    if (x === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                }
+                ctx.stroke();
+            }
+
+            for (let i = 0; i < 4; i += 1) {
+                const fx = (w + 120 - ((cycleT * 80) + i * 170) % (w + 120));
+                const fy = h * 0.35 + i * 30 + Math.sin(cycleT + i) * 12;
+                ctx.fillStyle = '#e0f2fe';
+                ctx.beginPath();
+                ctx.ellipse(fx, fy, 16, 8, 0, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        } else if (cycleTime === 3) {
+            const bg = ctx.createLinearGradient(0, 0, 0, h);
+            bg.addColorStop(0, '#020617');
+            bg.addColorStop(1, '#1d4ed8');
+            ctx.fillStyle = bg;
+            ctx.fillRect(0, 0, w, h);
+
+            ctx.strokeStyle = 'rgba(56,189,248,0.8)';
+            ctx.lineWidth = 2;
+            for (let i = 0; i < 14; i += 1) {
+                ctx.beginPath();
+                for (let x = 0; x <= w; x += 14) {
+                    const y = h * 0.62 + i * 14 + Math.sin((x / 80) + cycleT * 1.8 + i) * 8;
+                    if (x === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                }
+                ctx.stroke();
+            }
+
+            const laneOffset = (cycleT * 240) % h;
+            ctx.fillStyle = '#f472b6';
+            ctx.beginPath();
+            ctx.moveTo(w * 0.5 - 70, h);
+            ctx.lineTo(w * 0.5 - 10, h - laneOffset);
+            ctx.lineTo(w * 0.5 + 10, h - laneOffset);
+            ctx.lineTo(w * 0.5 + 70, h);
+            ctx.closePath();
+            ctx.fill();
+        } else if (cycleTime === 4) {
+            const bg = ctx.createLinearGradient(0, 0, 0, h);
+            bg.addColorStop(0, '#fb923c');
+            bg.addColorStop(1, '#7c3aed');
+            ctx.fillStyle = bg;
+            ctx.fillRect(0, 0, w, h);
+
+            ctx.fillStyle = '#0f172a';
+            const blockW = w / 9;
+            for (let i = 0; i < 10; i += 1) {
+                const bh = h * (0.2 + ((i * 7) % 6) * 0.08);
+                const bx = i * blockW - 8;
+                const by = h - bh;
+                ctx.fillRect(bx, by, blockW, bh);
+
+                for (let row = 0; row < 4; row += 1) {
+                    for (let col = 0; col < 2; col += 1) {
+                        if (((i + row + col + Math.floor(cycleT * 2)) % 3) === 0) {
+                            ctx.fillStyle = '#fde68a';
+                            ctx.fillRect(bx + 8 + col * 16, by + 10 + row * 18, 8, 10);
+                            ctx.fillStyle = '#0f172a';
+                        }
+                    }
+                }
+            }
+        } else if (cycleTime === 5) {
+            const bg = ctx.createLinearGradient(0, 0, w, h);
+            bg.addColorStop(0, '#1e1b4b');
+            bg.addColorStop(1, '#be185d');
+            ctx.fillStyle = bg;
+            ctx.fillRect(0, 0, w, h);
+
+            const bars = 26;
+            const barW = w / (bars * 1.5);
+            for (let i = 0; i < bars; i += 1) {
+                const x = 20 + i * (barW * 1.4);
+                const amp = (0.25 + Math.abs(Math.sin(cycleT * 2.2 + i * 0.3)) * 0.7) * h * 0.55;
+                const y = h - amp - 30;
+                ctx.fillStyle = i % 2 ? '#22d3ee' : '#f9a8d4';
+                ctx.fillRect(x, y, barW, amp);
+            }
         }
     }
 
