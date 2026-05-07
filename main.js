@@ -886,7 +886,7 @@ class WindowManager {
                     <p id="live-time-label" class="live-time-label">Loading channel...</p>
                 </div>
                 <div class="live-video-wrap">
-                    <video id="live-video" class="live-video" autoplay muted loop playsinline preload="metadata"></video>
+                    <canvas id="live-canvas" class="live-canvas" width="960" height="540" aria-label="Live channel animation"></canvas>
                     <div class="live-overlay">
                         <span class="live-dot" aria-hidden="true"></span>
                         <span>LIVE</span>
@@ -896,6 +896,7 @@ class WindowManager {
                     <h3 id="live-program-title">Loading program...</h3>
                     <p id="live-program-description">Building the right stream for your local time.</p>
                 </div>
+                <div class="live-guide" id="live-guide" aria-label="Live channel guide"></div>
             </div>
         `;
     }
@@ -1249,98 +1250,594 @@ window.addEventListener('offline', updateInternetStatus);
 const liveState = {
     timerId: null,
     tickBound: null,
-    currentKey: ''
+    animationId: null,
+    animationStart: 0,
+    currentKey: '',
+    manualKey: '',
+    guideClickBound: null
 };
 
-const LIVE_SCHEDULE = [
+const LIVE_CHANNELS = [
     {
         key: 'late-night',
-        startHour: 0,
-        endHour: 6,
         label: 'Late Night Channel',
-        title: 'Midnight Calm',
-        description: 'Quiet visuals and slower pacing while the world sleeps.',
-        video: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4'
+        title: 'Moon Drift',
+        description: 'Slow stars, moon glow, and drifting cloud bands for deep-night watching.',
+        channelNo: 'CH 001',
+        theme: 'starfield'
     },
     {
         key: 'morning',
-        startHour: 6,
-        endHour: 12,
         label: 'Morning Channel',
-        title: 'Sunrise Energy',
-        description: 'Bright scenes and a fresh start for the day ahead.',
-        video: 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4'
+        title: 'Sunrise Garden',
+        description: 'Original hand-drawn hills, birds, and warm daylight motion.',
+        channelNo: 'CH 002',
+        theme: 'sunrise'
     },
     {
-        key: 'afternoon',
-        startHour: 12,
-        endHour: 18,
-        label: 'Afternoon Channel',
-        title: 'Daylight Focus',
-        description: 'Steady, active visuals made for prime daytime hours.',
-        video: 'https://storage.googleapis.com/coverr-main/mp4/Mt_Baker.mp4'
+        key: 'cartoon',
+        label: 'Cartoon Channel',
+        title: 'Pancake Pals Cartoons',
+        description: 'Original cartoon loop with playful characters and slapstick gags.',
+        channelNo: 'CH 003',
+        theme: 'cartoon'
     },
     {
         key: 'evening',
-        startHour: 18,
-        endHour: 22,
         label: 'Evening Channel',
-        title: 'Golden Hour Live',
-        description: 'Warm tones and relaxed motion for end-of-day watching.',
-        video: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
+        title: 'Golden Streets',
+        description: 'City silhouettes, neon windows, and sunset gradients in motion.',
+        channelNo: 'CH 004',
+        theme: 'city'
     },
     {
         key: 'night',
-        startHour: 22,
-        endHour: 24,
         label: 'Night Channel',
-        title: 'After Hours Stream',
-        description: 'Deeper visuals that carry into late-night mode.',
-        video: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4'
+        title: 'Neon Night Drive',
+        description: 'Original synth-style night visuals and horizon glow.',
+        channelNo: 'CH 005',
+        theme: 'neon-drive'
+    },
+    {
+        key: 'ocean',
+        label: 'Ocean Channel',
+        title: 'Blue Current',
+        description: 'Rolling wave bands, fish silhouettes, and drifting foam.',
+        channelNo: 'CH 006',
+        theme: 'ocean'
+    },
+    {
+        key: 'sports',
+        label: 'Sports Channel',
+        title: 'Stadium Sprint',
+        description: 'Arcade-style field action with moving players and score lights.',
+        channelNo: 'CH 007',
+        theme: 'sports'
+    },
+    {
+        key: 'news',
+        label: 'News Channel',
+        title: 'City Desk Live',
+        description: 'Breaking ticker, studio lights, and animated lower-third updates.',
+        channelNo: 'CH 008',
+        theme: 'news'
+    },
+    {
+        key: 'nature',
+        label: 'Nature Channel',
+        title: 'Forest Falls',
+        description: 'Hand-drawn mountains and a looping waterfall scene.',
+        channelNo: 'CH 009',
+        theme: 'nature'
+    },
+    {
+        key: 'arcade',
+        label: 'Arcade Channel',
+        title: 'Pixel Arena',
+        description: 'Retro grid pulses and old-school sprite movement.',
+        channelNo: 'CH 010',
+        theme: 'arcade'
+    },
+    {
+        key: 'science',
+        label: 'Science Channel',
+        title: 'Lab Motion',
+        description: 'Molecule orbits, data pulses, and animated lab visuals.',
+        channelNo: 'CH 011',
+        theme: 'science'
+    },
+    {
+        key: 'music',
+        label: 'Music Channel',
+        title: 'Beat Room',
+        description: 'Reactive equalizer bars and waveform-inspired motion.',
+        channelNo: 'CH 012',
+        theme: 'music'
     }
 ];
 
-function getLiveSlot(date = new Date()) {
-    const hour = date.getHours();
-    return LIVE_SCHEDULE.find((slot) => hour >= slot.startHour && hour < slot.endHour) || LIVE_SCHEDULE[0];
+const LIVE_SCHEDULE = [
+    { key: 'late-night', startHour: 0, endHour: 6 },
+    { key: 'morning', startHour: 6, endHour: 12 },
+    { key: 'cartoon', startHour: 12, endHour: 18 },
+    { key: 'evening', startHour: 18, endHour: 22 },
+    { key: 'night', startHour: 22, endHour: 24 }
+];
+
+function getLiveChannelByKey(key) {
+    return LIVE_CHANNELS.find((channel) => channel.key === key) || null;
 }
 
-function applyLiveSlot(slot) {
-    const video = document.getElementById('live-video');
+function getLiveSlot(date = new Date()) {
+    const hour = date.getHours();
+    const schedule = LIVE_SCHEDULE.find((slot) => hour >= slot.startHour && hour < slot.endHour) || LIVE_SCHEDULE[0];
+    return getLiveChannelByKey(schedule.key) || LIVE_CHANNELS[0];
+}
+
+function formatLiveHour(hour) {
+    const normalized = hour % 24;
+    const suffix = normalized >= 12 ? 'PM' : 'AM';
+    const display = normalized % 12 || 12;
+    return `${display}${suffix}`;
+}
+
+function getLiveTimeRange(key) {
+    const slot = LIVE_SCHEDULE.find((entry) => entry.key === key);
+    if (!slot) return 'Any Time';
+    return `${formatLiveHour(slot.startHour)} - ${formatLiveHour(slot.endHour)}`;
+}
+
+function renderLiveGuide(activeKey, manualKey) {
+    const guide = document.getElementById('live-guide');
+    if (!guide) return;
+
+    guide.innerHTML = LIVE_CHANNELS.map((channel) => {
+        const activeClass = channel.key === activeKey ? ' active' : '';
+        const manualClass = channel.key === manualKey ? ' manual' : '';
+        const timeRange = getLiveTimeRange(channel.key);
+        return `
+            <div class="live-guide-item${activeClass}${manualClass}" data-key="${channel.key}" role="button" tabindex="0" aria-label="Switch to ${channel.label}">
+                <div class="live-guide-top">
+                    <span class="live-guide-number">${channel.channelNo}</span>
+                    <span class="live-guide-label">${channel.label}</span>
+                    <span class="live-guide-time">${timeRange}</span>
+                </div>
+                <div class="live-guide-title">${channel.title}</div>
+            </div>
+        `;
+    }).join('');
+}
+
+function drawLiveFrame(channel, timeMs) {
+    const canvas = document.getElementById('live-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const w = Math.max(640, Math.floor(canvas.clientWidth || canvas.width));
+    const h = Math.max(320, Math.floor(canvas.clientHeight || canvas.height));
+    if (canvas.width !== w || canvas.height !== h) {
+        canvas.width = w;
+        canvas.height = h;
+    }
+
+    const t = (timeMs - liveState.animationStart) / 1000;
+
+    if (channel.theme === 'starfield') {
+        const bg = ctx.createLinearGradient(0, 0, 0, h);
+        bg.addColorStop(0, '#020617');
+        bg.addColorStop(1, '#111827');
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, w, h);
+
+        ctx.fillStyle = '#f8fafc';
+        for (let i = 0; i < 45; i += 1) {
+            const x = (i * 77 + t * 7) % w;
+            const y = (i * 53) % (h * 0.75);
+            const r = 0.7 + ((i * 3) % 4) * 0.3;
+            ctx.globalAlpha = 0.4 + 0.4 * Math.sin(t * 1.5 + i);
+            ctx.beginPath();
+            ctx.arc(x, y, r, 0, Math.PI * 2);
+            ctx.fill();
+        }
+        ctx.globalAlpha = 1;
+
+        ctx.fillStyle = '#fef08a';
+        ctx.beginPath();
+        ctx.arc(w * 0.78, h * 0.22, h * 0.1, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = 'rgba(255,255,255,0.14)';
+        ctx.fillRect(0, h * 0.78, w, h * 0.22);
+    } else if (channel.theme === 'sunrise') {
+        const bg = ctx.createLinearGradient(0, 0, 0, h);
+        bg.addColorStop(0, '#fde68a');
+        bg.addColorStop(1, '#86efac');
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, w, h);
+
+        ctx.fillStyle = '#fbbf24';
+        ctx.beginPath();
+        ctx.arc(w * 0.18, h * 0.28, h * 0.11, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#22c55e';
+        ctx.beginPath();
+        ctx.moveTo(0, h);
+        ctx.quadraticCurveTo(w * 0.25, h * 0.58, w * 0.5, h * 0.78);
+        ctx.quadraticCurveTo(w * 0.76, h * 0.94, w, h * 0.7);
+        ctx.lineTo(w, h);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.strokeStyle = '#1f2937';
+        ctx.lineWidth = 3;
+        for (let i = 0; i < 4; i += 1) {
+            const bx = (w * 0.2) + i * (w * 0.18) + Math.sin(t + i) * 14;
+            const by = h * 0.28 + Math.cos(t * 2 + i) * 9;
+            ctx.beginPath();
+            ctx.arc(bx, by, 8, 0, Math.PI, true);
+            ctx.stroke();
+        }
+    } else if (channel.theme === 'cartoon') {
+        const bg = ctx.createLinearGradient(0, 0, 0, h);
+        bg.addColorStop(0, '#93c5fd');
+        bg.addColorStop(1, '#fde68a');
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, w, h);
+
+        const bounce = Math.abs(Math.sin(t * 2.2)) * 18;
+        const x = w * 0.5 + Math.sin(t * 1.4) * (w * 0.22);
+        const y = h * 0.58 - bounce;
+
+        ctx.fillStyle = '#f97316';
+        net2RoundRect(ctx, x - 90, y - 55, 180, 110, 34);
+        ctx.fill();
+
+        ctx.fillStyle = '#fff7ed';
+        net2RoundRect(ctx, x - 65, y - 35, 130, 70, 26);
+        ctx.fill();
+
+        ctx.fillStyle = '#0f172a';
+        ctx.beginPath();
+        ctx.arc(x - 25, y - 5, 9, 0, Math.PI * 2);
+        ctx.arc(x + 25, y - 5, 9, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.strokeStyle = '#0f172a';
+        ctx.lineWidth = 5;
+        ctx.beginPath();
+        ctx.arc(x, y + 12, 20, 0.1, Math.PI - 0.1);
+        ctx.stroke();
+
+        ctx.fillStyle = '#ef4444';
+        ctx.fillRect(0, h * 0.84, w, h * 0.16);
+        for (let i = 0; i < 7; i += 1) {
+            const bx = ((t * 90) + i * 130) % (w + 80) - 40;
+            ctx.fillStyle = i % 2 ? '#22c55e' : '#3b82f6';
+            ctx.beginPath();
+            ctx.arc(bx, h * 0.89, 14, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    } else if (channel.theme === 'city') {
+        const bg = ctx.createLinearGradient(0, 0, 0, h);
+        bg.addColorStop(0, '#fb923c');
+        bg.addColorStop(1, '#7c3aed');
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, w, h);
+
+        ctx.fillStyle = 'rgba(255,255,255,0.15)';
+        ctx.beginPath();
+        ctx.arc(w * 0.76, h * 0.28, h * 0.11, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#0f172a';
+        const blockW = w / 9;
+        for (let i = 0; i < 10; i += 1) {
+            const bh = h * (0.2 + ((i * 7) % 6) * 0.08);
+            const bx = i * blockW - 8;
+            const by = h - bh;
+            ctx.fillRect(bx, by, blockW, bh);
+
+            for (let row = 0; row < 4; row += 1) {
+                for (let col = 0; col < 2; col += 1) {
+                    if (((i + row + col + Math.floor(t * 2)) % 3) === 0) {
+                        ctx.fillStyle = '#fde68a';
+                        ctx.fillRect(bx + 8 + col * 16, by + 10 + row * 18, 8, 10);
+                        ctx.fillStyle = '#0f172a';
+                    }
+                }
+            }
+        }
+    } else if (channel.theme === 'neon-drive') {
+        const bg = ctx.createLinearGradient(0, 0, 0, h);
+        bg.addColorStop(0, '#020617');
+        bg.addColorStop(1, '#1d4ed8');
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, w, h);
+
+        ctx.strokeStyle = 'rgba(56,189,248,0.8)';
+        ctx.lineWidth = 2;
+        for (let i = 0; i < 14; i += 1) {
+            ctx.beginPath();
+            for (let x = 0; x <= w; x += 14) {
+                const y = h * 0.62 + i * 14 + Math.sin((x / 80) + t * 1.8 + i) * 8;
+                if (x === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+        }
+
+        const laneOffset = (t * 240) % h;
+        ctx.fillStyle = '#f472b6';
+        ctx.beginPath();
+        ctx.moveTo(w * 0.5 - 70, h);
+        ctx.lineTo(w * 0.5 - 10, h - laneOffset);
+        ctx.lineTo(w * 0.5 + 10, h - laneOffset);
+        ctx.lineTo(w * 0.5 + 70, h);
+        ctx.closePath();
+        ctx.fill();
+    } else if (channel.theme === 'ocean') {
+        const bg = ctx.createLinearGradient(0, 0, 0, h);
+        bg.addColorStop(0, '#0ea5e9');
+        bg.addColorStop(1, '#1e3a8a');
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, w, h);
+
+        for (let i = 0; i < 8; i += 1) {
+            ctx.strokeStyle = `rgba(191, 219, 254, ${0.16 + (i * 0.05)})`;
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            for (let x = 0; x <= w; x += 12) {
+                const y = h * 0.5 + i * 16 + Math.sin((x / 70) + t * 2 + i) * 8;
+                if (x === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+        }
+
+        for (let i = 0; i < 6; i += 1) {
+            const fx = (w + 120 - ((t * 80) + i * 170) % (w + 120));
+            const fy = h * 0.35 + i * 30 + Math.sin(t + i) * 12;
+            ctx.fillStyle = '#e0f2fe';
+            ctx.beginPath();
+            ctx.ellipse(fx, fy, 16, 8, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.moveTo(fx - 16, fy);
+            ctx.lineTo(fx - 26, fy - 7);
+            ctx.lineTo(fx - 26, fy + 7);
+            ctx.closePath();
+            ctx.fill();
+        }
+    } else if (channel.theme === 'sports') {
+        ctx.fillStyle = '#16a34a';
+        ctx.fillRect(0, 0, w, h);
+        ctx.strokeStyle = '#dcfce7';
+        ctx.lineWidth = 3;
+        ctx.strokeRect(30, 30, w - 60, h - 60);
+        ctx.beginPath();
+        ctx.moveTo(w * 0.5, 30);
+        ctx.lineTo(w * 0.5, h - 30);
+        ctx.stroke();
+
+        for (let i = 0; i < 7; i += 1) {
+            const px = 80 + i * ((w - 160) / 6);
+            const py = h * 0.35 + Math.sin(t * 2 + i) * 28;
+            ctx.fillStyle = i % 2 ? '#2563eb' : '#ef4444';
+            ctx.beginPath();
+            ctx.arc(px, py, 12, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        const ballX = 80 + ((t * 180) % (w - 160));
+        const ballY = h * 0.65 + Math.sin(t * 4) * 20;
+        ctx.fillStyle = '#fef08a';
+        ctx.beginPath();
+        ctx.arc(ballX, ballY, 8, 0, Math.PI * 2);
+        ctx.fill();
+    } else if (channel.theme === 'news') {
+        const bg = ctx.createLinearGradient(0, 0, w, h);
+        bg.addColorStop(0, '#0f172a');
+        bg.addColorStop(1, '#1e3a8a');
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, w, h);
+
+        ctx.fillStyle = '#cbd5e1';
+        net2RoundRect(ctx, w * 0.12, h * 0.22, w * 0.76, h * 0.45, 12);
+        ctx.fill();
+        ctx.fillStyle = '#1e293b';
+        net2RoundRect(ctx, w * 0.2, h * 0.6, w * 0.6, h * 0.22, 8);
+        ctx.fill();
+
+        const ticker = 'BREAKING: Super Pancake Live adds 12 original channels • No external videos •';
+        const offset = (t * 140) % (w + 480);
+        ctx.fillStyle = '#ef4444';
+        ctx.fillRect(0, h - 46, w, 46);
+        ctx.fillStyle = '#fff';
+        ctx.font = 'bold 18px Arial';
+        ctx.fillText(ticker, w - offset, h - 16);
+        ctx.fillText(ticker, w - offset + w + 420, h - 16);
+    } else if (channel.theme === 'nature') {
+        const bg = ctx.createLinearGradient(0, 0, 0, h);
+        bg.addColorStop(0, '#bae6fd');
+        bg.addColorStop(1, '#86efac');
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, w, h);
+
+        ctx.fillStyle = '#166534';
+        ctx.beginPath();
+        ctx.moveTo(0, h);
+        ctx.lineTo(w * 0.2, h * 0.45);
+        ctx.lineTo(w * 0.45, h);
+        ctx.closePath();
+        ctx.fill();
+        ctx.beginPath();
+        ctx.moveTo(w * 0.35, h);
+        ctx.lineTo(w * 0.62, h * 0.38);
+        ctx.lineTo(w * 0.9, h);
+        ctx.closePath();
+        ctx.fill();
+
+        const fallX = w * 0.55;
+        ctx.fillStyle = 'rgba(224, 242, 254, 0.8)';
+        for (let i = 0; i < 7; i += 1) {
+            const wx = fallX + Math.sin(t * 3 + i) * 6;
+            ctx.fillRect(wx, h * 0.28, 6, h * 0.56);
+        }
+    } else if (channel.theme === 'arcade') {
+        const bg = ctx.createLinearGradient(0, 0, 0, h);
+        bg.addColorStop(0, '#020617');
+        bg.addColorStop(1, '#111827');
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, w, h);
+
+        ctx.strokeStyle = 'rgba(34,211,238,0.45)';
+        ctx.lineWidth = 1;
+        for (let x = 0; x <= w; x += 40) {
+            ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
+        }
+        for (let y = 0; y <= h; y += 40) {
+            ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+        }
+
+        for (let i = 0; i < 18; i += 1) {
+            const sx = ((i * 90) + t * 120) % (w + 50) - 25;
+            const sy = 40 + (i * 27) % (h - 80);
+            ctx.fillStyle = i % 2 ? '#f472b6' : '#22d3ee';
+            ctx.fillRect(sx, sy, 16, 16);
+        }
+    } else if (channel.theme === 'science') {
+        ctx.fillStyle = '#0f172a';
+        ctx.fillRect(0, 0, w, h);
+
+        const cx = w * 0.5;
+        const cy = h * 0.5;
+        ctx.fillStyle = '#22d3ee';
+        ctx.beginPath();
+        ctx.arc(cx, cy, 18, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.strokeStyle = 'rgba(125,211,252,0.8)';
+        ctx.lineWidth = 2;
+        for (let i = 0; i < 4; i += 1) {
+            ctx.beginPath();
+            ctx.ellipse(cx, cy, 90 + i * 26, 24 + i * 14, (Math.PI / 4) * i, 0, Math.PI * 2);
+            ctx.stroke();
+            const ex = cx + Math.cos(t * (1 + i * 0.3) + i) * (90 + i * 26);
+            const ey = cy + Math.sin(t * (1 + i * 0.3) + i) * (24 + i * 14);
+            ctx.fillStyle = '#e879f9';
+            ctx.beginPath();
+            ctx.arc(ex, ey, 5, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    } else if (channel.theme === 'music') {
+        const bg = ctx.createLinearGradient(0, 0, w, h);
+        bg.addColorStop(0, '#1e1b4b');
+        bg.addColorStop(1, '#be185d');
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, w, h);
+
+        const bars = 26;
+        const barW = w / (bars * 1.5);
+        for (let i = 0; i < bars; i += 1) {
+            const x = 20 + i * (barW * 1.4);
+            const amp = (0.25 + Math.abs(Math.sin(t * 2.2 + i * 0.3)) * 0.7) * h * 0.55;
+            const y = h - amp - 30;
+            ctx.fillStyle = i % 2 ? '#22d3ee' : '#f9a8d4';
+            ctx.fillRect(x, y, barW, amp);
+        }
+    }
+
+    ctx.fillStyle = 'rgba(4, 12, 20, 0.45)';
+    ctx.fillRect(12, 12, 220, 34);
+    ctx.fillStyle = '#ecfeff';
+    ctx.font = 'bold 14px Arial';
+    ctx.fillText(channel.channelNo, 24, 35);
+    ctx.fillText(channel.label.toUpperCase(), 90, 35);
+}
+
+function applyLiveSlot(channel, mode = 'auto') {
     const timeLabel = document.getElementById('live-time-label');
     const title = document.getElementById('live-program-title');
     const description = document.getElementById('live-program-description');
-    if (!video || !timeLabel || !title || !description) return;
+    if (!timeLabel || !title || !description) return;
 
-    timeLabel.textContent = slot.label;
-    title.textContent = slot.title;
-    description.textContent = slot.description;
-
-    if (liveState.currentKey !== slot.key || video.src !== slot.video) {
-        liveState.currentKey = slot.key;
-        video.src = slot.video;
-        video.load();
-    }
-
-    video.muted = true;
-    video.play().catch(() => {
-        // If autoplay is blocked, keep retrying on next timer tick.
-    });
+    timeLabel.textContent = mode === 'manual' ? `${channel.label} • Manual` : channel.label;
+    title.textContent = channel.title;
+    description.textContent = channel.description;
+    liveState.currentKey = channel.key;
+    renderLiveGuide(channel.key, liveState.manualKey);
 }
 
 function updateLiveByTime() {
-    applyLiveSlot(getLiveSlot(new Date()));
+    if (liveState.manualKey) {
+        const manualChannel = getLiveChannelByKey(liveState.manualKey);
+        if (manualChannel) {
+            applyLiveSlot(manualChannel, 'manual');
+            return;
+        }
+        liveState.manualKey = '';
+    }
+    applyLiveSlot(getLiveSlot(new Date()), 'auto');
+}
+
+function handleLiveGuideClick(event) {
+    const target = event.target.closest('.live-guide-item');
+    if (!target) return;
+
+    const key = target.dataset.key;
+    const channel = getLiveChannelByKey(key);
+    if (!channel) return;
+
+    if (liveState.manualKey === key) {
+        liveState.manualKey = '';
+        updateLiveByTime();
+        return;
+    }
+
+    liveState.manualKey = key;
+    applyLiveSlot(channel, 'manual');
+}
+
+function animateLive(now) {
+    if (!liveState.animationStart) {
+        liveState.animationStart = now;
+    }
+
+    const channel = getLiveChannelByKey(liveState.currentKey) || getLiveSlot(new Date());
+    drawLiveFrame(channel, now);
+    liveState.animationId = requestAnimationFrame(animateLive);
 }
 
 function initLive() {
     cleanupLive();
+
     liveState.tickBound = updateLiveByTime;
+    liveState.guideClickBound = handleLiveGuideClick;
+
     updateLiveByTime();
+    liveState.animationId = requestAnimationFrame(animateLive);
     liveState.timerId = setInterval(liveState.tickBound, 30000);
+
+    const guide = document.getElementById('live-guide');
+    if (guide) {
+        guide.addEventListener('click', liveState.guideClickBound);
+    }
+
     document.addEventListener('visibilitychange', liveState.tickBound);
 }
 
 function cleanupLive() {
+    const guide = document.getElementById('live-guide');
+    if (guide && liveState.guideClickBound) {
+        guide.removeEventListener('click', liveState.guideClickBound);
+    }
+
+    if (liveState.animationId) {
+        cancelAnimationFrame(liveState.animationId);
+        liveState.animationId = null;
+    }
+
     if (liveState.timerId) {
         clearInterval(liveState.timerId);
         liveState.timerId = null;
@@ -1349,7 +1846,10 @@ function cleanupLive() {
         document.removeEventListener('visibilitychange', liveState.tickBound);
         liveState.tickBound = null;
     }
+    liveState.animationStart = 0;
     liveState.currentKey = '';
+    liveState.manualKey = '';
+    liveState.guideClickBound = null;
 }
 
 // ===== REC APP =====

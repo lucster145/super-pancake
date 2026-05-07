@@ -2972,11 +2972,15 @@ html {
     background: #031a19;
 }
 
-.live-video {
+.live-video,
+.live-canvas {
     width: 100%;
     height: 100%;
-    object-fit: cover;
     display: block;
+}
+
+.live-canvas {
+    background: #031a19;
 }
 
 .live-overlay {
@@ -3013,6 +3017,71 @@ html {
     font-size: 14px;
 }
 
+.live-guide {
+    border: 1px solid rgba(236, 254, 255, 0.28);
+    border-radius: 12px;
+    background: rgba(3, 26, 25, 0.45);
+    padding: 8px;
+    display: grid;
+    gap: 6px;
+    max-height: 170px;
+    overflow-y: auto;
+}
+
+.live-guide-item {
+    border: 1px solid rgba(236, 254, 255, 0.14);
+    border-radius: 10px;
+    padding: 7px 9px;
+    background: rgba(7, 20, 22, 0.35);
+    cursor: pointer;
+    transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+}
+
+.live-guide-item:hover {
+    border-color: rgba(165, 243, 252, 0.65);
+    background: rgba(7, 20, 22, 0.6);
+    transform: translateY(-1px);
+}
+
+.live-guide-item.active {
+    border-color: rgba(45, 212, 191, 0.8);
+    box-shadow: inset 0 0 0 1px rgba(45, 212, 191, 0.35);
+}
+
+.live-guide-item.manual {
+    border-color: rgba(253, 224, 71, 0.95);
+    box-shadow: inset 0 0 0 1px rgba(250, 204, 21, 0.45);
+}
+
+.live-guide-top {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    font-size: 12px;
+}
+
+.live-guide-number {
+    color: #99f6e4;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+}
+
+.live-guide-label {
+    color: #ecfeff;
+    font-weight: 600;
+}
+
+.live-guide-time {
+    margin-left: auto;
+    color: rgba(236, 254, 255, 0.82);
+}
+
+.live-guide-title {
+    margin-top: 4px;
+    color: rgba(236, 254, 255, 0.9);
+    font-size: 12px;
+}
+
 @media (max-width: 700px) {
     .live-app {
         padding: 10px;
@@ -3025,5 +3094,9 @@ html {
 
     .live-video-wrap {
         min-height: 190px;
+    }
+
+    .live-guide {
+        max-height: 150px;
     }
 }
