@@ -1259,7 +1259,11 @@ const liveState = {
     guideClickBound: null,
     guideKeydownBound: null,
     guideToggleBound: null,
-    guideOpen: false
+    guideOpen: false,
+    videoReadyBound: null,
+    videoErrorBound: null,
+    videoProbeTimeoutId: null,
+    usingVideoFallback: false
 };
 
 const LIVE_CHANNELS = [
@@ -1366,6 +1370,7 @@ const LIVE_CHANNELS = [
         description: 'Real nature footage with birds, deer, and forest life.',
         channelNo: 'CH 013',
         theme: 'video',
+        fallbackTheme: 'nature',
         videoUrl: 'https://cdn.pixabay.com/vimeo/732275425/Wildlife%20Nature%20_%20Free%20Stock%20Video%20Footage%20HD-732275425.mp4'
     },
     {
@@ -1375,6 +1380,7 @@ const LIVE_CHANNELS = [
         description: 'Scenic landscapes from mountains, beaches, and cities.',
         channelNo: 'CH 014',
         theme: 'video',
+        fallbackTheme: 'city',
         videoUrl: 'https://videos.pexels.com/video-files/3571026/3571026-hd_1920_1080_24fps.mp4'
     },
     {
@@ -1384,6 +1390,7 @@ const LIVE_CHANNELS = [
         description: 'Food preparation and cooking in real-time.',
         channelNo: 'CH 015',
         theme: 'video',
+        fallbackTheme: 'cartoon',
         videoUrl: 'https://videos.pexels.com/video-files/7974087/7974087-hd_1920_1080_24fps.mp4'
     },
     {
@@ -1393,6 +1400,7 @@ const LIVE_CHANNELS = [
         description: 'Time-lapse clouds, sky phenomena, and weather patterns.',
         channelNo: 'CH 016',
         theme: 'video',
+        fallbackTheme: 'starfield',
         videoUrl: 'https://cdn.pixabay.com/vimeo/673860689/Timelapse%20Sky%20_%20Free%20Stock%20Video%20Footage%20HD-673860689.mp4'
     },
     {
@@ -1482,18 +1490,70 @@ function showLiveVideo(channel) {
 
     if (channel.videoUrl) {
         const currentSrc = video.getAttribute('src') || '';
-        canvas.classList.add('hidden');
+        liveState.usingVideoFallback = false;
+        canvas.classList.remove('hidden');
         if (currentSrc !== channel.videoUrl) {
             video.src = channel.videoUrl;
+            video.load();
         }
-        video.classList.remove('hidden');
+        video.classList.add('hidden');
+        if (liveState.videoProbeTimeoutId) {
+            clearTimeout(liveState.videoProbeTimeoutId);
+        }
+        liveState.videoProbeTimeoutId = setTimeout(() => {
+            if (liveState.currentKey === channel.key && video.readyState < 2) {
+                handleLiveVideoError();
+            }
+        }, 2000);
         video.play().catch(() => {});
     } else {
+        liveState.usingVideoFallback = false;
         video.classList.add('hidden');
         canvas.classList.remove('hidden');
         video.pause();
         video.src = '';
     }
+}
+
+function getLiveRenderTheme(channel) {
+    if (!channel) return '';
+    if (channel.theme === 'video' && liveState.usingVideoFallback) {
+        return channel.fallbackTheme || 'nature';
+    }
+    return channel.theme;
+}
+
+function handleLiveVideoReady() {
+    const video = document.getElementById('live-video');
+    const canvas = document.getElementById('live-canvas');
+    const channel = getLiveChannelByKey(liveState.currentKey);
+    if (!video || !canvas || !channel || channel.theme !== 'video') return;
+
+    if (liveState.videoProbeTimeoutId) {
+        clearTimeout(liveState.videoProbeTimeoutId);
+        liveState.videoProbeTimeoutId = null;
+    }
+
+    liveState.usingVideoFallback = false;
+    canvas.classList.add('hidden');
+    video.classList.remove('hidden');
+}
+
+function handleLiveVideoError() {
+    const video = document.getElementById('live-video');
+    const canvas = document.getElementById('live-canvas');
+    const channel = getLiveChannelByKey(liveState.currentKey);
+    if (!video || !canvas || !channel || channel.theme !== 'video') return;
+
+    if (liveState.videoProbeTimeoutId) {
+        clearTimeout(liveState.videoProbeTimeoutId);
+        liveState.videoProbeTimeoutId = null;
+    }
+
+    liveState.usingVideoFallback = true;
+    video.pause();
+    video.classList.add('hidden');
+    canvas.classList.remove('hidden');
 }
 
 function drawLiveFrame(channel, timeMs) {
@@ -1502,7 +1562,8 @@ function drawLiveFrame(channel, timeMs) {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    if (channel.theme === 'video') return;
+    const theme = getLiveRenderTheme(channel);
+    if (theme === 'video') return;
 
     const w = Math.max(640, Math.floor(canvas.clientWidth || canvas.width));
     const h = Math.max(320, Math.floor(canvas.clientHeight || canvas.height));
@@ -1513,7 +1574,7 @@ function drawLiveFrame(channel, timeMs) {
 
     const t = (timeMs - liveState.animationStart) / 1000;
 
-    if (channel.theme === 'starfield') {
+    if (theme === 'starfield') {
         const bg = ctx.createLinearGradient(0, 0, 0, h);
         bg.addColorStop(0, '#020617');
         bg.addColorStop(1, '#111827');
@@ -1538,7 +1599,7 @@ function drawLiveFrame(channel, timeMs) {
         ctx.fill();
         ctx.fillStyle = 'rgba(255,255,255,0.14)';
         ctx.fillRect(0, h * 0.78, w, h * 0.22);
-    } else if (channel.theme === 'sunrise') {
+    } else if (theme === 'sunrise') {
         const bg = ctx.createLinearGradient(0, 0, 0, h);
         bg.addColorStop(0, '#fde68a');
         bg.addColorStop(1, '#86efac');
@@ -1568,7 +1629,7 @@ function drawLiveFrame(channel, timeMs) {
             ctx.arc(bx, by, 8, 0, Math.PI, true);
             ctx.stroke();
         }
-    } else if (channel.theme === 'cartoon') {
+    } else if (theme === 'cartoon') {
         const bg = ctx.createLinearGradient(0, 0, 0, h);
         bg.addColorStop(0, '#93c5fd');
         bg.addColorStop(1, '#fde68a');
@@ -1608,7 +1669,7 @@ function drawLiveFrame(channel, timeMs) {
             ctx.arc(bx, h * 0.89, 14, 0, Math.PI * 2);
             ctx.fill();
         }
-    } else if (channel.theme === 'city') {
+    } else if (theme === 'city') {
         const bg = ctx.createLinearGradient(0, 0, 0, h);
         bg.addColorStop(0, '#fb923c');
         bg.addColorStop(1, '#7c3aed');
@@ -1638,7 +1699,7 @@ function drawLiveFrame(channel, timeMs) {
                 }
             }
         }
-    } else if (channel.theme === 'neon-drive') {
+    } else if (theme === 'neon-drive') {
         const bg = ctx.createLinearGradient(0, 0, 0, h);
         bg.addColorStop(0, '#020617');
         bg.addColorStop(1, '#1d4ed8');
@@ -1666,7 +1727,7 @@ function drawLiveFrame(channel, timeMs) {
         ctx.lineTo(w * 0.5 + 70, h);
         ctx.closePath();
         ctx.fill();
-    } else if (channel.theme === 'ocean') {
+    } else if (theme === 'ocean') {
         const bg = ctx.createLinearGradient(0, 0, 0, h);
         bg.addColorStop(0, '#0ea5e9');
         bg.addColorStop(1, '#1e3a8a');
@@ -1699,7 +1760,7 @@ function drawLiveFrame(channel, timeMs) {
             ctx.closePath();
             ctx.fill();
         }
-    } else if (channel.theme === 'sports') {
+    } else if (theme === 'sports') {
         ctx.fillStyle = '#16a34a';
         ctx.fillRect(0, 0, w, h);
         ctx.strokeStyle = '#dcfce7';
@@ -1725,7 +1786,7 @@ function drawLiveFrame(channel, timeMs) {
         ctx.beginPath();
         ctx.arc(ballX, ballY, 8, 0, Math.PI * 2);
         ctx.fill();
-    } else if (channel.theme === 'news') {
+    } else if (theme === 'news') {
         const bg = ctx.createLinearGradient(0, 0, w, h);
         bg.addColorStop(0, '#0f172a');
         bg.addColorStop(1, '#1e3a8a');
@@ -1747,7 +1808,7 @@ function drawLiveFrame(channel, timeMs) {
         ctx.font = 'bold 18px Arial';
         ctx.fillText(ticker, w - offset, h - 16);
         ctx.fillText(ticker, w - offset + w + 420, h - 16);
-    } else if (channel.theme === 'nature') {
+    } else if (theme === 'nature') {
         const bg = ctx.createLinearGradient(0, 0, 0, h);
         bg.addColorStop(0, '#bae6fd');
         bg.addColorStop(1, '#86efac');
@@ -1774,7 +1835,7 @@ function drawLiveFrame(channel, timeMs) {
             const wx = fallX + Math.sin(t * 3 + i) * 6;
             ctx.fillRect(wx, h * 0.28, 6, h * 0.56);
         }
-    } else if (channel.theme === 'arcade') {
+    } else if (theme === 'arcade') {
         const bg = ctx.createLinearGradient(0, 0, 0, h);
         bg.addColorStop(0, '#020617');
         bg.addColorStop(1, '#111827');
@@ -1796,7 +1857,7 @@ function drawLiveFrame(channel, timeMs) {
             ctx.fillStyle = i % 2 ? '#f472b6' : '#22d3ee';
             ctx.fillRect(sx, sy, 16, 16);
         }
-    } else if (channel.theme === 'science') {
+    } else if (theme === 'science') {
         ctx.fillStyle = '#0f172a';
         ctx.fillRect(0, 0, w, h);
 
@@ -1820,7 +1881,7 @@ function drawLiveFrame(channel, timeMs) {
             ctx.arc(ex, ey, 5, 0, Math.PI * 2);
             ctx.fill();
         }
-    } else if (channel.theme === 'music') {
+    } else if (theme === 'music') {
         const bg = ctx.createLinearGradient(0, 0, w, h);
         bg.addColorStop(0, '#1e1b4b');
         bg.addColorStop(1, '#be185d');
@@ -1836,7 +1897,7 @@ function drawLiveFrame(channel, timeMs) {
             ctx.fillStyle = i % 2 ? '#22d3ee' : '#f9a8d4';
             ctx.fillRect(x, y, barW, amp);
         }
-    } else if (channel.theme === 'garden') {
+    } else if (theme === 'garden') {
         const bg = ctx.createLinearGradient(0, 0, 0, h);
         bg.addColorStop(0, '#87ceeb');
         bg.addColorStop(1, '#90ee90');
@@ -1919,7 +1980,7 @@ function drawLiveFrame(channel, timeMs) {
             ctx.arc(sx + 8, sy, 6, 0, Math.PI * 2);
             ctx.fill();
         }
-    } else if (channel.theme === 'live-now') {
+    } else if (theme === 'live-now') {
         const cycleTime = Math.floor(t / 4) % 6;
         const cycleT = t % 4;
         const fadeAlpha = 1 - Math.max(0, Math.min(1, (cycleT - 3) * 2));
@@ -2194,7 +2255,10 @@ function initLive() {
     liveState.guideClickBound = handleLiveGuideClick;
     liveState.guideKeydownBound = handleLiveGuideKeydown;
     liveState.guideToggleBound = handleLiveGuideToggle;
+    liveState.videoReadyBound = handleLiveVideoReady;
+    liveState.videoErrorBound = handleLiveVideoError;
     liveState.guideOpen = false;
+    liveState.usingVideoFallback = false;
 
     updateLiveByTime();
     liveState.animationId = requestAnimationFrame(animateLive);
@@ -2211,6 +2275,14 @@ function initLive() {
         toggleBtn.setAttribute('aria-expanded', 'false');
         toggleBtn.setAttribute('aria-label', 'Open channel guide');
         toggleBtn.addEventListener('click', liveState.guideToggleBound);
+    }
+
+    const video = document.getElementById('live-video');
+    if (video) {
+        video.addEventListener('loadeddata', liveState.videoReadyBound);
+        video.addEventListener('canplay', liveState.videoReadyBound);
+        video.addEventListener('error', liveState.videoErrorBound);
+        video.addEventListener('stalled', liveState.videoErrorBound);
     }
 
     document.addEventListener('visibilitychange', liveState.tickBound);
@@ -2230,6 +2302,16 @@ function cleanupLive() {
         toggleBtn.removeEventListener('click', liveState.guideToggleBound);
     }
 
+    const video = document.getElementById('live-video');
+    if (video && liveState.videoReadyBound) {
+        video.removeEventListener('loadeddata', liveState.videoReadyBound);
+        video.removeEventListener('canplay', liveState.videoReadyBound);
+    }
+    if (video && liveState.videoErrorBound) {
+        video.removeEventListener('error', liveState.videoErrorBound);
+        video.removeEventListener('stalled', liveState.videoErrorBound);
+    }
+
     if (liveState.animationId) {
         cancelAnimationFrame(liveState.animationId);
         liveState.animationId = null;
@@ -2240,10 +2322,16 @@ function cleanupLive() {
         liveState.timerId = null;
     }
 
-    const video = document.getElementById('live-video');
     if (video) {
         video.pause();
-        video.src = '';
+        video.removeAttribute('src');
+        video.load();
+        video.classList.add('hidden');
+    }
+
+    if (liveState.videoProbeTimeoutId) {
+        clearTimeout(liveState.videoProbeTimeoutId);
+        liveState.videoProbeTimeoutId = null;
     }
 
     if (liveState.tickBound) {
@@ -2256,7 +2344,10 @@ function cleanupLive() {
     liveState.guideClickBound = null;
     liveState.guideKeydownBound = null;
     liveState.guideToggleBound = null;
+    liveState.videoReadyBound = null;
+    liveState.videoErrorBound = null;
     liveState.guideOpen = false;
+    liveState.usingVideoFallback = false;
 }
 
 // ===== REC APP =====
