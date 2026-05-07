@@ -884,7 +884,7 @@ class WindowManager {
                     <div class="live-pill">ALWAYS ON</div>
                     <h2>Live</h2>
                     <p id="live-time-label" class="live-time-label">Loading channel...</p>
-                    <button id="live-guide-toggle" class="live-guide-toggle" aria-label="Toggle channel guide">📺 Guide</button>
+                    <button id="live-guide-toggle" class="live-guide-toggle" aria-label="Toggle channel guide" aria-expanded="false">📺 Guide</button>
                 </div>
                 <div class="live-video-wrap">
                     <canvas id="live-canvas" class="live-canvas" width="960" height="540" aria-label="Live channel content"></canvas>
@@ -898,7 +898,7 @@ class WindowManager {
                     <h3 id="live-program-title">Loading program...</h3>
                     <p id="live-program-description">Building the right stream for your local time.</p>
                 </div>
-                <div class="live-guide hidden" id="live-guide" aria-label="Live channel guide"></div>
+                <div class="live-guide" id="live-guide" aria-label="Live channel guide" aria-hidden="true"></div>
             </div>
         `;
     }
@@ -2132,13 +2132,18 @@ function handleLiveGuideClick(event) {
 
 function handleLiveGuideToggle() {
     const guide = document.getElementById('live-guide');
+    const toggleBtn = document.getElementById('live-guide-toggle');
     if (!guide) return;
 
     liveState.guideOpen = !liveState.guideOpen;
     if (liveState.guideOpen) {
-        guide.classList.remove('hidden');
+        guide.classList.add('open');
+        guide.setAttribute('aria-hidden', 'false');
+        if (toggleBtn) toggleBtn.setAttribute('aria-expanded', 'true');
     } else {
-        guide.classList.add('hidden');
+        guide.classList.remove('open');
+        guide.setAttribute('aria-hidden', 'true');
+        if (toggleBtn) toggleBtn.setAttribute('aria-expanded', 'false');
     }
 }
 
@@ -2171,6 +2176,7 @@ function initLive() {
 
     const toggleBtn = document.getElementById('live-guide-toggle');
     if (toggleBtn) {
+        toggleBtn.setAttribute('aria-expanded', 'false');
         toggleBtn.addEventListener('click', liveState.guideToggleBound);
     }
 
