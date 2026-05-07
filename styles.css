@@ -2967,6 +2967,11 @@ html {
     border-color: rgba(236, 254, 255, 0.55);
 }
 
+.live-guide-toggle:focus-visible {
+    outline: 2px solid #99f6e4;
+    outline-offset: 2px;
+}
+
 .live-pill {
     align-self: flex-start;
     background: rgba(236, 254, 255, 0.2);
@@ -3093,6 +3098,11 @@ html {
     border-color: rgba(165, 243, 252, 0.65);
     background: rgba(7, 20, 22, 0.6);
     transform: translateY(-1px);
+}
+
+.live-guide-item:focus-visible {
+    outline: 2px solid #99f6e4;
+    outline-offset: 2px;
 }
 
 .live-guide-item.active {
