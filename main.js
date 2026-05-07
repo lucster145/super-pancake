@@ -1273,7 +1273,6 @@ const LIVE_CHANNELS = [
         label: 'Late Night Channel',
         title: 'Moon Drift',
         description: 'Slow stars, moon glow, and drifting cloud bands for deep-night watching.',
-        channelNo: 'CH 001',
         theme: 'starfield'
     },
     {
@@ -1281,7 +1280,6 @@ const LIVE_CHANNELS = [
         label: 'Morning Channel',
         title: 'Sunrise Garden',
         description: 'Original hand-drawn hills, birds, and warm daylight motion.',
-        channelNo: 'CH 002',
         theme: 'sunrise'
     },
     {
@@ -1289,8 +1287,8 @@ const LIVE_CHANNELS = [
         label: 'Cartoon Channel',
         title: 'Pancake Pals Cartoons',
         description: 'Original cartoon loop with playful characters, slapstick gags, and ten new mini-cartoon premieres.',
-        channelNo: 'CH 003',
         theme: 'cartoon',
+        lineupLabel: 'New Cartoons',
         episodes: [
             'Captain Syrup and the Pancake Moon',
             'Rocket Waffle Rescue',
@@ -1309,7 +1307,6 @@ const LIVE_CHANNELS = [
         label: 'Evening Channel',
         title: 'Golden Streets',
         description: 'City silhouettes, neon windows, and sunset gradients in motion.',
-        channelNo: 'CH 004',
         theme: 'city'
     },
     {
@@ -1317,7 +1314,6 @@ const LIVE_CHANNELS = [
         label: 'Night Channel',
         title: 'Neon Night Drive',
         description: 'Original synth-style night visuals and horizon glow.',
-        channelNo: 'CH 005',
         theme: 'neon-drive'
     },
     {
@@ -1325,7 +1321,6 @@ const LIVE_CHANNELS = [
         label: 'Ocean Channel',
         title: 'Blue Current',
         description: 'Rolling wave bands, fish silhouettes, and drifting foam.',
-        channelNo: 'CH 006',
         theme: 'ocean'
     },
     {
@@ -1333,7 +1328,6 @@ const LIVE_CHANNELS = [
         label: 'Sports Channel',
         title: 'Stadium Sprint',
         description: 'Arcade-style field action with moving players and score lights.',
-        channelNo: 'CH 007',
         theme: 'sports'
     },
     {
@@ -1341,7 +1335,6 @@ const LIVE_CHANNELS = [
         label: 'News Channel',
         title: 'City Desk Live',
         description: 'Breaking ticker, studio lights, and animated lower-third updates.',
-        channelNo: 'CH 008',
         theme: 'news'
     },
     {
@@ -1349,7 +1342,6 @@ const LIVE_CHANNELS = [
         label: 'Nature Channel',
         title: 'Forest Falls',
         description: 'Hand-drawn mountains and a looping waterfall scene.',
-        channelNo: 'CH 009',
         theme: 'nature'
     },
     {
@@ -1357,7 +1349,6 @@ const LIVE_CHANNELS = [
         label: 'Arcade Channel',
         title: 'Pixel Arena',
         description: 'Retro grid pulses and old-school sprite movement.',
-        channelNo: 'CH 010',
         theme: 'arcade'
     },
     {
@@ -1365,7 +1356,6 @@ const LIVE_CHANNELS = [
         label: 'Science Channel',
         title: 'Lab Motion',
         description: 'Molecule orbits, data pulses, and animated lab visuals.',
-        channelNo: 'CH 011',
         theme: 'science'
     },
     {
@@ -1373,7 +1363,6 @@ const LIVE_CHANNELS = [
         label: 'Music Channel',
         title: 'Beat Room',
         description: 'Reactive equalizer bars and waveform-inspired motion.',
-        channelNo: 'CH 012',
         theme: 'music'
     },
     {
@@ -1381,7 +1370,6 @@ const LIVE_CHANNELS = [
         label: 'Wildlife Channel',
         title: 'Animal Planet',
         description: 'Real nature footage with birds, deer, and forest life.',
-        channelNo: 'CH 013',
         theme: 'video',
         fallbackTheme: 'nature',
         videoUrl: 'https://cdn.pixabay.com/vimeo/732275425/Wildlife%20Nature%20_%20Free%20Stock%20Video%20Footage%20HD-732275425.mp4'
@@ -1391,7 +1379,6 @@ const LIVE_CHANNELS = [
         label: 'Travel Channel',
         title: 'Around the World',
         description: 'Scenic landscapes from mountains, beaches, and cities.',
-        channelNo: 'CH 014',
         theme: 'video',
         fallbackTheme: 'city',
         videoUrl: 'https://videos.pexels.com/video-files/3571026/3571026-hd_1920_1080_24fps.mp4'
@@ -1401,15 +1388,33 @@ const LIVE_CHANNELS = [
         label: 'Cooking Channel',
         title: 'Kitchen Live',
         description: 'A live kitchen scene with a cook at the stove, stirring dinner in real-time.',
-        channelNo: 'CH 015',
         theme: 'cooking'
+    },
+    {
+        key: 'net2-live',
+        label: 'Net2 Live',
+        title: 'Shows from Net Two',
+        description: 'A live Net2 feed with fan-favorite shows and rotating Net Two premieres.',
+        theme: 'live-now',
+        lineupLabel: 'Shows from Net Two',
+        episodes: [
+            'Shadow Protocol',
+            'Vortex Rising',
+            'Neon Hollow',
+            'The Frozen Keep',
+            'Dust and Thunder',
+            'Galactic Drifters',
+            'Crimson Pact',
+            'Echo Valley',
+            'Iron Circuit',
+            'Lost Meridian'
+        ]
     },
     {
         key: 'garden',
         label: 'Nature Garden Channel',
         title: 'Blooming Sanctuary',
         description: 'Animated garden with blooming flowers, trees, and wildlife.',
-        channelNo: 'CH 017',
         theme: 'garden'
     },
     {
@@ -1417,10 +1422,240 @@ const LIVE_CHANNELS = [
         label: 'Live Now',
         title: 'Non-Stop Entertainment',
         description: 'Ever-changing mix of cartoons, nature, ocean, neon cities, and more.',
-        channelNo: 'CH 018',
         theme: 'live-now'
+    },
+    {
+        key: 'comedy',
+        label: 'Comedy Channel',
+        title: 'Laugh Loop',
+        description: 'Fast gags, quick cuts, and upbeat sketch-style visuals.',
+        theme: 'cartoon'
+    },
+    {
+        key: 'documentary',
+        label: 'Documentary Channel',
+        title: 'Deep Story',
+        description: 'Slow-paced visual storytelling across cities, labs, and landscapes.',
+        theme: 'nature'
+    },
+    {
+        key: 'adventure',
+        label: 'Adventure Channel',
+        title: 'Trailblazer',
+        description: 'Animated expeditions through peaks, oceans, and hidden ruins.',
+        theme: 'city'
+    },
+    {
+        key: 'mystery',
+        label: 'Mystery Channel',
+        title: 'Signal Unknown',
+        description: 'Late-hour clues, dark alleys, and coded transmissions.',
+        theme: 'starfield'
+    },
+    {
+        key: 'racing',
+        label: 'Racing Channel',
+        title: 'Midnight Circuit',
+        description: 'Neon roads, speed lines, and turbo sprint highlights.',
+        theme: 'neon-drive'
+    },
+    {
+        key: 'chillhop',
+        label: 'Chillhop Channel',
+        title: 'Lo-Fi Lounge',
+        description: 'Smooth beats, glowing bars, and relaxed visual loops.',
+        theme: 'music'
+    },
+    {
+        key: 'weather',
+        label: 'Weather Channel',
+        title: 'Storm Watch',
+        description: 'Rolling sky gradients and moving pressure maps all day.',
+        theme: 'ocean'
+    },
+    {
+        key: 'history',
+        label: 'History Channel',
+        title: 'Past and Present',
+        description: 'Archive-inspired scenes with map overlays and timelines.',
+        theme: 'news'
+    },
+    {
+        key: 'kids',
+        label: 'Kids Channel',
+        title: 'Playtime Planet',
+        description: 'Bright character loops made for daytime family viewing.',
+        theme: 'cartoon'
+    },
+    {
+        key: 'action',
+        label: 'Action Channel',
+        title: 'Impact Hour',
+        description: 'High-energy motion, chase scenes, and dramatic cuts.',
+        theme: 'sports'
+    },
+    {
+        key: 'animation',
+        label: 'Animation Channel',
+        title: 'Frame Factory',
+        description: 'Stylized movement studies and original animated shorts.',
+        theme: 'arcade'
+    },
+    {
+        key: 'strategy',
+        label: 'Strategy Channel',
+        title: 'Tactics Table',
+        description: 'Grid-based visual plans, matchups, and decisions.',
+        theme: 'arcade'
+    },
+    {
+        key: 'deep-space',
+        label: 'Deep Space Channel',
+        title: 'Orbital Window',
+        description: 'Nebula glows, drifting stars, and distant planet passes.',
+        theme: 'science'
+    },
+    {
+        key: 'retro',
+        label: 'Retro Channel',
+        title: 'CRT Classics',
+        description: 'Old-school textures, scanlines, and arcade nostalgia.',
+        theme: 'arcade'
+    },
+    {
+        key: 'art',
+        label: 'Art Channel',
+        title: 'Palette Motion',
+        description: 'Color studies and kinetic brush-like animation loops.',
+        theme: 'sunrise'
+    },
+    {
+        key: 'fitness',
+        label: 'Fitness Channel',
+        title: 'Pulse Training',
+        description: 'Rhythmic exercise sessions with timer-driven movement.',
+        theme: 'sports'
+    },
+    {
+        key: 'food-trips',
+        label: 'Food Trips Channel',
+        title: 'Street Flavor',
+        description: 'Kitchen moments mixed with market street atmosphere.',
+        theme: 'cooking'
+    },
+    {
+        key: 'world-news',
+        label: 'World News Channel',
+        title: 'Global Briefing',
+        description: 'Headline walls, world maps, and nightly desk updates.',
+        theme: 'news'
+    },
+    {
+        key: 'science-lab',
+        label: 'Science Lab Channel',
+        title: 'Experiment Now',
+        description: 'Animated experiments, particle trails, and data bursts.',
+        theme: 'science'
+    },
+    {
+        key: 'ocean-night',
+        label: 'Ocean Night Channel',
+        title: 'Midnight Tides',
+        description: 'Darker wave layers and calm moonlit current motion.',
+        theme: 'ocean'
+    },
+    {
+        key: 'mountain',
+        label: 'Mountain Channel',
+        title: 'Highland View',
+        description: 'Peaks, fog bands, and sunrise ridge panoramas.',
+        theme: 'nature'
+    },
+    {
+        key: 'city-pop',
+        label: 'City Pop Channel',
+        title: 'Downtown Neon',
+        description: 'Night skyline loops with pop-inspired city colorways.',
+        theme: 'city'
+    },
+    {
+        key: 'midnight-horror',
+        label: 'Midnight Horror Channel',
+        title: 'After Dark Stories',
+        description: 'Moody visuals for a spooky late-night atmosphere.',
+        theme: 'starfield'
+    },
+    {
+        key: 'reality',
+        label: 'Reality Channel',
+        title: 'House and Hustle',
+        description: 'Everyday challenges and competition-style pacing.',
+        theme: 'live-now'
+    },
+    {
+        key: 'esports',
+        label: 'eSports Channel',
+        title: 'Arena Online',
+        description: 'Digital tournaments, strategy cams, and crowd energy.',
+        theme: 'arcade'
+    },
+    {
+        key: 'diy',
+        label: 'DIY Channel',
+        title: 'Build It Live',
+        description: 'Hands-on projects and step-by-step maker loops.',
+        theme: 'cooking'
+    },
+    {
+        key: 'anime-zone',
+        label: 'Anime Zone',
+        title: 'Skyline Saga',
+        description: 'Stylized action and dramatic city-night transitions.',
+        theme: 'neon-drive'
+    },
+    {
+        key: 'tech-daily',
+        label: 'Tech Daily',
+        title: 'Future Feed',
+        description: 'Device demos, dashboards, and rapid update reels.',
+        theme: 'science'
+    },
+    {
+        key: 'dance',
+        label: 'Dance Channel',
+        title: 'Move Machine',
+        description: 'Beat-synced choreography visuals with energetic pulses.',
+        theme: 'music'
+    },
+    {
+        key: 'travel-plus',
+        label: 'Travel Plus',
+        title: 'Passport Loop',
+        description: 'Fast-cut scenery tours from coastlines to skylines.',
+        theme: 'video',
+        fallbackTheme: 'city',
+        videoUrl: 'https://videos.pexels.com/video-files/3571026/3571026-hd_1920_1080_24fps.mp4'
+    },
+    {
+        key: 'wildlife-plus',
+        label: 'Wildlife Plus',
+        title: 'Earth Creatures',
+        description: 'More nature footage with forest and river wildlife.',
+        theme: 'video',
+        fallbackTheme: 'nature',
+        videoUrl: 'https://cdn.pixabay.com/vimeo/732275425/Wildlife%20Nature%20_%20Free%20Stock%20Video%20Footage%20HD-732275425.mp4'
+    },
+    {
+        key: 'cinema-classics',
+        label: 'Cinema Classics',
+        title: 'Prime Time Rewind',
+        description: 'Vintage-style primetime framing with dramatic transitions.',
+        theme: 'city'
     }
-];
+].map((channel, index) => ({
+    ...channel,
+    channelNo: `CH ${String(index + 1).padStart(3, '0')}`
+}));
 
 const LIVE_SCHEDULE = [
     { key: 'late-night', startHour: 0, endHour: 6 },
@@ -2300,7 +2535,7 @@ function applyLiveSlot(channel, mode = 'auto') {
     if (Array.isArray(channel.episodes) && channel.episodes.length > 0) {
         lineup.classList.remove('hidden');
         lineup.innerHTML = `
-            <p class="live-program-lineup-label">New Cartoons</p>
+            <p class="live-program-lineup-label">${channel.lineupLabel || 'Featured Shows'}</p>
             <ul class="live-program-lineup-list">
                 ${channel.episodes.map((episode) => `<li>${episode}</li>`).join('')}
             </ul>
