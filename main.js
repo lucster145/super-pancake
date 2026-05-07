@@ -1257,6 +1257,7 @@ const liveState = {
     currentKey: '',
     manualKey: '',
     guideClickBound: null,
+    guideKeydownBound: null,
     guideToggleBound: null,
     guideOpen: false
 };
@@ -1428,7 +1429,14 @@ function getLiveChannelByKey(key) {
 
 function getLiveSlot(date = new Date()) {
     const hour = date.getHours();
-    const schedule = LIVE_SCHEDULE.find((slot) => hour >= slot.startHour && hour < slot.endHour) || LIVE_SCHEDULE[0];
+    const matchingSlots = LIVE_SCHEDULE.filter((slot) => hour >= slot.startHour && hour < slot.endHour);
+    if (matchingSlots.length === 0) {
+        return getLiveChannelByKey(LIVE_SCHEDULE[0].key) || LIVE_CHANNELS[0];
+    }
+
+    // Rotate across overlapping slots so special channels can surface automatically.
+    const slice = Math.floor(date.getMinutes() / 15);
+    const schedule = matchingSlots[slice % matchingSlots.length];
     return getLiveChannelByKey(schedule.key) || LIVE_CHANNELS[0];
 }
 
@@ -1473,8 +1481,11 @@ function showLiveVideo(channel) {
     if (!video || !canvas) return;
 
     if (channel.videoUrl) {
+        const currentSrc = video.getAttribute('src') || '';
         canvas.classList.add('hidden');
-        video.src = channel.videoUrl;
+        if (currentSrc !== channel.videoUrl) {
+            video.src = channel.videoUrl;
+        }
         video.classList.remove('hidden');
         video.play().catch(() => {});
     } else {
@@ -2090,13 +2101,16 @@ function applyLiveSlot(channel, mode = 'auto') {
     const title = document.getElementById('live-program-title');
     const description = document.getElementById('live-program-description');
     if (!timeLabel || !title || !description) return;
+    const isSameChannel = liveState.currentKey === channel.key;
 
     timeLabel.textContent = mode === 'manual' ? `${channel.label} • Manual` : channel.label;
     title.textContent = channel.title;
     description.textContent = channel.description;
     liveState.currentKey = channel.key;
 
-    showLiveVideo(channel);
+    if (!isSameChannel || channel.theme === 'video') {
+        showLiveVideo(channel);
+    }
     renderLiveGuide(channel.key, liveState.manualKey);
 }
 
@@ -2130,6 +2144,16 @@ function handleLiveGuideClick(event) {
     applyLiveSlot(channel, 'manual');
 }
 
+function handleLiveGuideKeydown(event) {
+    const target = event.target.closest('.live-guide-item');
+    if (!target) return;
+
+    if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        target.click();
+    }
+}
+
 function handleLiveGuideToggle() {
     const guide = document.getElementById('live-guide');
     const toggleBtn = document.getElementById('live-guide-toggle');
@@ -2139,11 +2163,17 @@ function handleLiveGuideToggle() {
     if (liveState.guideOpen) {
         guide.classList.add('open');
         guide.setAttribute('aria-hidden', 'false');
-        if (toggleBtn) toggleBtn.setAttribute('aria-expanded', 'true');
+        if (toggleBtn) {
+            toggleBtn.setAttribute('aria-expanded', 'true');
+            toggleBtn.setAttribute('aria-label', 'Close channel guide');
+        }
     } else {
         guide.classList.remove('open');
         guide.setAttribute('aria-hidden', 'true');
-        if (toggleBtn) toggleBtn.setAttribute('aria-expanded', 'false');
+        if (toggleBtn) {
+            toggleBtn.setAttribute('aria-expanded', 'false');
+            toggleBtn.setAttribute('aria-label', 'Open channel guide');
+        }
     }
 }
 
@@ -2162,6 +2192,7 @@ function initLive() {
 
     liveState.tickBound = updateLiveByTime;
     liveState.guideClickBound = handleLiveGuideClick;
+    liveState.guideKeydownBound = handleLiveGuideKeydown;
     liveState.guideToggleBound = handleLiveGuideToggle;
     liveState.guideOpen = false;
 
@@ -2172,11 +2203,13 @@ function initLive() {
     const guide = document.getElementById('live-guide');
     if (guide) {
         guide.addEventListener('click', liveState.guideClickBound);
+        guide.addEventListener('keydown', liveState.guideKeydownBound);
     }
 
     const toggleBtn = document.getElementById('live-guide-toggle');
     if (toggleBtn) {
         toggleBtn.setAttribute('aria-expanded', 'false');
+        toggleBtn.setAttribute('aria-label', 'Open channel guide');
         toggleBtn.addEventListener('click', liveState.guideToggleBound);
     }
 
@@ -2187,6 +2220,9 @@ function cleanupLive() {
     const guide = document.getElementById('live-guide');
     if (guide && liveState.guideClickBound) {
         guide.removeEventListener('click', liveState.guideClickBound);
+    }
+    if (guide && liveState.guideKeydownBound) {
+        guide.removeEventListener('keydown', liveState.guideKeydownBound);
     }
 
     const toggleBtn = document.getElementById('live-guide-toggle');
@@ -2218,6 +2254,7 @@ function cleanupLive() {
     liveState.currentKey = '';
     liveState.manualKey = '';
     liveState.guideClickBound = null;
+    liveState.guideKeydownBound = null;
     liveState.guideToggleBound = null;
     liveState.guideOpen = false;
 }
