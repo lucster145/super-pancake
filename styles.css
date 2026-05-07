@@ -2933,6 +2933,8 @@ html {
     flex-direction: column;
     gap: 14px;
     padding: 12px;
+    position: relative;
+    overflow: hidden;
     background: linear-gradient(160deg, #062f2d 0%, #0b4c47 55%, #14635a 100%);
     color: #ecfeff;
 }
@@ -2942,6 +2944,7 @@ html {
     flex-direction: column;
     gap: 4px;
     position: relative;
+    z-index: 8;
 }
 
 .live-guide-toggle {
@@ -3048,29 +3051,33 @@ html {
 }
 
 .live-guide {
+    position: absolute;
+    inset: 0;
+    z-index: 7;
     border: 1px solid rgba(236, 254, 255, 0.28);
-    border-radius: 12px;
-    background: rgba(3, 26, 25, 0.45);
+    border-radius: 0;
+    background: rgba(3, 26, 25, 0.88);
     padding: 0 8px;
     display: grid;
-    gap: 6px;
-    max-height: 0;
-    margin-top: -2px;
+    align-content: start;
+    gap: 8px;
+    margin-top: 0;
     opacity: 0;
-    transform: translateY(-10px) scale(0.96);
+    transform: scale(0.98);
     transform-origin: top right;
     pointer-events: none;
+    visibility: hidden;
     overflow-y: auto;
-    transition: max-height 0.22s ease, opacity 0.22s ease, transform 0.22s ease, padding 0.22s ease, margin-top 0.22s ease;
+    transition: opacity 0.22s ease, transform 0.22s ease, padding 0.22s ease, visibility 0.22s ease;
 }
 
 .live-guide.open {
-    padding: 8px;
-    max-height: 260px;
+    padding: 56px 12px 12px;
     margin-top: 0;
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: scale(1);
     pointer-events: auto;
+    visibility: visible;
 }
 
 .live-guide-item {
@@ -3147,8 +3154,8 @@ html {
         min-height: 190px;
     }
 
-    .live-guide {
-        max-height: 200px;
+    .live-guide.open {
+        padding: 52px 10px 10px;
     }
 
     .live-guide-top,
