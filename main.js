@@ -1386,12 +1386,10 @@ const LIVE_CHANNELS = [
     {
         key: 'cooking',
         label: 'Cooking Channel',
-        title: 'Recipe Time',
-        description: 'Food preparation and cooking in real-time.',
+        title: 'Kitchen Live',
+        description: 'A live kitchen scene with a cook at the stove, stirring dinner in real-time.',
         channelNo: 'CH 015',
-        theme: 'video',
-        fallbackTheme: 'cartoon',
-        videoUrl: 'https://videos.pexels.com/video-files/7974087/7974087-hd_1920_1080_24fps.mp4'
+        theme: 'cooking'
     },
     {
         key: 'weather',
@@ -1897,6 +1895,134 @@ function drawLiveFrame(channel, timeMs) {
             ctx.fillStyle = i % 2 ? '#22d3ee' : '#f9a8d4';
             ctx.fillRect(x, y, barW, amp);
         }
+    } else if (theme === 'cooking') {
+        const wall = ctx.createLinearGradient(0, 0, 0, h);
+        wall.addColorStop(0, '#fff7ed');
+        wall.addColorStop(1, '#fed7aa');
+        ctx.fillStyle = wall;
+        ctx.fillRect(0, 0, w, h);
+
+        ctx.fillStyle = '#f59e0b';
+        ctx.fillRect(0, h * 0.74, w, h * 0.26);
+
+        ctx.fillStyle = '#c2410c';
+        ctx.fillRect(0, h * 0.62, w, h * 0.14);
+
+        ctx.fillStyle = '#94a3b8';
+        net2RoundRect(ctx, w * 0.58, h * 0.48, w * 0.22, h * 0.1, 18);
+        ctx.fill();
+        ctx.fillStyle = '#1f2937';
+        ctx.beginPath();
+        ctx.arc(w * 0.65, h * 0.53, 12, 0, Math.PI * 2);
+        ctx.arc(w * 0.73, h * 0.53, 12, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#d6d3d1';
+        net2RoundRect(ctx, w * 0.13, h * 0.18, w * 0.18, h * 0.16, 14);
+        ctx.fill();
+        ctx.fillStyle = '#fb923c';
+        for (let i = 0; i < 3; i += 1) {
+            ctx.fillRect(w * (0.16 + i * 0.05), h * 0.22, w * 0.025, h * 0.08);
+        }
+
+        const chefX = w * 0.34 + Math.sin(t * 1.2) * 10;
+        const chefY = h * 0.46;
+        const armSwing = Math.sin(t * 3.1) * 14;
+        const steamLift = (t * 30) % 90;
+
+        ctx.fillStyle = '#f1c27d';
+        ctx.beginPath();
+        ctx.arc(chefX, chefY - 74, 30, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#ffffff';
+        net2RoundRect(ctx, chefX - 34, chefY - 122, 68, 28, 12);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(chefX - 18, chefY - 108, 16, Math.PI, 0);
+        ctx.arc(chefX, chefY - 116, 18, Math.PI, 0);
+        ctx.arc(chefX + 20, chefY - 108, 16, Math.PI, 0);
+        ctx.fill();
+
+        ctx.strokeStyle = '#7c2d12';
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.arc(chefX, chefY - 72, 12, 0.2, Math.PI - 0.2);
+        ctx.stroke();
+
+        ctx.fillStyle = '#0f172a';
+        ctx.beginPath();
+        ctx.arc(chefX - 10, chefY - 80, 3, 0, Math.PI * 2);
+        ctx.arc(chefX + 10, chefY - 80, 3, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#ffffff';
+        net2RoundRect(ctx, chefX - 42, chefY - 34, 84, 110, 24);
+        ctx.fill();
+        ctx.fillStyle = '#ea580c';
+        ctx.fillRect(chefX - 10, chefY - 16, 20, 58);
+
+        ctx.strokeStyle = '#f1c27d';
+        ctx.lineWidth = 14;
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        ctx.moveTo(chefX - 34, chefY - 8);
+        ctx.lineTo(chefX - 92, chefY + 28);
+        ctx.moveTo(chefX + 34, chefY - 10);
+        ctx.lineTo(chefX + 94, chefY + armSwing);
+        ctx.stroke();
+
+        ctx.strokeStyle = '#1f2937';
+        ctx.lineWidth = 6;
+        ctx.beginPath();
+        ctx.moveTo(chefX + 94, chefY + armSwing);
+        ctx.lineTo(chefX + 128, chefY + armSwing - 18);
+        ctx.stroke();
+
+        ctx.strokeStyle = '#334155';
+        ctx.lineWidth = 16;
+        ctx.beginPath();
+        ctx.moveTo(chefX - 20, chefY + 74);
+        ctx.lineTo(chefX - 30, chefY + 130);
+        ctx.moveTo(chefX + 20, chefY + 74);
+        ctx.lineTo(chefX + 30, chefY + 130);
+        ctx.stroke();
+        ctx.lineCap = 'butt';
+
+        ctx.fillStyle = '#111827';
+        net2RoundRect(ctx, w * 0.56, h * 0.54, w * 0.17, h * 0.08, 30);
+        ctx.fill();
+        ctx.strokeStyle = '#94a3b8';
+        ctx.lineWidth = 5;
+        ctx.beginPath();
+        ctx.arc(w * 0.73, h * 0.58, 18, -Math.PI / 2, Math.PI / 2);
+        ctx.stroke();
+
+        ctx.fillStyle = '#f97316';
+        for (let i = 0; i < 3; i += 1) {
+            const flameX = w * 0.605 + i * 26;
+            const flameHeight = 16 + Math.abs(Math.sin(t * 6 + i)) * 24;
+            ctx.beginPath();
+            ctx.moveTo(flameX, h * 0.62);
+            ctx.quadraticCurveTo(flameX - 10, h * 0.62 - flameHeight * 0.45, flameX, h * 0.62 - flameHeight);
+            ctx.quadraticCurveTo(flameX + 10, h * 0.62 - flameHeight * 0.45, flameX, h * 0.62);
+            ctx.fill();
+        }
+
+        ctx.strokeStyle = 'rgba(255,255,255,0.6)';
+        ctx.lineWidth = 4;
+        for (let i = 0; i < 4; i += 1) {
+            const steamX = w * 0.615 + i * 18;
+            const steamY = h * 0.5 - ((steamLift + i * 18) % 90);
+            ctx.beginPath();
+            ctx.moveTo(steamX, steamY + 20);
+            ctx.bezierCurveTo(steamX - 12, steamY + 4, steamX + 10, steamY - 8, steamX - 4, steamY - 26);
+            ctx.stroke();
+        }
+
+        ctx.fillStyle = 'rgba(255,255,255,0.35)';
+        ctx.font = 'bold 26px Arial';
+        ctx.fillText('LIVE KITCHEN', w * 0.06, h * 0.14);
     } else if (theme === 'garden') {
         const bg = ctx.createLinearGradient(0, 0, 0, h);
         bg.addColorStop(0, '#87ceeb');
