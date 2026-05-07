@@ -884,9 +884,11 @@ class WindowManager {
                     <div class="live-pill">ALWAYS ON</div>
                     <h2>Live</h2>
                     <p id="live-time-label" class="live-time-label">Loading channel...</p>
+                    <button id="live-guide-toggle" class="live-guide-toggle" aria-label="Toggle channel guide">📺 Guide</button>
                 </div>
                 <div class="live-video-wrap">
-                    <canvas id="live-canvas" class="live-canvas" width="960" height="540" aria-label="Live channel animation"></canvas>
+                    <canvas id="live-canvas" class="live-canvas" width="960" height="540" aria-label="Live channel content"></canvas>
+                    <video id="live-video" class="live-video hidden" autoplay muted playsinline></video>
                     <div class="live-overlay">
                         <span class="live-dot" aria-hidden="true"></span>
                         <span>LIVE</span>
@@ -896,7 +898,7 @@ class WindowManager {
                     <h3 id="live-program-title">Loading program...</h3>
                     <p id="live-program-description">Building the right stream for your local time.</p>
                 </div>
-                <div class="live-guide" id="live-guide" aria-label="Live channel guide"></div>
+                <div class="live-guide hidden" id="live-guide" aria-label="Live channel guide"></div>
             </div>
         `;
     }
@@ -1254,7 +1256,9 @@ const liveState = {
     animationStart: 0,
     currentKey: '',
     manualKey: '',
-    guideClickBound: null
+    guideClickBound: null,
+    guideToggleBound: null,
+    guideOpen: false
 };
 
 const LIVE_CHANNELS = [
@@ -1353,6 +1357,42 @@ const LIVE_CHANNELS = [
         description: 'Reactive equalizer bars and waveform-inspired motion.',
         channelNo: 'CH 012',
         theme: 'music'
+    },
+    {
+        key: 'wildlife',
+        label: 'Wildlife Channel',
+        title: 'Animal Planet',
+        description: 'Real nature footage with birds, deer, and forest life.',
+        channelNo: 'CH 013',
+        theme: 'video',
+        videoUrl: 'https://cdn.pixabay.com/vimeo/732275425/Wildlife%20Nature%20_%20Free%20Stock%20Video%20Footage%20HD-732275425.mp4'
+    },
+    {
+        key: 'travel',
+        label: 'Travel Channel',
+        title: 'Around the World',
+        description: 'Scenic landscapes from mountains, beaches, and cities.',
+        channelNo: 'CH 014',
+        theme: 'video',
+        videoUrl: 'https://videos.pexels.com/video-files/3571026/3571026-hd_1920_1080_24fps.mp4'
+    },
+    {
+        key: 'cooking',
+        label: 'Cooking Channel',
+        title: 'Recipe Time',
+        description: 'Food preparation and cooking in real-time.',
+        channelNo: 'CH 015',
+        theme: 'video',
+        videoUrl: 'https://videos.pexels.com/video-files/7974087/7974087-hd_1920_1080_24fps.mp4'
+    },
+    {
+        key: 'weather',
+        label: 'Weather Channel',
+        title: 'Storm Watch',
+        description: 'Time-lapse clouds, sky phenomena, and weather patterns.',
+        channelNo: 'CH 016',
+        theme: 'video',
+        videoUrl: 'https://cdn.pixabay.com/vimeo/673860689/Timelapse%20Sky%20_%20Free%20Stock%20Video%20Footage%20HD-673860689.mp4'
     }
 ];
 
@@ -1395,11 +1435,12 @@ function renderLiveGuide(activeKey, manualKey) {
         const activeClass = channel.key === activeKey ? ' active' : '';
         const manualClass = channel.key === manualKey ? ' manual' : '';
         const timeRange = getLiveTimeRange(channel.key);
+        const badge = channel.theme === 'video' ? ' <span class="live-guide-badge">📹</span>' : '';
         return `
             <div class="live-guide-item${activeClass}${manualClass}" data-key="${channel.key}" role="button" tabindex="0" aria-label="Switch to ${channel.label}">
                 <div class="live-guide-top">
                     <span class="live-guide-number">${channel.channelNo}</span>
-                    <span class="live-guide-label">${channel.label}</span>
+                    <span class="live-guide-label">${channel.label}${badge}</span>
                     <span class="live-guide-time">${timeRange}</span>
                 </div>
                 <div class="live-guide-title">${channel.title}</div>
@@ -1408,11 +1449,31 @@ function renderLiveGuide(activeKey, manualKey) {
     }).join('');
 }
 
+function showLiveVideo(channel) {
+    const video = document.getElementById('live-video');
+    const canvas = document.getElementById('live-canvas');
+    if (!video || !canvas) return;
+
+    if (channel.videoUrl) {
+        canvas.classList.add('hidden');
+        video.src = channel.videoUrl;
+        video.classList.remove('hidden');
+        video.play().catch(() => {});
+    } else {
+        video.classList.add('hidden');
+        canvas.classList.remove('hidden');
+        video.pause();
+        video.src = '';
+    }
+}
+
 function drawLiveFrame(channel, timeMs) {
     const canvas = document.getElementById('live-canvas');
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
+
+    if (channel.theme === 'video') return;
 
     const w = Math.max(640, Math.floor(canvas.clientWidth || canvas.width));
     const h = Math.max(320, Math.floor(canvas.clientHeight || canvas.height));
@@ -1766,6 +1827,8 @@ function applyLiveSlot(channel, mode = 'auto') {
     title.textContent = channel.title;
     description.textContent = channel.description;
     liveState.currentKey = channel.key;
+
+    showLiveVideo(channel);
     renderLiveGuide(channel.key, liveState.manualKey);
 }
 
@@ -1799,6 +1862,18 @@ function handleLiveGuideClick(event) {
     applyLiveSlot(channel, 'manual');
 }
 
+function handleLiveGuideToggle() {
+    const guide = document.getElementById('live-guide');
+    if (!guide) return;
+
+    liveState.guideOpen = !liveState.guideOpen;
+    if (liveState.guideOpen) {
+        guide.classList.remove('hidden');
+    } else {
+        guide.classList.add('hidden');
+    }
+}
+
 function animateLive(now) {
     if (!liveState.animationStart) {
         liveState.animationStart = now;
@@ -1814,6 +1889,8 @@ function initLive() {
 
     liveState.tickBound = updateLiveByTime;
     liveState.guideClickBound = handleLiveGuideClick;
+    liveState.guideToggleBound = handleLiveGuideToggle;
+    liveState.guideOpen = false;
 
     updateLiveByTime();
     liveState.animationId = requestAnimationFrame(animateLive);
@@ -1822,6 +1899,11 @@ function initLive() {
     const guide = document.getElementById('live-guide');
     if (guide) {
         guide.addEventListener('click', liveState.guideClickBound);
+    }
+
+    const toggleBtn = document.getElementById('live-guide-toggle');
+    if (toggleBtn) {
+        toggleBtn.addEventListener('click', liveState.guideToggleBound);
     }
 
     document.addEventListener('visibilitychange', liveState.tickBound);
@@ -1833,6 +1915,11 @@ function cleanupLive() {
         guide.removeEventListener('click', liveState.guideClickBound);
     }
 
+    const toggleBtn = document.getElementById('live-guide-toggle');
+    if (toggleBtn && liveState.guideToggleBound) {
+        toggleBtn.removeEventListener('click', liveState.guideToggleBound);
+    }
+
     if (liveState.animationId) {
         cancelAnimationFrame(liveState.animationId);
         liveState.animationId = null;
@@ -1842,6 +1929,13 @@ function cleanupLive() {
         clearInterval(liveState.timerId);
         liveState.timerId = null;
     }
+
+    const video = document.getElementById('live-video');
+    if (video) {
+        video.pause();
+        video.src = '';
+    }
+
     if (liveState.tickBound) {
         document.removeEventListener('visibilitychange', liveState.tickBound);
         liveState.tickBound = null;
@@ -1850,6 +1944,8 @@ function cleanupLive() {
     liveState.currentKey = '';
     liveState.manualKey = '';
     liveState.guideClickBound = null;
+    liveState.guideToggleBound = null;
+    liveState.guideOpen = false;
 }
 
 // ===== REC APP =====

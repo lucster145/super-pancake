@@ -2922,6 +2922,10 @@ html {
     background: rgba(0, 0, 0, 0.5);
 }
 
+.hidden {
+    display: none !important;
+}
+
 /* Live App */
 .live-app {
     height: 100%;
@@ -2937,6 +2941,27 @@ html {
     display: flex;
     flex-direction: column;
     gap: 4px;
+    position: relative;
+}
+
+.live-guide-toggle {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: rgba(236, 254, 255, 0.15);
+    border: 1px solid rgba(236, 254, 255, 0.35);
+    color: #ecfeff;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.live-guide-toggle:hover {
+    background: rgba(236, 254, 255, 0.25);
+    border-color: rgba(236, 254, 255, 0.55);
 }
 
 .live-pill {
@@ -2981,6 +3006,11 @@ html {
 
 .live-canvas {
     background: #031a19;
+}
+
+.live-video {
+    background: #031a19;
+    object-fit: cover;
 }
 
 .live-overlay {
@@ -3080,6 +3110,12 @@ html {
     margin-top: 4px;
     color: rgba(236, 254, 255, 0.9);
     font-size: 12px;
+}
+
+.live-guide-badge {
+    font-size: 11px;
+    margin-left: 4px;
+    opacity: 0.8;
 }
 
 @media (max-width: 700px) {
