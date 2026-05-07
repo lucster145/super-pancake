@@ -1466,15 +1466,16 @@ function renderLiveGuide(activeKey, manualKey) {
     const guide = document.getElementById('live-guide');
     if (!guide) return;
 
-    guide.innerHTML = LIVE_CHANNELS.slice(0, 16).map((channel) => {
+    guide.innerHTML = LIVE_CHANNELS.map((channel) => {
         const activeClass = channel.key === activeKey ? ' active' : '';
         const manualClass = channel.key === manualKey ? ' manual' : '';
         const timeRange = getLiveTimeRange(channel.key);
         const badge = channel.theme === 'video' ? ' <span class="live-guide-badge">📹</span>' : '';
+        const guideNumber = channel.key === 'live-now' ? 'LIVE NOW' : channel.channelNo;
         return `
             <div class="live-guide-item${activeClass}${manualClass}" data-key="${channel.key}" role="button" tabindex="0" aria-label="Switch to ${channel.label}">
                 <div class="live-guide-top">
-                    <span class="live-guide-number">${channel.channelNo}</span>
+                    <span class="live-guide-number">${guideNumber}</span>
                     <span class="live-guide-label">${channel.label}${badge}</span>
                     <span class="live-guide-time">${timeRange}</span>
                 </div>
