@@ -3066,7 +3066,7 @@ html {
 
 .live-guide.open {
     padding: 8px;
-    max-height: 170px;
+    max-height: 260px;
     margin-top: 0;
     opacity: 1;
     transform: translateY(0) scale(1);
@@ -3076,7 +3076,7 @@ html {
 .live-guide-item {
     border: 1px solid rgba(236, 254, 255, 0.14);
     border-radius: 10px;
-    padding: 7px 9px;
+    padding: 10px 12px;
     background: rgba(7, 20, 22, 0.35);
     cursor: pointer;
     transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
@@ -3102,7 +3102,7 @@ html {
     display: flex;
     gap: 8px;
     align-items: center;
-    font-size: 12px;
+    font-size: 14px;
 }
 
 .live-guide-number {
@@ -3124,7 +3124,7 @@ html {
 .live-guide-title {
     margin-top: 4px;
     color: rgba(236, 254, 255, 0.9);
-    font-size: 12px;
+    font-size: 14px;
 }
 
 .live-guide-badge {
@@ -3148,6 +3148,11 @@ html {
     }
 
     .live-guide {
-        max-height: 150px;
+        max-height: 200px;
+    }
+
+    .live-guide-top,
+    .live-guide-title {
+        font-size: 13px;
     }
 }
