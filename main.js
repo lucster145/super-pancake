@@ -884,7 +884,10 @@ class WindowManager {
                     <div class="live-pill">ALWAYS ON</div>
                     <h2>Live</h2>
                     <p id="live-time-label" class="live-time-label">Loading channel...</p>
-                    <button id="live-guide-toggle" class="live-guide-toggle" aria-label="Toggle channel guide" aria-expanded="false">📺 Guide</button>
+                    <div class="live-header-actions">
+                        <button id="live-go-live" class="live-go-live-btn" aria-label="Start live loop">🔴 Go to Live</button>
+                        <button id="live-guide-toggle" class="live-guide-toggle" aria-label="Toggle channel guide" aria-expanded="false">📺 Guide</button>
+                    </div>
                 </div>
                 <div class="live-video-wrap">
                     <canvas id="live-canvas" class="live-canvas" width="960" height="540" aria-label="Live channel content"></canvas>
@@ -1252,14 +1255,18 @@ window.addEventListener('offline', updateInternetStatus);
 // ===== LIVE APP =====
 const liveState = {
     timerId: null,
+    loopTimerId: null,
     tickBound: null,
     animationId: null,
     animationStart: 0,
     currentKey: '',
     manualKey: '',
+    loopAllActive: false,
+    loopIndex: 0,
     guideClickBound: null,
     guideKeydownBound: null,
     guideToggleBound: null,
+    goLiveBound: null,
     guideOpen: false,
     videoReadyBound: null,
     videoErrorBound: null,
@@ -2163,7 +2170,13 @@ function applyLiveSlot(channel, mode = 'auto') {
     if (!timeLabel || !title || !description || !lineup) return;
     const isSameChannel = liveState.currentKey === channel.key;
 
-    timeLabel.textContent = mode === 'manual' ? `${channel.label} • Manual` : channel.label;
+    if (mode === 'manual') {
+        timeLabel.textContent = `${channel.label} • Manual`;
+    } else if (mode === 'loop') {
+        timeLabel.textContent = `${channel.label} • Live Loop`;
+    } else {
+        timeLabel.textContent = channel.label;
+    }
     title.textContent = channel.title;
     description.textContent = channel.description;
     if (Array.isArray(channel.episodes) && channel.episodes.length > 0) {
@@ -2186,7 +2199,63 @@ function applyLiveSlot(channel, mode = 'auto') {
     renderLiveGuide(channel.key, liveState.manualKey);
 }
 
+function updateLiveGoButton() {
+    const goLiveBtn = document.getElementById('live-go-live');
+    if (!goLiveBtn) return;
+
+    if (liveState.loopAllActive) {
+        goLiveBtn.textContent = '⏹ Stop Live';
+        goLiveBtn.classList.add('active');
+        goLiveBtn.setAttribute('aria-label', 'Stop live loop');
+    } else {
+        goLiveBtn.textContent = '🔴 Go to Live';
+        goLiveBtn.classList.remove('active');
+        goLiveBtn.setAttribute('aria-label', 'Start live loop');
+    }
+}
+
+function stopLiveLoop() {
+    liveState.loopAllActive = false;
+    if (liveState.loopTimerId) {
+        clearInterval(liveState.loopTimerId);
+        liveState.loopTimerId = null;
+    }
+    updateLiveGoButton();
+}
+
+function stepLiveLoop() {
+    if (LIVE_CHANNELS.length === 0) return;
+    const channel = LIVE_CHANNELS[liveState.loopIndex % LIVE_CHANNELS.length];
+    liveState.loopIndex = (liveState.loopIndex + 1) % LIVE_CHANNELS.length;
+    applyLiveSlot(channel, 'loop');
+}
+
+function startLiveLoop() {
+    stopLiveLoop();
+    liveState.manualKey = '';
+    liveState.loopAllActive = true;
+
+    const currentIndex = LIVE_CHANNELS.findIndex((channel) => channel.key === liveState.currentKey);
+    liveState.loopIndex = currentIndex >= 0 ? currentIndex : 0;
+    stepLiveLoop();
+    liveState.loopTimerId = setInterval(stepLiveLoop, 10000);
+    updateLiveGoButton();
+}
+
+function handleGoLiveClick() {
+    if (liveState.loopAllActive) {
+        stopLiveLoop();
+        updateLiveByTime();
+        return;
+    }
+    startLiveLoop();
+}
+
 function updateLiveByTime() {
+    if (liveState.loopAllActive) {
+        return;
+    }
+
     if (liveState.manualKey) {
         const manualChannel = getLiveChannelByKey(liveState.manualKey);
         if (manualChannel) {
@@ -2205,6 +2274,8 @@ function handleLiveGuideClick(event) {
     const key = target.dataset.key;
     const channel = getLiveChannelByKey(key);
     if (!channel) return;
+
+    stopLiveLoop();
 
     if (liveState.manualKey === key) {
         liveState.manualKey = '';
@@ -2266,12 +2337,16 @@ function initLive() {
     liveState.guideClickBound = handleLiveGuideClick;
     liveState.guideKeydownBound = handleLiveGuideKeydown;
     liveState.guideToggleBound = handleLiveGuideToggle;
+    liveState.goLiveBound = handleGoLiveClick;
     liveState.videoReadyBound = handleLiveVideoReady;
     liveState.videoErrorBound = handleLiveVideoError;
     liveState.guideOpen = false;
     liveState.usingVideoFallback = false;
+    liveState.loopAllActive = false;
+    liveState.loopIndex = 0;
 
     updateLiveByTime();
+    updateLiveGoButton();
     liveState.animationId = requestAnimationFrame(animateLive);
     liveState.timerId = setInterval(liveState.tickBound, 30000);
 
@@ -2286,6 +2361,11 @@ function initLive() {
         toggleBtn.setAttribute('aria-expanded', 'false');
         toggleBtn.setAttribute('aria-label', 'Open channel guide');
         toggleBtn.addEventListener('click', liveState.guideToggleBound);
+    }
+
+    const goLiveBtn = document.getElementById('live-go-live');
+    if (goLiveBtn) {
+        goLiveBtn.addEventListener('click', liveState.goLiveBound);
     }
 
     const video = document.getElementById('live-video');
@@ -2313,6 +2393,11 @@ function cleanupLive() {
         toggleBtn.removeEventListener('click', liveState.guideToggleBound);
     }
 
+    const goLiveBtn = document.getElementById('live-go-live');
+    if (goLiveBtn && liveState.goLiveBound) {
+        goLiveBtn.removeEventListener('click', liveState.goLiveBound);
+    }
+
     const video = document.getElementById('live-video');
     if (video && liveState.videoReadyBound) {
         video.removeEventListener('loadeddata', liveState.videoReadyBound);
@@ -2331,6 +2416,11 @@ function cleanupLive() {
     if (liveState.timerId) {
         clearInterval(liveState.timerId);
         liveState.timerId = null;
+    }
+
+    if (liveState.loopTimerId) {
+        clearInterval(liveState.loopTimerId);
+        liveState.loopTimerId = null;
     }
 
     if (video) {
@@ -2352,9 +2442,12 @@ function cleanupLive() {
     liveState.animationStart = 0;
     liveState.currentKey = '';
     liveState.manualKey = '';
+    liveState.loopAllActive = false;
+    liveState.loopIndex = 0;
     liveState.guideClickBound = null;
     liveState.guideKeydownBound = null;
     liveState.guideToggleBound = null;
+    liveState.goLiveBound = null;
     liveState.videoReadyBound = null;
     liveState.videoErrorBound = null;
     liveState.guideOpen = false;
