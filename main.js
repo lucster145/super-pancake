@@ -1371,7 +1371,7 @@ const LIVE_CHANNELS = [
         title: 'Animal Planet',
         description: 'Real nature footage with birds, deer, and forest life.',
         theme: 'video',
-        fallbackTheme: 'nature',
+        fallbackTheme: 'wildlife-fallback',
         videoUrl: 'https://cdn.pixabay.com/vimeo/732275425/Wildlife%20Nature%20_%20Free%20Stock%20Video%20Footage%20HD-732275425.mp4'
     },
     {
@@ -1380,7 +1380,7 @@ const LIVE_CHANNELS = [
         title: 'Around the World',
         description: 'Scenic landscapes from mountains, beaches, and cities.',
         theme: 'video',
-        fallbackTheme: 'city',
+        fallbackTheme: 'travel-fallback',
         videoUrl: 'https://videos.pexels.com/video-files/3571026/3571026-hd_1920_1080_24fps.mp4'
     },
     {
@@ -1415,7 +1415,7 @@ const LIVE_CHANNELS = [
         label: 'Nature Garden Channel',
         title: 'Blooming Sanctuary',
         description: 'Animated garden with blooming flowers, trees, and wildlife.',
-        theme: 'garden'
+        theme: 'garden-bloom'
     },
     {
         key: 'live-now',
@@ -1429,203 +1429,203 @@ const LIVE_CHANNELS = [
         label: 'Comedy Channel',
         title: 'Laugh Loop',
         description: 'Fast gags, quick cuts, and upbeat sketch-style visuals.',
-        theme: 'cartoon'
+        theme: 'comedy-gags'
     },
     {
         key: 'documentary',
         label: 'Documentary Channel',
         title: 'Deep Story',
         description: 'Slow-paced visual storytelling across cities, labs, and landscapes.',
-        theme: 'nature'
+        theme: 'doc-landscape'
     },
     {
         key: 'adventure',
         label: 'Adventure Channel',
         title: 'Trailblazer',
         description: 'Animated expeditions through peaks, oceans, and hidden ruins.',
-        theme: 'city'
+        theme: 'adventure-peaks'
     },
     {
         key: 'mystery',
         label: 'Mystery Channel',
         title: 'Signal Unknown',
         description: 'Late-hour clues, dark alleys, and coded transmissions.',
-        theme: 'starfield'
+        theme: 'mystery-dark'
     },
     {
         key: 'racing',
         label: 'Racing Channel',
         title: 'Midnight Circuit',
         description: 'Neon roads, speed lines, and turbo sprint highlights.',
-        theme: 'neon-drive'
+        theme: 'racing-circuit'
     },
     {
         key: 'chillhop',
         label: 'Chillhop Channel',
         title: 'Lo-Fi Lounge',
         description: 'Smooth beats, glowing bars, and relaxed visual loops.',
-        theme: 'music'
+        theme: 'chillhop-lofi'
     },
     {
         key: 'weather',
         label: 'Weather Channel',
         title: 'Storm Watch',
         description: 'Rolling sky gradients and moving pressure maps all day.',
-        theme: 'ocean'
+        theme: 'weather-storms'
     },
     {
         key: 'history',
         label: 'History Channel',
         title: 'Past and Present',
         description: 'Archive-inspired scenes with map overlays and timelines.',
-        theme: 'news'
+        theme: 'history-timeline'
     },
     {
         key: 'kids',
         label: 'Kids Channel',
         title: 'Playtime Planet',
         description: 'Bright character loops made for daytime family viewing.',
-        theme: 'cartoon'
+        theme: 'kids-fun'
     },
     {
         key: 'action',
         label: 'Action Channel',
         title: 'Impact Hour',
         description: 'High-energy motion, chase scenes, and dramatic cuts.',
-        theme: 'sports'
+        theme: 'action-impact'
     },
     {
         key: 'animation',
         label: 'Animation Channel',
         title: 'Frame Factory',
         description: 'Stylized movement studies and original animated shorts.',
-        theme: 'arcade'
+        theme: 'animation-frames'
     },
     {
         key: 'strategy',
         label: 'Strategy Channel',
         title: 'Tactics Table',
         description: 'Grid-based visual plans, matchups, and decisions.',
-        theme: 'arcade'
+        theme: 'strategy-grid'
     },
     {
         key: 'deep-space',
         label: 'Deep Space Channel',
         title: 'Orbital Window',
         description: 'Nebula glows, drifting stars, and distant planet passes.',
-        theme: 'science'
+        theme: 'space-nebula'
     },
     {
         key: 'retro',
         label: 'Retro Channel',
         title: 'CRT Classics',
         description: 'Old-school textures, scanlines, and arcade nostalgia.',
-        theme: 'arcade'
+        theme: 'retro-crt'
     },
     {
         key: 'art',
         label: 'Art Channel',
         title: 'Palette Motion',
         description: 'Color studies and kinetic brush-like animation loops.',
-        theme: 'sunrise'
+        theme: 'art-palette'
     },
     {
         key: 'fitness',
         label: 'Fitness Channel',
         title: 'Pulse Training',
         description: 'Rhythmic exercise sessions with timer-driven movement.',
-        theme: 'sports'
+        theme: 'fitness-rhythm'
     },
     {
         key: 'food-trips',
         label: 'Food Trips Channel',
         title: 'Street Flavor',
         description: 'Kitchen moments mixed with market street atmosphere.',
-        theme: 'cooking'
+        theme: 'food-markets'
     },
     {
         key: 'world-news',
         label: 'World News Channel',
         title: 'Global Briefing',
         description: 'Headline walls, world maps, and nightly desk updates.',
-        theme: 'news'
+        theme: 'news-global'
     },
     {
         key: 'science-lab',
         label: 'Science Lab Channel',
         title: 'Experiment Now',
         description: 'Animated experiments, particle trails, and data bursts.',
-        theme: 'science'
+        theme: 'lab-experiment'
     },
     {
         key: 'ocean-night',
         label: 'Ocean Night Channel',
         title: 'Midnight Tides',
         description: 'Darker wave layers and calm moonlit current motion.',
-        theme: 'ocean'
+        theme: 'ocean-waves'
     },
     {
         key: 'mountain',
         label: 'Mountain Channel',
         title: 'Highland View',
         description: 'Peaks, fog bands, and sunrise ridge panoramas.',
-        theme: 'nature'
+        theme: 'mountain-peaks'
     },
     {
         key: 'city-pop',
         label: 'City Pop Channel',
         title: 'Downtown Neon',
         description: 'Night skyline loops with pop-inspired city colorways.',
-        theme: 'city'
+        theme: 'city-neon'
     },
     {
         key: 'midnight-horror',
         label: 'Midnight Horror Channel',
         title: 'After Dark Stories',
         description: 'Moody visuals for a spooky late-night atmosphere.',
-        theme: 'starfield'
+        theme: 'horror-dark'
     },
     {
         key: 'reality',
         label: 'Reality Channel',
         title: 'House and Hustle',
         description: 'Everyday challenges and competition-style pacing.',
-        theme: 'live-now'
+        theme: 'reality-hustle'
     },
     {
         key: 'esports',
         label: 'eSports Channel',
         title: 'Arena Online',
         description: 'Digital tournaments, strategy cams, and crowd energy.',
-        theme: 'arcade'
+        theme: 'esports-arena'
     },
     {
         key: 'diy',
         label: 'DIY Channel',
         title: 'Build It Live',
         description: 'Hands-on projects and step-by-step maker loops.',
-        theme: 'cooking'
+        theme: 'diy-maker'
     },
     {
         key: 'anime-zone',
         label: 'Anime Zone',
         title: 'Skyline Saga',
         description: 'Stylized action and dramatic city-night transitions.',
-        theme: 'neon-drive'
+        theme: 'anime-neon'
     },
     {
         key: 'tech-daily',
         label: 'Tech Daily',
         title: 'Future Feed',
         description: 'Device demos, dashboards, and rapid update reels.',
-        theme: 'science'
+        theme: 'tech-dashboard'
     },
     {
         key: 'dance',
         label: 'Dance Channel',
         title: 'Move Machine',
         description: 'Beat-synced choreography visuals with energetic pulses.',
-        theme: 'music'
+        theme: 'dance-beats'
     },
     {
         key: 'travel-plus',
@@ -1633,7 +1633,7 @@ const LIVE_CHANNELS = [
         title: 'Passport Loop',
         description: 'Fast-cut scenery tours from coastlines to skylines.',
         theme: 'video',
-        fallbackTheme: 'city',
+        fallbackTheme: 'travel-scenic',
         videoUrl: 'https://videos.pexels.com/video-files/3571026/3571026-hd_1920_1080_24fps.mp4'
     },
     {
@@ -1642,7 +1642,7 @@ const LIVE_CHANNELS = [
         title: 'Earth Creatures',
         description: 'More nature footage with forest and river wildlife.',
         theme: 'video',
-        fallbackTheme: 'nature',
+        fallbackTheme: 'wildlife-forest',
         videoUrl: 'https://cdn.pixabay.com/vimeo/732275425/Wildlife%20Nature%20_%20Free%20Stock%20Video%20Footage%20HD-732275425.mp4'
     },
     {
@@ -1650,7 +1650,7 @@ const LIVE_CHANNELS = [
         label: 'Cinema Classics',
         title: 'Prime Time Rewind',
         description: 'Vintage-style primetime framing with dramatic transitions.',
-        theme: 'city'
+        theme: 'cinema-vintage'
     }
 ].map((channel, index) => ({
     ...channel,
@@ -2509,6 +2509,447 @@ function drawLiveFrame(channel, timeMs) {
                 const y = h - amp - 30;
                 ctx.fillStyle = i % 2 ? '#22d3ee' : '#f9a8d4';
                 ctx.fillRect(x, y, barW, amp);
+            }
+        }
+    } else if (theme === 'comedy-gags') {
+        const bg = ctx.createLinearGradient(0, 0, 0, h);
+        bg.addColorStop(0, '#dbeafe');
+        bg.addColorStop(1, '#fecaca');
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, w, h);
+        ctx.fillStyle = '#f97316';
+        for (let i = 0; i < 6; i += 1) {
+            const x = w * (0.2 + i * 0.12);
+            const y = h * (0.3 + Math.sin(t * 3 + i) * 0.15);
+            ctx.beginPath();
+            ctx.arc(x, y, 20, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    } else if (theme === 'doc-landscape') {
+        const bg = ctx.createLinearGradient(0, 0, 0, h);
+        bg.addColorStop(0, '#dbeafe');
+        bg.addColorStop(1, '#86efac');
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, w, h);
+        ctx.fillStyle = '#166534';
+        ctx.beginPath();
+        ctx.moveTo(0, h * 0.6);
+        ctx.quadraticCurveTo(w * 0.5, h * 0.35, w, h * 0.6);
+        ctx.lineTo(w, h);
+        ctx.lineTo(0, h);
+        ctx.closePath();
+        ctx.fill();
+    } else if (theme === 'adventure-peaks') {
+        const bg = ctx.createLinearGradient(0, 0, 0, h);
+        bg.addColorStop(0, '#fef3c7');
+        bg.addColorStop(1, '#86efac');
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, w, h);
+        ctx.fillStyle = '#7c2d12';
+        ctx.beginPath();
+        ctx.moveTo(0, h * 0.5);
+        ctx.lineTo(w * 0.3, h * 0.25);
+        ctx.lineTo(w * 0.5, h * 0.45);
+        ctx.lineTo(w * 0.7, h * 0.2);
+        ctx.lineTo(w, h * 0.5);
+        ctx.lineTo(w, h);
+        ctx.lineTo(0, h);
+        ctx.closePath();
+        ctx.fill();
+    } else if (theme === 'mystery-dark') {
+        const bg = ctx.createLinearGradient(0, 0, 0, h);
+        bg.addColorStop(0, '#1a1a2e');
+        bg.addColorStop(1, '#0a0a14');
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, w, h);
+        ctx.fillStyle = 'rgba(168, 85, 247, 0.8)';
+        for (let i = 0; i < 15; i += 1) {
+            const x = (i * 120 + t * 40) % w;
+            const y = h * 0.3 + Math.sin(t + i) * 40;
+            ctx.beginPath();
+            ctx.arc(x, y, 3, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    } else if (theme === 'racing-circuit') {
+        const bg = ctx.createLinearGradient(0, 0, 0, h);
+        bg.addColorStop(0, '#1a1a2e');
+        bg.addColorStop(1, '#16213e');
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, w, h);
+        ctx.strokeStyle = '#fbbf24';
+        ctx.lineWidth = 8;
+        ctx.setLineDash([20, 15]);
+        ctx.lineDashOffset = -(t * 60) % 35;
+        ctx.beginPath();
+        ctx.moveTo(0, h * 0.5);
+        ctx.lineTo(w, h * 0.5);
+        ctx.stroke();
+        ctx.setLineDash([]);
+    } else if (theme === 'chillhop-lofi') {
+        const bg = ctx.createLinearGradient(0, 0, w, h);
+        bg.addColorStop(0, '#fcd34d');
+        bg.addColorStop(1, '#f472b6');
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, w, h);
+        const bars = 20;
+        for (let i = 0; i < bars; i += 1) {
+            const x = 20 + i * (w / bars);
+            const amp = (0.3 + Math.sin(t + i * 0.4) * 0.4) * h * 0.4;
+            ctx.fillStyle = '#4f46e5';
+            ctx.fillRect(x, h - amp - 30, w / bars - 4, amp);
+        }
+    } else if (theme === 'weather-storms') {
+        const bg = ctx.createLinearGradient(0, 0, 0, h);
+        bg.addColorStop(0, '#475569');
+        bg.addColorStop(1, '#1e3a8a');
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, w, h);
+        ctx.strokeStyle = '#bfdbfe';
+        ctx.lineWidth = 1;
+        for (let i = 0; i < 16; i += 1) {
+            ctx.beginPath();
+            for (let x = 0; x <= w; x += 20) {
+                const y = h * 0.5 + i * 20 + Math.sin((x / 100) + t * 3) * 10;
+                if (x === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+        }
+    } else if (theme === 'history-timeline') {
+        const bg = ctx.createLinearGradient(0, 0, w, h);
+        bg.addColorStop(0, '#d2691e');
+        bg.addColorStop(1, '#8b4513');
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, w, h);
+        ctx.strokeStyle = '#fef3c7';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(w * 0.5, 0);
+        ctx.lineTo(w * 0.5, h);
+        ctx.stroke();
+    } else if (theme === 'kids-fun') {
+        const bg = ctx.createLinearGradient(0, 0, 0, h);
+        bg.addColorStop(0, '#fbbf24');
+        bg.addColorStop(1, '#86efac');
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, w, h);
+        for (let i = 0; i < 5; i += 1) {
+            const x = w * (0.2 + i * 0.18);
+            const y = h * 0.5 + Math.sin(t * 2 + i) * 30;
+            ctx.fillStyle = ['#ef4444', '#3b82f6', '#f97316', '#ec4899', '#8b5cf6'][i];
+            ctx.beginPath();
+            ctx.arc(x, y, 25, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    } else if (theme === 'action-impact') {
+        const bg = ctx.createLinearGradient(0, 0, 0, h);
+        bg.addColorStop(0, '#dc2626');
+        bg.addColorStop(1, '#b91c1c');
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, w, h);
+        ctx.fillStyle = '#fbbf24';
+        for (let i = 0; i < 8; i += 1) {
+            const x = w * Math.random();
+            const y = h * Math.random();
+            const size = 15 + Math.sin(t + i) * 10;
+            ctx.fillRect(x, y, size, size);
+        }
+    } else if (theme === 'animation-frames') {
+        const bg = ctx.createLinearGradient(0, 0, 0, h);
+        bg.addColorStop(0, '#111827');
+        bg.addColorStop(1, '#1f2937');
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, w, h);
+        ctx.strokeStyle = '#06b6d4';
+        ctx.lineWidth = 2;
+        for (let row = 0; row < 3; row += 1) {
+            for (let col = 0; col < 4; col += 1) {
+                const x = 40 + col * (w / 4);
+                const y = 40 + row * (h / 3);
+                ctx.strokeRect(x, y, w / 5, h / 4);
+            }
+        }
+    } else if (theme === 'strategy-grid') {
+        const bg = ctx.createLinearGradient(0, 0, 0, h);
+        bg.addColorStop(0, '#0f172a');
+        bg.addColorStop(1, '#1e1b4b');
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, w, h);
+        ctx.strokeStyle = 'rgba(34, 211, 238, 0.3)';
+        ctx.lineWidth = 1;
+        const gridSize = 50;
+        for (let x = 0; x <= w; x += gridSize) {
+            ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
+        }
+        for (let y = 0; y <= h; y += gridSize) {
+            ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+        }
+    } else if (theme === 'space-nebula') {
+        const bg = ctx.createLinearGradient(0, 0, 0, h);
+        bg.addColorStop(0, '#2d1b4e');
+        bg.addColorStop(1, '#1a0e2e');
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, w, h);
+        ctx.fillStyle = 'rgba(139, 92, 246, 0.6)';
+        for (let i = 0; i < 20; i += 1) {
+            const x = (i * 95 + t * 20) % w;
+            const y = h * 0.5 + Math.sin(t * 0.5 + i) * h * 0.3;
+            ctx.beginPath();
+            ctx.arc(x, y, Math.random() * 8 + 2, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    } else if (theme === 'retro-crt') {
+        const bg = ctx.createLinearGradient(0, 0, 0, h);
+        bg.addColorStop(0, '#000');
+        bg.addColorStop(1, '#111');
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, w, h);
+        ctx.strokeStyle = '#00ff00';
+        ctx.lineWidth = 1;
+        for (let y = 0; y < h; y += 4) {
+            ctx.beginPath();
+            ctx.moveTo(0, y);
+            ctx.lineTo(w, y);
+            ctx.stroke();
+        }
+    } else if (theme === 'art-palette') {
+        const colors = ['#ff6b6b', '#ffd93d', '#6bcf7f', '#4d96ff', '#c780fa'];
+        const bg = ctx.createLinearGradient(0, 0, w, h);
+        colors.forEach((c, i) => bg.addColorStop(i / (colors.length - 1), c));
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, w, h);
+    } else if (theme === 'fitness-rhythm') {
+        const bg = ctx.createLinearGradient(0, 0, 0, h);
+        bg.addColorStop(0, '#ecfdf5');
+        bg.addColorStop(1, '#10b981');
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, w, h);
+        ctx.fillStyle = '#065f46';
+        for (let i = 0; i < 5; i += 1) {
+            const x = w * (0.2 + i * 0.15);
+            const pulse = Math.sin(t * 5) * 0.5 + 0.5;
+            ctx.beginPath();
+            ctx.arc(x, h * 0.5, 30 * pulse, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    } else if (theme === 'food-markets') {
+        const bg = ctx.createLinearGradient(0, 0, 0, h);
+        bg.addColorStop(0, '#fef3c7');
+        bg.addColorStop(1, '#fed7aa');
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, w, h);
+        const items = ['🍎', '🥕', '🌽', '🍅', '🥬', '🍊'];
+        items.forEach((item, i) => {
+            const x = w * (0.15 + i * 0.14);
+            ctx.font = '40px Arial';
+            ctx.fillText(item, x, h * 0.5);
+        });
+    } else if (theme === 'news-global') {
+        const bg = ctx.createLinearGradient(0, 0, 0, h);
+        bg.addColorStop(0, '#1e3a8a');
+        bg.addColorStop(1, '#0f172a');
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, w, h);
+        ctx.strokeStyle = '#38bdf8';
+        ctx.beginPath();
+        ctx.ellipse(w * 0.5, h * 0.5, w * 0.3, h * 0.3, 0, 0, Math.PI * 2);
+        ctx.stroke();
+    } else if (theme === 'lab-experiment') {
+        ctx.fillStyle = '#1f2937';
+        ctx.fillRect(0, 0, w, h);
+        ctx.fillStyle = '#34d399';
+        for (let i = 0; i < 5; i += 1) {
+            const x = w * (0.2 + i * 0.15);
+            ctx.beginPath();
+            ctx.arc(x, h * 0.5, 15, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    } else if (theme === 'ocean-waves') {
+        const bg = ctx.createLinearGradient(0, 0, 0, h);
+        bg.addColorStop(0, '#0369a1');
+        bg.addColorStop(1, '#0c4a6e');
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, w, h);
+        ctx.strokeStyle = 'rgba(225, 243, 254, 0.4)';
+        ctx.lineWidth = 3;
+        for (let i = 0; i < 6; i += 1) {
+            ctx.beginPath();
+            for (let x = 0; x <= w; x += 10) {
+                const y = h * 0.5 + i * 25 + Math.sin((x / 50) + t * 2.5 + i) * 6;
+                if (x === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+        }
+    } else if (theme === 'mountain-peaks') {
+        const bg = ctx.createLinearGradient(0, 0, 0, h);
+        bg.addColorStop(0, '#e0f2fe');
+        bg.addColorStop(1, '#7c3aed');
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, w, h);
+        ctx.fillStyle = '#6b7280';
+        ctx.beginPath();
+        ctx.moveTo(0, h * 0.58);
+        ctx.lineTo(w * 0.2, h * 0.3);
+        ctx.lineTo(w * 0.35, h * 0.5);
+        ctx.lineTo(w * 0.55, h * 0.2);
+        ctx.lineTo(w * 0.8, h * 0.45);
+        ctx.lineTo(w, h * 0.3);
+        ctx.lineTo(w, h);
+        ctx.lineTo(0, h);
+        ctx.closePath();
+        ctx.fill();
+    } else if (theme === 'city-neon') {
+        const bg = ctx.createLinearGradient(0, 0, 0, h);
+        bg.addColorStop(0, '#0f0a1a');
+        bg.addColorStop(1, '#1f0f3d');
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, w, h);
+        ctx.fillStyle = 'rgba(236, 72, 153, 0.8)';
+        const buildings = 8;
+        for (let i = 0; i < buildings; i += 1) {
+            const bw = w / buildings;
+            const bh = h * (0.3 + (i % 3) * 0.2);
+            ctx.fillRect(i * bw, h - bh, bw - 2, bh);
+        }
+    } else if (theme === 'horror-dark') {
+        const bg = ctx.createLinearGradient(0, 0, 0, h);
+        bg.addColorStop(0, '#1a1a2e');
+        bg.addColorStop(1, '#0f0f23');
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, w, h);
+        ctx.fillStyle = 'rgba(239, 68, 68, 0.5)';
+        for (let i = 0; i < 10; i += 1) {
+            const x = Math.random() * w;
+            const y = Math.random() * h;
+            ctx.fillRect(x, y, 20, 20);
+        }
+    } else if (theme === 'reality-hustle') {
+        const bg = ctx.createLinearGradient(0, 0, 0, h);
+        bg.addColorStop(0, '#fca5a5');
+        bg.addColorStop(1, '#fbbf24');
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, w, h);
+        for (let i = 0; i < 15; i += 1) {
+            ctx.fillStyle = ['#06b6d4', '#8b5cf6', '#ec4899'][i % 3];
+            ctx.fillRect(Math.random() * w, Math.random() * h, Math.random() * 40 + 10, Math.random() * 40 + 10);
+        }
+    } else if (theme === 'esports-arena') {
+        const bg = ctx.createLinearGradient(0, 0, 0, h);
+        bg.addColorStop(0, '#1f2937');
+        bg.addColorStop(1, '#111827');
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, w, h);
+        ctx.strokeStyle = '#06b6d4';
+        ctx.lineWidth = 3;
+        ctx.strokeRect(w * 0.2, h * 0.2, w * 0.6, h * 0.6);
+    } else if (theme === 'diy-maker') {
+        const bg = ctx.createLinearGradient(0, 0, 0, h);
+        bg.addColorStop(0, '#d97706');
+        bg.addColorStop(1, '#92400e');
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, w, h);
+        ctx.fillStyle = '#78350f';
+        for (let i = 0; i < 12; i += 1) {
+            ctx.fillRect(Math.random() * w, Math.random() * h, 30, 30);
+        }
+    } else if (theme === 'anime-neon') {
+        const bg = ctx.createLinearGradient(0, 0, 0, h);
+        bg.addColorStop(0, '#020617');
+        bg.addColorStop(1, '#312e81');
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, w, h);
+        ctx.fillStyle = '#ec4899';
+        ctx.font = 'bold 60px Arial';
+        ctx.fillText('━━', w * 0.3, h * 0.5);
+        ctx.fillStyle = '#06b6d4';
+        ctx.fillText('━━', w * 0.55, h * 0.5);
+    } else if (theme === 'tech-dashboard') {
+        const bg = ctx.createLinearGradient(0, 0, 0, h);
+        bg.addColorStop(0, '#0f172a');
+        bg.addColorStop(1, '#1e293b');
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, w, h);
+        ctx.strokeStyle = '#0ea5e9';
+        ctx.lineWidth = 2;
+        for (let i = 0; i < 4; i += 1) {
+            ctx.strokeRect(20 + i * (w / 4 - 5), 20, w / 4 - 10, h - 40);
+        }
+    } else if (theme === 'dance-beats') {
+        const bg = ctx.createLinearGradient(0, 0, 0, h);
+        bg.addColorStop(0, '#7c3aed');
+        bg.addColorStop(1, '#1e1b4b');
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, w, h);
+        const bars = 12;
+        for (let i = 0; i < bars; i += 1) {
+            const x = 30 + i * (w / bars);
+            const amp = Math.sin(t * 4 + i * 0.5) * 0.5 + 0.5;
+            ctx.fillStyle = '#06b6d4';
+            ctx.fillRect(x, h - amp * h * 0.6 - 20, w / bars - 10, amp * h * 0.6);
+        }
+    } else if (theme === 'cinema-vintage') {
+        const bg = ctx.createLinearGradient(0, 0, 0, h);
+        bg.addColorStop(0, '#3f2819');
+        bg.addColorStop(1, '#1f1410');
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, w, h);
+        ctx.strokeStyle = 'rgba(255, 200, 100, 0.4)';
+        ctx.lineWidth = 8;
+        ctx.strokeRect(30, 30, w - 60, h - 60);
+    } else if (theme === 'wildlife-fallback') {
+        const bg = ctx.createLinearGradient(0, 0, 0, h);
+        bg.addColorStop(0, '#fef3c7');
+        bg.addColorStop(1, '#86efac');
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, w, h);
+        ctx.fillStyle = '#166534';
+        for (let i = 0; i < 4; i += 1) {
+            ctx.beginPath();
+            ctx.arc(w * (0.2 + i * 0.2), h * 0.5, 20, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    } else if (theme === 'travel-fallback') {
+        const bg = ctx.createLinearGradient(0, 0, 0, h);
+        bg.addColorStop(0, '#93c5fd');
+        bg.addColorStop(1, '#fca5a5');
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, w, h);
+        ctx.fillStyle = '#dc2626';
+        ctx.beginPath();
+        ctx.moveTo(w * 0.5, h * 0.3);
+        ctx.lineTo(w * 0.6, h * 0.6);
+        ctx.lineTo(w * 0.4, h * 0.6);
+        ctx.closePath();
+        ctx.fill();
+    } else if (theme === 'travel-scenic') {
+        const bg = ctx.createLinearGradient(0, 0, 0, h);
+        bg.addColorStop(0, '#e0e7ff');
+        bg.addColorStop(1, '#10b981');
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, w, h);
+    } else if (theme === 'wildlife-forest') {
+        const bg = ctx.createLinearGradient(0, 0, 0, h);
+        bg.addColorStop(0, '#86efac');
+        bg.addColorStop(1, '#166534');
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, w, h);
+    } else if (theme === 'garden-bloom') {
+        const bg = ctx.createLinearGradient(0, 0, 0, h);
+        bg.addColorStop(0, '#87ceeb');
+        bg.addColorStop(1, '#90ee90');
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, w, h);
+        ctx.fillStyle = '#ff69b4';
+        for (let i = 0; i < 8; i += 1) {
+            const x = (w + 100 - ((t * 40) + i * 140) % (w + 100));
+            const y = h * 0.7;
+            for (let p = 0; p < 5; p += 1) {
+                const px = x + Math.cos((Math.PI * 2 / 5) * p) * 10;
+                const py = y + Math.sin((Math.PI * 2 / 5) * p) * 10;
+                ctx.beginPath();
+                ctx.arc(px, py, 4, 0, Math.PI * 2);
+                ctx.fill();
             }
         }
     }
