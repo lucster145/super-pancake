@@ -885,7 +885,6 @@ class WindowManager {
                     <h2>Live</h2>
                     <p id="live-time-label" class="live-time-label">Loading channel...</p>
                     <div class="live-header-actions">
-                        <button id="live-go-live" class="live-go-live-btn" aria-label="Switch to Live Now channel">🔴 Live Now</button>
                         <button id="live-guide-toggle" class="live-guide-toggle" aria-label="Toggle channel guide" aria-expanded="false">📺 Guide</button>
                     </div>
                 </div>
@@ -1276,167 +1275,48 @@ const liveState = {
 
 const LIVE_CHANNELS = [
     {
-        key: 'late-night',
-        label: 'Late Night Channel',
-        title: 'Moon Drift',
-        description: 'Slow stars, moon glow, and drifting cloud bands for deep-night watching.',
-        channelNo: 'CH 001',
-        theme: 'starfield'
-    },
-    {
-        key: 'morning',
+        key: 'morning-bloom',
         label: 'Morning Channel',
-        title: 'Sunrise Garden',
-        description: 'Original hand-drawn hills, birds, and warm daylight motion.',
-        channelNo: 'CH 002',
-        theme: 'sunrise'
+        title: 'Flowers and Sun',
+        description: 'A cheerful morning scene with blooming flowers, soft clouds, and a warm rising sun.',
+        channelNo: 'CH 001',
+        theme: 'morning-bloom'
     },
     {
-        key: 'cartoon',
-        label: 'Cartoon Channel',
-        title: 'Pancake Pals Cartoons',
-        description: 'Original cartoon loop with playful characters, slapstick gags, and ten new mini-cartoon premieres.',
-        channelNo: 'CH 003',
-        theme: 'cartoon',
+        key: 'afternoon-cartoons',
+        label: 'Afternoon Channel',
+        title: 'Cartoon Hour',
+        description: 'Bright afternoon cartoon action with bouncy characters and playful movement.',
+        channelNo: 'CH 002',
+        theme: 'afternoon-cartoon',
         episodes: [
-            'Captain Syrup and the Pancake Moon',
-            'Rocket Waffle Rescue',
-            'Bubble City Bake-Off',
-            'Maple Ninja Playground',
-            'Toast Town Treasure Hunt',
-            'Jellybean Jungle Jam',
-            'Cosmo Cookie Cruise',
-            'Flipjack Funhouse Fix-Up',
-            'Sprinkle Squad Saves Saturday',
-            'Muffin Mountain Mystery'
+            'Sunny Side Street Chase',
+            'Captain Flip and the Giant Balloon',
+            'Snack Time Super Squad',
+            'Pancake Park Prank Day'
         ]
     },
     {
-        key: 'evening',
-        label: 'Evening Channel',
-        title: 'Golden Streets',
-        description: 'City silhouettes, neon windows, and sunset gradients in motion.',
-        channelNo: 'CH 004',
-        theme: 'city'
-    },
-    {
-        key: 'night',
+        key: 'night-city-cartoons',
         label: 'Night Channel',
-        title: 'Neon Night Drive',
-        description: 'Original synth-style night visuals and horizon glow.',
-        channelNo: 'CH 005',
-        theme: 'neon-drive'
-    },
-    {
-        key: 'ocean',
-        label: 'Ocean Channel',
-        title: 'Blue Current',
-        description: 'Rolling wave bands, fish silhouettes, and drifting foam.',
-        channelNo: 'CH 006',
-        theme: 'ocean'
-    },
-    {
-        key: 'sports',
-        label: 'Sports Channel',
-        title: 'Stadium Sprint',
-        description: 'Arcade-style field action with moving players and score lights.',
-        channelNo: 'CH 007',
-        theme: 'sports'
-    },
-    {
-        key: 'news',
-        label: 'News Channel',
-        title: 'City Desk Live',
-        description: 'Breaking ticker, studio lights, and animated lower-third updates.',
-        channelNo: 'CH 008',
-        theme: 'news'
-    },
-    {
-        key: 'nature',
-        label: 'Nature Channel',
-        title: 'Forest Falls',
-        description: 'Hand-drawn mountains and a looping waterfall scene.',
-        channelNo: 'CH 009',
-        theme: 'nature'
-    },
-    {
-        key: 'arcade',
-        label: 'Arcade Channel',
-        title: 'Pixel Arena',
-        description: 'Retro grid pulses and old-school sprite movement.',
-        channelNo: 'CH 010',
-        theme: 'arcade'
-    },
-    {
-        key: 'science',
-        label: 'Science Channel',
-        title: 'Lab Motion',
-        description: 'Molecule orbits, data pulses, and animated lab visuals.',
-        channelNo: 'CH 011',
-        theme: 'science'
-    },
-    {
-        key: 'music',
-        label: 'Music Channel',
-        title: 'Beat Room',
-        description: 'Reactive equalizer bars and waveform-inspired motion.',
-        channelNo: 'CH 012',
-        theme: 'music'
-    },
-    {
-        key: 'wildlife',
-        label: 'Wildlife Channel',
-        title: 'Animal Planet',
-        description: 'Real nature footage with birds, deer, and forest life.',
-        channelNo: 'CH 013',
-        theme: 'video',
-        fallbackTheme: 'nature',
-        videoUrl: 'https://cdn.pixabay.com/vimeo/732275425/Wildlife%20Nature%20_%20Free%20Stock%20Video%20Footage%20HD-732275425.mp4'
-    },
-    {
-        key: 'travel',
-        label: 'Travel Channel',
-        title: 'Around the World',
-        description: 'Scenic landscapes from mountains, beaches, and cities.',
-        channelNo: 'CH 014',
-        theme: 'video',
-        fallbackTheme: 'city',
-        videoUrl: 'https://videos.pexels.com/video-files/3571026/3571026-hd_1920_1080_24fps.mp4'
-    },
-    {
-        key: 'cooking',
-        label: 'Cooking Channel',
-        title: 'Kitchen Live',
-        description: 'A live kitchen scene with a cook at the stove, stirring dinner in real-time.',
-        channelNo: 'CH 015',
-        theme: 'cooking'
-    },
-    {
-        key: 'garden',
-        label: 'Nature Garden Channel',
-        title: 'Blooming Sanctuary',
-        description: 'Animated garden with blooming flowers, trees, and wildlife.',
-        channelNo: 'CH 017',
-        theme: 'garden'
-    },
-    {
-        key: 'live-now',
-        label: 'Live Now',
-        title: 'Non-Stop Entertainment',
-        description: 'Ever-changing mix of cartoons, nature, ocean, neon cities, and more.',
-        channelNo: 'CH 018',
-        theme: 'live-now'
+        title: 'Cartoon City Nights',
+        description: 'Night cartoons in front of a glowing city skyline with twinkling windows and stars.',
+        channelNo: 'CH 003',
+        theme: 'night-city-cartoon',
+        episodes: [
+            'Moonlight Rooftop Rescue',
+            'Skyline Scooter Showdown',
+            'Neon Alley Treasure Dash',
+            'Midnight Pancake Parade'
+        ]
     }
 ];
 
 const LIVE_SCHEDULE = [
-    { key: 'late-night', startHour: 0, endHour: 6 },
-    { key: 'morning', startHour: 6, endHour: 12 },
-    { key: 'cartoon', startHour: 12, endHour: 18 },
-    { key: 'evening', startHour: 18, endHour: 22 },
-    { key: 'night', startHour: 22, endHour: 24 },
-    { key: 'garden', startHour: 8, endHour: 16 },
-    { key: 'live-now', startHour: 7, endHour: 20 }
+    { key: 'morning-bloom', startHour: 5, endHour: 12 },
+    { key: 'afternoon-cartoons', startHour: 12, endHour: 18 },
+    { key: 'night-city-cartoons', startHour: 18, endHour: 24 },
+    { key: 'night-city-cartoons', startHour: 0, endHour: 5 }
 ];
 
 function getLiveChannelByKey(key) {
@@ -1464,9 +1344,15 @@ function formatLiveHour(hour) {
 }
 
 function getLiveTimeRange(key) {
-    const slot = LIVE_SCHEDULE.find((entry) => entry.key === key);
-    if (!slot) return 'Any Time';
-    return `${formatLiveHour(slot.startHour)} - ${formatLiveHour(slot.endHour)}`;
+    const slots = LIVE_SCHEDULE.filter((entry) => entry.key === key);
+    if (slots.length === 0) return 'Any Time';
+    if (slots.length === 1) {
+        return `${formatLiveHour(slots[0].startHour)} - ${formatLiveHour(slots[0].endHour)}`;
+    }
+
+    const first = slots[0];
+    const last = slots[slots.length - 1];
+    return `${formatLiveHour(first.startHour)} - ${formatLiveHour(last.endHour)}`;
 }
 
 function renderLiveGuide(activeKey, manualKey) {
@@ -1477,8 +1363,8 @@ function renderLiveGuide(activeKey, manualKey) {
         const activeClass = channel.key === activeKey ? ' active' : '';
         const manualClass = channel.key === manualKey ? ' manual' : '';
         const timeRange = getLiveTimeRange(channel.key);
-        const badge = channel.theme === 'video' ? ' <span class="live-guide-badge">📹</span>' : '';
-        const guideNumber = channel.key === 'live-now' ? 'LIVE NOW' : channel.channelNo;
+        const badge = '';
+        const guideNumber = channel.channelNo;
         return `
             <div class="live-guide-item${activeClass}${manualClass}" data-key="${channel.key}" role="button" tabindex="0" aria-label="Switch to ${channel.label}">
                 <div class="live-guide-top">
@@ -1583,7 +1469,163 @@ function drawLiveFrame(channel, timeMs) {
 
     const t = (timeMs - liveState.animationStart) / 1000;
 
-    if (theme === 'starfield') {
+    if (theme === 'morning-bloom') {
+        const bg = ctx.createLinearGradient(0, 0, 0, h);
+        bg.addColorStop(0, '#b8ecff');
+        bg.addColorStop(1, '#8be59b');
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, w, h);
+
+        ctx.fillStyle = '#fcd34d';
+        ctx.beginPath();
+        ctx.arc(w * 0.17, h * 0.22, h * 0.11, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#ffffff';
+        for (let i = 0; i < 4; i += 1) {
+            const cx = ((i * 220) + (t * 18)) % (w + 140) - 70;
+            const cy = h * (0.18 + (i % 2) * 0.08);
+            ctx.beginPath();
+            ctx.arc(cx, cy, 24, 0, Math.PI * 2);
+            ctx.arc(cx + 24, cy - 8, 18, 0, Math.PI * 2);
+            ctx.arc(cx + 44, cy, 22, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        ctx.fillStyle = '#22c55e';
+        ctx.fillRect(0, h * 0.74, w, h * 0.26);
+
+        for (let i = 0; i < 14; i += 1) {
+            const flowerX = 40 + i * ((w - 80) / 13);
+            const flowerY = h * 0.79 + Math.sin(t * 1.8 + i) * 10;
+            const petalColor = i % 3 === 0 ? '#f472b6' : (i % 3 === 1 ? '#f59e0b' : '#60a5fa');
+            ctx.fillStyle = '#15803d';
+            ctx.fillRect(flowerX - 2, flowerY - 22, 4, 25);
+            ctx.fillStyle = petalColor;
+            for (let p = 0; p < 6; p += 1) {
+                const px = flowerX + Math.cos((Math.PI * 2 / 6) * p) * 9;
+                const py = flowerY - 24 + Math.sin((Math.PI * 2 / 6) * p) * 9;
+                ctx.beginPath();
+                ctx.arc(px, py, 4.5, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            ctx.fillStyle = '#fde047';
+            ctx.beginPath();
+            ctx.arc(flowerX, flowerY - 24, 4, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    } else if (theme === 'afternoon-cartoon') {
+        const bg = ctx.createLinearGradient(0, 0, 0, h);
+        bg.addColorStop(0, '#9bd4ff');
+        bg.addColorStop(1, '#ffe28a');
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, w, h);
+
+        ctx.fillStyle = '#f59e0b';
+        ctx.beginPath();
+        ctx.arc(w * 0.85, h * 0.2, h * 0.08, 0, Math.PI * 2);
+        ctx.fill();
+
+        const bounce = Math.abs(Math.sin(t * 2.3)) * 16;
+        const x = w * 0.48 + Math.sin(t * 1.3) * (w * 0.18);
+        const y = h * 0.58 - bounce;
+
+        ctx.fillStyle = '#fb7185';
+        net2RoundRect(ctx, x - 88, y - 52, 176, 104, 34);
+        ctx.fill();
+
+        ctx.fillStyle = '#fff7ed';
+        net2RoundRect(ctx, x - 62, y - 34, 124, 68, 24);
+        ctx.fill();
+
+        ctx.fillStyle = '#0f172a';
+        ctx.beginPath();
+        ctx.arc(x - 22, y - 6, 8, 0, Math.PI * 2);
+        ctx.arc(x + 22, y - 6, 8, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.strokeStyle = '#0f172a';
+        ctx.lineWidth = 5;
+        ctx.beginPath();
+        ctx.arc(x, y + 10, 18, 0.1, Math.PI - 0.1);
+        ctx.stroke();
+
+        ctx.fillStyle = '#22c55e';
+        ctx.fillRect(0, h * 0.82, w, h * 0.18);
+
+        for (let i = 0; i < 8; i += 1) {
+            const bx = ((t * 100) + i * 120) % (w + 100) - 50;
+            ctx.fillStyle = i % 2 ? '#f97316' : '#3b82f6';
+            ctx.beginPath();
+            ctx.arc(bx, h * 0.88, 12, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    } else if (theme === 'night-city-cartoon') {
+        const bg = ctx.createLinearGradient(0, 0, 0, h);
+        bg.addColorStop(0, '#0b1120');
+        bg.addColorStop(1, '#1e3a8a');
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, w, h);
+
+        ctx.fillStyle = '#fef08a';
+        ctx.beginPath();
+        ctx.arc(w * 0.16, h * 0.2, h * 0.08, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#f8fafc';
+        for (let i = 0; i < 45; i += 1) {
+            const sx = (i * 63 + t * 9) % w;
+            const sy = (i * 47) % (h * 0.55);
+            const r = 0.8 + (i % 3) * 0.45;
+            ctx.globalAlpha = 0.35 + 0.5 * Math.sin(t * 1.5 + i);
+            ctx.beginPath();
+            ctx.arc(sx, sy, r, 0, Math.PI * 2);
+            ctx.fill();
+        }
+        ctx.globalAlpha = 1;
+
+        ctx.fillStyle = '#0f172a';
+        const buildingW = w / 10;
+        for (let i = 0; i < 11; i += 1) {
+            const bh = h * (0.2 + ((i * 5) % 7) * 0.07);
+            const bx = i * buildingW - 8;
+            const by = h - bh;
+            ctx.fillRect(bx, by, buildingW, bh);
+            for (let row = 0; row < 4; row += 1) {
+                for (let col = 0; col < 2; col += 1) {
+                    if (((i + row + col + Math.floor(t * 1.8)) % 3) === 0) {
+                        ctx.fillStyle = '#fde68a';
+                        ctx.fillRect(bx + 8 + col * 16, by + 10 + row * 18, 8, 10);
+                        ctx.fillStyle = '#0f172a';
+                    }
+                }
+            }
+        }
+
+        const hop = Math.abs(Math.sin(t * 2.2)) * 12;
+        const cx = w * 0.48 + Math.sin(t * 1.4) * (w * 0.2);
+        const cy = h * 0.72 - hop;
+
+        ctx.fillStyle = '#22d3ee';
+        net2RoundRect(ctx, cx - 82, cy - 48, 164, 96, 30);
+        ctx.fill();
+
+        ctx.fillStyle = '#ecfeff';
+        net2RoundRect(ctx, cx - 58, cy - 32, 116, 64, 22);
+        ctx.fill();
+
+        ctx.fillStyle = '#0f172a';
+        ctx.beginPath();
+        ctx.arc(cx - 20, cy - 4, 8, 0, Math.PI * 2);
+        ctx.arc(cx + 20, cy - 4, 8, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.strokeStyle = '#0f172a';
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.arc(cx, cy + 10, 18, 0.1, Math.PI - 0.1);
+        ctx.stroke();
+    } else if (theme === 'starfield') {
         const bg = ctx.createLinearGradient(0, 0, 0, h);
         bg.addColorStop(0, '#020617');
         bg.addColorStop(1, '#111827');
@@ -2117,41 +2159,6 @@ function drawLiveFrame(channel, timeMs) {
             ctx.arc(sx + 8, sy, 6, 0, Math.PI * 2);
             ctx.fill();
         }
-    } else if (theme === 'live-now') {
-        const liveNowChannels = LIVE_CHANNELS.filter((ch) => ch.theme !== 'live-now' && ch.theme !== 'video');
-        const slideIndex = Math.floor(t / 5) % liveNowChannels.length;
-        const slideT = t % 5;
-        const slideChannel = liveNowChannels[slideIndex];
-
-        // Draw the current slide channel using its own theme
-        ctx.save();
-        drawLiveFrame(slideChannel, timeMs);
-        ctx.restore();
-
-        // Draw a slide label at the bottom so the viewer knows what's on
-        ctx.fillStyle = 'rgba(0,0,0,0.55)';
-        ctx.fillRect(0, h - 44, w, 44);
-        ctx.fillStyle = '#ffffff';
-        ctx.font = 'bold 15px Arial';
-        ctx.textAlign = 'left';
-        ctx.fillText(`▶  ${slideChannel.label.toUpperCase()}  —  ${slideChannel.title}`, 16, h - 16);
-
-        // Progress bar
-        const progress = slideT / 5;
-        ctx.fillStyle = 'rgba(255,255,255,0.18)';
-        ctx.fillRect(0, h - 3, w, 3);
-        ctx.fillStyle = '#38bdf8';
-        ctx.fillRect(0, h - 3, w * progress, 3);
-
-        // Channel badge (override the default one drawn after this block)
-        ctx.fillStyle = 'rgba(4, 12, 20, 0.72)';
-        ctx.fillRect(12, 12, 250, 34);
-        ctx.fillStyle = '#ecfeff';
-        ctx.font = 'bold 14px Arial';
-        ctx.textAlign = 'left';
-        ctx.fillText(channel.channelNo, 24, 35);
-        ctx.fillText('LIVE NOW', 90, 35);
-        return;
     }
 
     ctx.fillStyle = 'rgba(4, 12, 20, 0.45)';
