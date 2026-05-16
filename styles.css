@@ -1877,7 +1877,7 @@ html {
     width: min(540px, calc(100vw - 48px));
     color: var(--ink-light);
     animation: heroRise 720ms ease-out;
-    pointer-events: none;
+    pointer-events: auto;
 }
 
 .desktop-kicker {
@@ -1902,6 +1902,33 @@ html {
     font-size: 15px;
     color: rgba(233, 243, 255, 0.88);
     line-height: 1.55;
+}
+
+.desktop-live-btn {
+    margin-top: 14px;
+    border: 1px solid rgba(190, 242, 100, 0.65);
+    background: linear-gradient(135deg, rgba(22, 101, 52, 0.82), rgba(5, 150, 105, 0.78));
+    color: #f0fdf4;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 10px 14px;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 10px 24px rgba(3, 24, 22, 0.35);
+    transition: transform 0.2s ease, filter 0.2s ease, box-shadow 0.2s ease;
+}
+
+.desktop-live-btn:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.08);
+    box-shadow: 0 14px 28px rgba(3, 24, 22, 0.42);
+}
+
+.desktop-live-btn:focus-visible {
+    outline: 2px solid #bbf7d0;
+    outline-offset: 2px;
 }
 
 .desktop-icons {
@@ -2840,6 +2867,12 @@ html {
         gap: 16px;
     }
 
+    .desktop-live-btn {
+        margin-top: 10px;
+        padding: 9px 12px;
+        font-size: 12px;
+    }
+
     .webpulse-panel {
         right: 12px;
         left: 12px;
@@ -2970,7 +3003,7 @@ html {
     gap: 4px;
     position: relative;
     z-index: 8;
-    padding-right: 220px;
+    padding-right: 120px;
 }
 
 .live-header-actions {
