@@ -1276,18 +1276,42 @@ const liveState = {
 const LIVE_CHANNELS = [
     {
         key: 'morning-bloom',
-        label: 'Morning Channel',
+        label: 'Morning Bloom',
         title: 'Flowers and Sun',
         description: 'A cheerful morning scene with blooming flowers, soft clouds, and a warm rising sun.',
         channelNo: 'CH 001',
         theme: 'morning-bloom'
     },
     {
+        key: 'sunrise-trails',
+        label: 'Sunrise Trails',
+        title: 'Golden Hills at Dawn',
+        description: 'Rolling green hills and bright sunrise skies to kick off the day.',
+        channelNo: 'CH 002',
+        theme: 'sunrise'
+    },
+    {
+        key: 'garden-party',
+        label: 'Garden Party',
+        title: 'Backyard Bloom Watch',
+        description: 'Birds, flowers, and playful critters moving through a colorful garden.',
+        channelNo: 'CH 003',
+        theme: 'garden'
+    },
+    {
+        key: 'forest-falls',
+        label: 'Forest Falls',
+        title: 'Nature Waterfall Loop',
+        description: 'A calm nature channel with mountain ridges and a continuous waterfall.',
+        channelNo: 'CH 004',
+        theme: 'nature'
+    },
+    {
         key: 'afternoon-cartoons',
-        label: 'Afternoon Channel',
+        label: 'Afternoon Cartoons',
         title: 'Cartoon Hour',
         description: 'Bright afternoon cartoon action with bouncy characters and playful movement.',
-        channelNo: 'CH 002',
+        channelNo: 'CH 005',
         theme: 'afternoon-cartoon',
         episodes: [
             'Sunny Side Street Chase',
@@ -1297,11 +1321,41 @@ const LIVE_CHANNELS = [
         ]
     },
     {
+        key: 'toon-rush',
+        label: 'Toon Rush',
+        title: 'Midday Cartoon Dash',
+        description: 'Fast-paced cartoon scenes, bold colors, and nonstop silly action.',
+        channelNo: 'CH 006',
+        theme: 'cartoon',
+        episodes: [
+            'Turbo Scooter Trouble',
+            'Backyard Boing Battle',
+            'Mailbox Mystery Sprint',
+            'The Great Snack Escape'
+        ]
+    },
+    {
+        key: 'sports-central',
+        label: 'Sports Central',
+        title: 'Practice Field Live',
+        description: 'Animated sports drills and matches with a bright stadium vibe.',
+        channelNo: 'CH 007',
+        theme: 'sports'
+    },
+    {
+        key: 'arcade-x',
+        label: 'Arcade X',
+        title: 'Retro Grid Arena',
+        description: 'A pixel-style arcade stream packed with moving neon shapes.',
+        channelNo: 'CH 008',
+        theme: 'arcade'
+    },
+    {
         key: 'night-city-cartoons',
-        label: 'Night Channel',
+        label: 'Night Cartoons',
         title: 'Cartoon City Nights',
         description: 'Night cartoons in front of a glowing city skyline with twinkling windows and stars.',
-        channelNo: 'CH 003',
+        channelNo: 'CH 009',
         theme: 'night-city-cartoon',
         episodes: [
             'Moonlight Rooftop Rescue',
@@ -1309,14 +1363,82 @@ const LIVE_CHANNELS = [
             'Neon Alley Treasure Dash',
             'Midnight Pancake Parade'
         ]
+    },
+    {
+        key: 'city-lights',
+        label: 'City Lights',
+        title: 'Downtown Skyline Feed',
+        description: 'Sunset-to-night city skylines with glowing windows and moving light.',
+        channelNo: 'CH 010',
+        theme: 'city'
+    },
+    {
+        key: 'neon-drive',
+        label: 'Neon Drive',
+        title: 'Late Night Highway',
+        description: 'Retro-futuristic night roads and pulsing neon lanes.',
+        channelNo: 'CH 011',
+        theme: 'neon-drive'
+    },
+    {
+        key: 'music-mix',
+        label: 'Music Mix',
+        title: 'Equalizer Live Set',
+        description: 'Color-reactive visual bars that pulse like a late-night radio set.',
+        channelNo: 'CH 012',
+        theme: 'music'
+    },
+    {
+        key: 'starwatch',
+        label: 'Starwatch',
+        title: 'Midnight Sky Drift',
+        description: 'A deep-space style starfield for after-hours viewing.',
+        channelNo: 'CH 013',
+        theme: 'starfield'
+    },
+    {
+        key: 'ocean-calm',
+        label: 'Ocean Calm',
+        title: 'Moon Tide Channel',
+        description: 'Animated moonlit waves and drifting fish across a deep blue sea.',
+        channelNo: 'CH 014',
+        theme: 'ocean'
+    },
+    {
+        key: 'science-lab',
+        label: 'Science Lab',
+        title: 'Orbit Desk Live',
+        description: 'Atom-like orbit visuals and science-inspired motion graphics.',
+        channelNo: 'CH 015',
+        theme: 'science'
+    },
+    {
+        key: 'news-desk',
+        label: 'News Desk',
+        title: 'Late Report Ticker',
+        description: 'Breaking style ticker and studio visuals for a newsroom feel.',
+        channelNo: 'CH 016',
+        theme: 'news'
     }
 ];
 
 const LIVE_SCHEDULE = [
     { key: 'morning-bloom', startHour: 5, endHour: 12 },
+    { key: 'sunrise-trails', startHour: 5, endHour: 12 },
+    { key: 'garden-party', startHour: 5, endHour: 12 },
+    { key: 'forest-falls', startHour: 5, endHour: 12 },
     { key: 'afternoon-cartoons', startHour: 12, endHour: 18 },
+    { key: 'toon-rush', startHour: 12, endHour: 18 },
+    { key: 'sports-central', startHour: 12, endHour: 18 },
+    { key: 'arcade-x', startHour: 12, endHour: 18 },
     { key: 'night-city-cartoons', startHour: 18, endHour: 24 },
-    { key: 'night-city-cartoons', startHour: 0, endHour: 5 }
+    { key: 'city-lights', startHour: 18, endHour: 24 },
+    { key: 'neon-drive', startHour: 18, endHour: 24 },
+    { key: 'music-mix', startHour: 18, endHour: 24 },
+    { key: 'starwatch', startHour: 0, endHour: 5 },
+    { key: 'ocean-calm', startHour: 0, endHour: 5 },
+    { key: 'science-lab', startHour: 0, endHour: 5 },
+    { key: 'news-desk', startHour: 0, endHour: 5 }
 ];
 
 function getLiveChannelByKey(key) {
