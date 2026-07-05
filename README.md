@@ -1,53 +1,33 @@
-# Simple PC
+# Origami Recipes Vault
 
-A fun web-based simulation of a Simple PC desktop environment with a built-in Play Store featuring interactive apps, including a social media app, streaming service, AI assistant, and more!
+Origami Recipes Vault is a single-page web app packed with a large list of origami recipes, from beginner folds to advanced projects.
 
 ## Features
 
-- **Simple PC Interface**: Modern desktop with taskbar, Start menu, and window management
-- **Play Store**: Install and launch apps:
-  - 📝 Notes - Simple note-taking app
-  - 🎯 2048 Game - Classic number puzzle game
-  - 🎵 Music Player - Audio player with playlist
-  - 🧮 Calculator - Basic calculator
-  - 🧠 Memory Game - Card matching game
-  - 📅 Calendar - View and navigate dates
-  - 🎬 Net2 - Netflix-style streaming with animated cinematic shows
-  - 🌐 Web Browser - Browse fake websites and search topics
+- 26 built-in origami recipes
+- Search by name, type, or words inside instructions
+- Filter by difficulty and model type
+- Step-by-step instruction view for every recipe
+- Responsive layout for desktop and mobile
 
-  - 🤖 Simple AI - AI chatbot with knowledge across many topics
-  - 📸 QuickPick - Instagram-style social media app
-- **Window Management**: Drag, resize, minimize, maximize, and close windows
-- **Desktop Icons**: Clickable app shortcuts on the desktop
-- **Right-click Context Menu**: Quick actions
-- **Start Menu**: Access all installed apps from the taskbar
+## Recipe Categories
 
-## How to Use
+- Animal
+- Flower
+- Decor
+- Toy
+- Useful
+- Seasonal
 
-1. Double-click any desktop icon or use the Start menu to launch an app
-2. Open the Play Store to install additional apps
-3. Right-click the desktop for quick actions
+## Tech Stack
 
-### Net2
-Stream animated shows — each episode plays a unique cinematic canvas animation with characters, particle effects, film grain, and scene subtitles.
-
-### QuickPick
-A social media feed with stories, reels, notifications, explore grid, and a profile page.
-
-## Live Demo
-
-Play the game online at: [https://lucster145.github.io/super-pancake/](https://lucster145.github.io/super-pancake/)
-
-## Technologies Used
-
-- HTML5
-- CSS3
+- HTML
+- CSS
 - Vanilla JavaScript
-- localStorage for persistent app data
 
-## Local Development
+## Run Locally
 
-1. Clone the repository
-2. Open `index.html` in your web browser
-3. No build process required!
+1. Clone this repository.
+2. Open index.html in your browser.
+3. Start folding.
 
