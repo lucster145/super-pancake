@@ -452,6 +452,166 @@ body, html {
     background: rgba(0, 255, 0, 0.3);
 }
 
+/* Origami App */
+.origami-app {
+    height: 100%;
+    display: grid;
+    grid-template-rows: auto auto auto auto 1fr auto;
+    gap: 12px;
+    padding: 18px;
+    background:
+        radial-gradient(circle at 12% 8%, rgba(245, 158, 11, 0.22), transparent 38%),
+        radial-gradient(circle at 90% 14%, rgba(239, 68, 68, 0.18), transparent 32%),
+        linear-gradient(150deg, #fffbeb 0%, #fff7ed 45%, #fef3c7 100%);
+    border-radius: 10px;
+    color: #4a2b12;
+}
+
+.origami-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.origami-header h2 {
+    margin: 0;
+    font-size: 24px;
+    color: #9a3412;
+}
+
+.origami-header p {
+    margin: 4px 0 0;
+    font-size: 13px;
+    color: #7c2d12;
+}
+
+.origami-badge {
+    padding: 8px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff7ed;
+    background: linear-gradient(135deg, #ea580c, #dc2626);
+    letter-spacing: 0.03em;
+}
+
+.origami-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.origami-controls label {
+    font-size: 13px;
+    font-weight: 700;
+    color: #7c2d12;
+}
+
+.origami-select {
+    min-width: 220px;
+    border: 1px solid rgba(194, 65, 12, 0.28);
+    border-radius: 10px;
+    padding: 9px 10px;
+    background: #fff;
+    color: #7c2d12;
+    font-weight: 600;
+}
+
+.origami-model-meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 8px;
+}
+
+.origami-model-meta > div {
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(194, 65, 12, 0.2);
+    border-radius: 10px;
+    padding: 10px;
+    font-size: 13px;
+}
+
+.origami-progress-wrap {
+    width: 100%;
+    height: 10px;
+    border-radius: 999px;
+    background: rgba(194, 65, 12, 0.18);
+    overflow: hidden;
+}
+
+.origami-progress-bar {
+    height: 100%;
+    width: 0;
+    background: linear-gradient(90deg, #f97316, #ef4444);
+    transition: width 0.2s ease;
+}
+
+.origami-step-list {
+    margin: 0;
+    padding: 10px 14px;
+    border-radius: 12px;
+    border: 1px solid rgba(194, 65, 12, 0.2);
+    background: rgba(255, 255, 255, 0.75);
+    overflow-y: auto;
+}
+
+.origami-step {
+    list-style: none;
+    padding: 10px 8px;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #7c2d12;
+    line-height: 1.45;
+}
+
+.origami-step span {
+    display: inline-block;
+    width: 24px;
+    font-weight: 700;
+}
+
+.origami-step.done {
+    color: #9a3412;
+    opacity: 0.75;
+}
+
+.origami-step.active {
+    background: rgba(249, 115, 22, 0.16);
+    border: 1px solid rgba(234, 88, 12, 0.3);
+    color: #6b1a07;
+}
+
+.origami-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.origami-step-label {
+    font-size: 13px;
+    font-weight: 700;
+    color: #9a3412;
+}
+
+.origami-btn {
+    border: none;
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    color: #fff;
+    background: linear-gradient(135deg, #f97316, #dc2626);
+}
+
+.origami-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.45;
+}
+
 /* Pro Notes App */
 .pronotes-app {
     height: 100%;

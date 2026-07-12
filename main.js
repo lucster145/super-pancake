@@ -6,6 +6,13 @@ const APPS = {
         minWidth: 800,
         minHeight: 600
     },
+    origami: {
+        name: 'Origami Studio',
+        icon: '📄',
+        color: '#f59e0b',
+        minWidth: 780,
+        minHeight: 560
+    },
     notes: {
         name: 'Pro Notes',
         icon: '📝',
@@ -128,7 +135,7 @@ const APPS = {
 };
 
 // Store app installation state
-const installedApps = new Set(['playstore', 'notes', 'game2048', 'calculator', 'memory', 'calendar', 'net2', 'live', 'browser', 'simpleai', 'vibe', 'rec', 'everygame', 'runtuchvictory', 'cloudgaming', 'supersports']);
+const installedApps = new Set(['playstore', 'origami', 'notes', 'game2048', 'calculator', 'memory', 'calendar', 'net2', 'live', 'browser', 'simpleai', 'vibe', 'rec', 'everygame', 'runtuchvictory', 'cloudgaming', 'supersports']);
 const cloudInstalledApps = new Set(); // apps installed from Cloud Gaming
 
 // Global error handler for better debugging
@@ -381,6 +388,8 @@ class WindowManager {
         switch(appId) {
             case 'playstore':
                 return this.getPlayStoreContent();
+            case 'origami':
+                return this.getOrigamiContent();
             case 'notes':
                 return this.getNotesContent();
             case 'game2048':
@@ -1021,6 +1030,40 @@ class WindowManager {
         `;
     }
 
+    getOrigamiContent() {
+        return `
+            <div class="origami-app">
+                <header class="origami-header">
+                    <div>
+                        <h2>Origami Studio</h2>
+                        <p>Step-by-step folds for beginner to advanced models.</p>
+                    </div>
+                    <div class="origami-badge">Paper + Patience</div>
+                </header>
+
+                <div class="origami-controls">
+                    <label for="origami-model-select">Model</label>
+                    <select id="origami-model-select" class="origami-select"></select>
+                    <button id="origami-reset" class="origami-btn" type="button">Reset Step</button>
+                </div>
+
+                <div id="origami-model-meta" class="origami-model-meta"></div>
+
+                <div class="origami-progress-wrap" aria-label="Fold progress">
+                    <div id="origami-progress-bar" class="origami-progress-bar"></div>
+                </div>
+
+                <ol id="origami-step-list" class="origami-step-list"></ol>
+
+                <footer class="origami-footer">
+                    <button id="origami-prev" class="origami-btn" type="button">Previous</button>
+                    <div id="origami-step-label" class="origami-step-label">Step 1</div>
+                    <button id="origami-next" class="origami-btn" type="button">Next</button>
+                </footer>
+            </div>
+        `;
+    }
+
     getSuperSportsContent() {
         return `
             <div class="supersports-app">
@@ -1065,6 +1108,9 @@ class WindowManager {
 
     initializeAppLogic(appId, contentEl) {
         switch(appId) {
+            case 'origami':
+                initOrigamiApp();
+                break;
             case 'notes':
                 initNotesApp(contentEl);
                 break;
@@ -4138,6 +4184,146 @@ function initMemoryGame() {
             }
         }
     };
+}
+
+// ===== ORIGAMI APP =====
+function initOrigamiApp() {
+    const modelSelect = document.getElementById('origami-model-select');
+    const modelMeta = document.getElementById('origami-model-meta');
+    const stepList = document.getElementById('origami-step-list');
+    const stepLabel = document.getElementById('origami-step-label');
+    const progressBar = document.getElementById('origami-progress-bar');
+    const prevBtn = document.getElementById('origami-prev');
+    const nextBtn = document.getElementById('origami-next');
+    const resetBtn = document.getElementById('origami-reset');
+
+    if (!modelSelect || !modelMeta || !stepList || !stepLabel || !progressBar || !prevBtn || !nextBtn || !resetBtn) {
+        return;
+    }
+
+    const models = [
+        {
+            id: 'crane',
+            name: 'Classic Crane',
+            difficulty: 'Medium',
+            paper: 'Square sheet (15cm)',
+            steps: [
+                'Start color-side down and fold diagonally both ways, then unfold.',
+                'Flip over and fold in half horizontally and vertically, then unfold.',
+                'Collapse into a square base by pushing corners inward.',
+                'Fold side edges to center on both sides to form a kite, then unfold.',
+                'Lift lower point and inside-reverse fold upward to create bird base.',
+                'Fold lower side flaps to center for neck and tail shaping.',
+                'Inside-reverse fold one flap up for the neck and the other for tail.',
+                'Fold down top tip for head, then pull wings apart to finish.'
+            ]
+        },
+        {
+            id: 'tulip',
+            name: 'Tulip Flower',
+            difficulty: 'Easy',
+            paper: 'Square sheet (any color)',
+            steps: [
+                'Place paper color-side down and fold diagonally both ways.',
+                'Bring left and right corners up to top to form a diamond shape.',
+                'Fold left and right points inward to center line.',
+                'Flip and repeat inward folds on the other side.',
+                'Open a flap and tuck one folded tab into the other to lock.',
+                'Inflate base gently through the bottom hole.',
+                'Fold petals outward from the top points to shape the flower.'
+            ]
+        },
+        {
+            id: 'fox',
+            name: 'Fox Face',
+            difficulty: 'Beginner',
+            paper: 'Square sheet (orange recommended)',
+            steps: [
+                'Start with color-side down and fold in half diagonally.',
+                'Rotate so long side is bottom, then fold left corner up to top.',
+                'Fold right corner up to top to mirror the left fold.',
+                'Fold top point down slightly to form forehead.',
+                'Fold left and right outer tips up for ears.',
+                'Fold lower tip up to make the snout.',
+                'Draw eyes and nose to finish.'
+            ]
+        },
+        {
+            id: 'frog',
+            name: 'Jumping Frog',
+            difficulty: 'Medium',
+            paper: 'Rectangle sheet (A4 cut in half)',
+            steps: [
+                'Fold rectangle in half lengthwise and unfold.',
+                'Fold top corners to center line to make a triangle top.',
+                'Fold top triangle in half downward, then unfold.',
+                'Push side folds inward to create a waterbomb triangle top.',
+                'Fold side edges to center on lower rectangle section.',
+                'Fold lower corners in to center, making a diamond body.',
+                'Fold bottom up, then fold back down halfway for spring legs.',
+                'Press tail edge quickly to make frog jump.'
+            ]
+        }
+    ];
+
+    let currentModelIndex = 0;
+    let currentStepIndex = 0;
+
+    modelSelect.innerHTML = models
+        .map((model, idx) => `<option value="${idx}">${model.name}</option>`)
+        .join('');
+
+    function render() {
+        const model = models[currentModelIndex];
+        const totalSteps = model.steps.length;
+
+        modelMeta.innerHTML = `
+            <div><strong>Difficulty:</strong> ${model.difficulty}</div>
+            <div><strong>Paper:</strong> ${model.paper}</div>
+            <div><strong>Total steps:</strong> ${totalSteps}</div>
+        `;
+
+        stepList.innerHTML = model.steps
+            .map((step, idx) => {
+                const active = idx === currentStepIndex ? ' active' : '';
+                const done = idx < currentStepIndex ? ' done' : '';
+                return `<li class="origami-step${active}${done}"><span>${idx + 1}.</span> ${step}</li>`;
+            })
+            .join('');
+
+        stepLabel.textContent = `Step ${currentStepIndex + 1} of ${totalSteps}`;
+        progressBar.style.width = `${((currentStepIndex + 1) / totalSteps) * 100}%`;
+        prevBtn.disabled = currentStepIndex === 0;
+        nextBtn.disabled = currentStepIndex >= totalSteps - 1;
+    }
+
+    modelSelect.addEventListener('change', () => {
+        currentModelIndex = Number(modelSelect.value) || 0;
+        currentStepIndex = 0;
+        render();
+    });
+
+    prevBtn.addEventListener('click', () => {
+        if (currentStepIndex > 0) {
+            currentStepIndex -= 1;
+            render();
+        }
+    });
+
+    nextBtn.addEventListener('click', () => {
+        const totalSteps = models[currentModelIndex].steps.length;
+        if (currentStepIndex < totalSteps - 1) {
+            currentStepIndex += 1;
+            render();
+        }
+    });
+
+    resetBtn.addEventListener('click', () => {
+        currentStepIndex = 0;
+        render();
+    });
+
+    render();
 }
 
 window.createNewWindow = function(appId) {
